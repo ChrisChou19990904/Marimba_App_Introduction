@@ -35,6 +35,24 @@
             left: 10px; /* 距離頁面左側 10px */
             z-index: 9999; /* 保證它不會被其他元素遮蓋 */
         }
+        #perfect_piano{
+            border: 1px solid #ccc;
+            padding: 8px;
+            background-color: #f9f9f9;
+            margin: 10px 0;
+        }
+        #songs_played_on_marimba_real{
+            border: 1px solid #ccc;
+            padding: 8px;
+            background-color: #f9f9f9;
+            margin: 10px 0;
+        }
+        #songs_played_on_perfect_piano{
+            border: 1px solid #ccc;
+            padding: 8px;
+            background-color: #f9f9f9;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -72,7 +90,7 @@
 </ul>
 
 <div class="screenshot">
-    <p>📱 使用者可自訂八度、琴鍵數量、樂器模擬：</p>
+    <p>📱 使用者可自訂八度、琴鍵數量、樂器模擬，但是必須關閉靜音模式才能發出聲音：</p>
     <p><em><video controls><source src="marimba_app.mp4"></video></em></p>
 </div>
 
@@ -85,8 +103,8 @@
     <li><strong>缺點：</strong> 琴鍵數量少，不利於多八度跨越與複雜雙手演奏，有時伴奏與旋律會「搶鍵」。</li>
 </ul>
 
-<p>相較之下，另一款《完美鋼琴》允許顯示更多琴鍵，更適合完整雙手演奏，但鍵較小，容易彈錯音。</p>
-
+<p>相較之下，另一款名為《<a href="#perfect_piano">Perfect Piano</a>》的樂器App允許顯示更多琴鍵，更適合完整雙手演奏，且在靜音模式下也能發出聲音，但音域過大時會導致琴鍵鍵較小並且容易彈錯音。</p>
+<section id="songs_played_on_marimba_real">
 <h2>🎧 彈奏影片分享：</h2>
 <p>以下是我用 Marimba Real 彈奏的 17 段旋律影片，歡迎大家收聽🎶：</p>
 
@@ -109,7 +127,19 @@
     <li><strong>《仮面ライダークウガ》（此旋律為《假面騎士空我》主題曲）</strong><br><video controls><source src="仮面ライダークウガ.mp4"></video></li>
     <li><strong>《Life Goes On》（此旋律為《超星神格蘭賽沙》主題曲）</strong><br><video controls><source src="Life_Goes_On.mp4"></video></li>
 </ol>
-
+</section>
+<div id="perfect_piano">
+    <p>📱 講解完Marimba Real後，我也順便簡單介紹一下《Perfect Piano》這款App —— 如我剛才所說，不管有沒有靜音都能彈出聲音，而且可以跨的八度範圍更廣，但也較容易出錯就是了（如下影片所示）：</p>
+    <p><em><video controls><source src="perfect_piano.mp4"></video></em></p>
+</div>
+<section id="songs_played_on_perfect_piano">
+<p>以下是我用《Perfect Piano》彈奏的兩段段旋律影片，大家也可以參考一下：</p>
+<ol class="video-list">
+    <li><strong>《Ultraman Theme Song》 Music Box Version</strong><br><video controls><source src="ultraman.mp4"></video></li>
+    <li><strong>《Ultraman Ace Theme Song》</strong><br><video controls><source src="ultraman_ace.mp4"></video></li>
+    <li><strong>《Ultraman Mebius Theme Song》</strong><br><video controls><source src="ultraman_mebius.mp4"></video></li>
+</ol>
+</section>
 <h2>🔔 總結：</h2>
 <p>對於習慣鋼琴鍵盤、但想嘗試打擊樂器音色的朋友來說，<strong>Marimba Real</strong> 是一款不錯的入門工具。如果你對馬林巴、木琴、管鐘等聲音感興趣，不妨也來玩玩看！</p>
 <hr>
