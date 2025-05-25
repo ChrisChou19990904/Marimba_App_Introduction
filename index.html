@@ -30,10 +30,29 @@
         .video-list li {
             margin-bottom: 8px;
         }
+        #google_translate_element {
+            top: 10px;  /* 距離頁面頂端 10px */
+            left: 10px; /* 距離頁面左側 10px */
+            z-index: 9999; /* 保證它不會被其他元素遮蓋 */
+        }
     </style>
 </head>
 <body>
-
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
 <h1>🎵 樂器 App 推薦｜Marimba Real</h1>
 
 <p>想和各位音樂同好分享一款我最近覺得很有趣的樂器 App —— <strong>Marimba Real</strong>（如下圖紅框所示）：</p>
@@ -58,7 +77,7 @@
 </div>
 
 <h2>🎹 使用心得分享：</h2>
-<p>我自己本身是學鋼琴的（想看我彈鋼琴的朋友可以點進我的<a href="https://www.facebook.com/chris.chou.776839" target="_blank">臉書</a>），但由於這些打擊樂器的琴鍵排列和鋼琴一樣，所以蠻容易上手。</p>
+<p>我自己本身是學鋼琴的（想看我彈鋼琴的朋友可以在<a href="https://www.xiaohongshu.com/user/profile/64ef3ade000000000500110a?xhsshare=CopyLink&appuid=64ef3ade000000000500110a&apptime=1733489995&share_id=6a056f4bf121447c8feb695f29dc7b14&fbclid=IwY2xjawKgL-FleHRuA2FlbQIxMABicmlkETFkWEZTVTFETk9vVERPYzY0AR4r-4-LdQVRuH8PpLwtemnd9qbiTjA5aRa1le55FKIivhQMfKjgA0-9-Js58w_aem_fjyWHJVT-brGeHqZ5VKJcA" target="_blank">小紅書</a>上關注我），但由於這些打擊樂器的琴鍵排列和鋼琴一樣，所以蠻容易上手。</p>
 
 <p><strong>👉 優缺點簡評：</strong></p>
 <ul>
@@ -93,6 +112,12 @@
 
 <h2>🔔 總結：</h2>
 <p>對於習慣鋼琴鍵盤、但想嘗試打擊樂器音色的朋友來說，<strong>Marimba Real</strong> 是一款不錯的入門工具。如果你對馬林巴、木琴、管鐘等聲音感興趣，不妨也來玩玩看！</p>
-
+<hr>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二五年五月二十六日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
 </body>
 </html>
