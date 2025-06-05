@@ -60,6 +60,25 @@
             margin: 10px 0;
         }
     </style>
+    <style>
+        #comments > div {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .media-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center; /* 垂直置中 */
+            margin-top: 8px;
+        }
+        .media-wrapper img,
+        .media-wrapper video {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 <div id="google-translate-box">
@@ -176,6 +195,69 @@
 </section>
 <h2>🔔 總結：</h2>
 <p>對於習慣鋼琴鍵盤、但想嘗試打擊樂器音色的朋友來說，<strong>Marimba Real</strong> 是一款不錯的入門工具。如果你對馬林巴、木琴、管鐘等聲音感興趣，不妨也來玩玩看！</p>
+<form id="comment-form">
+    <input type="text" id="name" placeholder="你的名字" required />
+    <br />
+    <textarea id="message" placeholder="留言內容" required></textarea>
+    <br />
+    <label for="image">上傳圖片：</label>
+    <input type="file" id="image" accept="image/*" />
+    <br />
+    <label for="video">上傳影片：</label>
+    <input type="file" id="video" accept="video/*" />
+    <br />
+    <button type="submit">送出</button>
+</form>
+
+<hr />
+<h3>留言內容：</h3>
+<div id="comments"></div>
+
+<script>
+    document.getElementById('comment-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const imageFile = document.getElementById('image').files[0];
+        const videoFile = document.getElementById('video').files[0];
+
+        if (!name || !message) {
+            alert('請填寫名字和留言內容');
+            return;
+        }
+
+        const commentDiv = document.createElement('div');
+        commentDiv.innerHTML = `<p><strong>${name}</strong>: ${message}</p>`;
+
+        const mediaWrapper = document.createElement('div');
+        mediaWrapper.classList.add('media-wrapper');
+
+        if (imageFile) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(imageFile);
+            img.alt = '上傳的圖片';
+            mediaWrapper.appendChild(img);
+        }
+
+        if (videoFile) {
+            const video = document.createElement('video');
+            video.src = URL.createObjectURL(videoFile);
+            video.controls = true;
+            mediaWrapper.appendChild(video);
+        }
+
+        // 只有當有圖片或影片時才加 mediaWrapper
+        if (mediaWrapper.children.length > 0) {
+            commentDiv.appendChild(mediaWrapper);
+        }
+
+        document.getElementById('comments').appendChild(commentDiv);
+
+        this.reset();
+    });
+</script>
+<ul id="messages"></ul>
 <hr>
 <footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
     作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
