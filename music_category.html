@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>演奏曲目分類</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      line-height: 1.8;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    #google_translate_element {
+      top: 10px;  /* 距離頁面頂端 10px */
+      left: 10px; /* 距離頁面左側 10px */
+      z-index: 9999; /* 保證它不會被其他元素遮蓋 */
+    }
+    h1 {
+      color: #b22222;
+    }
+    .category-buttons {
+      margin-bottom: 20px;
+    }
+    .category-buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #b22222;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin: 0 5px;
+    }
+    .category-buttons button:hover {
+      background-color: #9b1c1c;
+    }
+    .video-list {
+      display: none;
+      margin-top: 20px;
+    }
+    .video-list.show {
+      display: block;
+    }
+    .video-list li {
+      margin-bottom: 10px;
+    }
+    video {
+      width: 100%;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+<div id="google-translate-box">
+  <div id="google_translate_element"></div>
+  <!-- Google Translate 的自動翻譯功能 -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'zh-TW',  // 頁面原語言
+        includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <p>點擊上方的語言選單以切換語言</p>
+</div>
+<h2><a href="index.html">回首頁</a></h2>
+<h1>🎶 演奏曲目分類</h1>
+
+<!-- 分類按鈕區域 -->
+<div class="category-buttons">
+  <button onclick="showCategory('jiangshi')">香港殭屍片配樂</button>
+  <button onclick="showCategory('armorHero')">鎧甲勇士配樂</button>
+  <button onclick="showCategory('ultraman')">超人力霸王配樂</button>
+  <button onclick="showCategory('superSentai')">超級戰隊配樂</button>
+  <button onclick="showCategory('kamenRider')">假面騎士配樂</button>
+  <button onclick="showCategory('tokusatsu')">東寶特攝配樂</button>
+  <button onclick="showCategory('others')">其他</button>
+</div>
+
+<!-- 每個分類的曲目列表 -->
+<section id="songs_played_on_marimba_real">
+  <p>🎧 以下是我演奏的曲目：</p>
+
+  <!-- 香港殭屍片配樂 -->
+  <div id="jiangshi" class="video-list">
+    <p>香港殭屍片配樂：</p>
+    <ol>
+      <li><strong>《鬼新娘》</strong><br><video controls><source src="鬼新娘.mp4"></video></li>
+      <li><strong>《殭屍先生》</strong><br><video controls><source src="殭屍先生.mp4"></video></li>
+      <li><strong>《殭屍先生-整蠱》</strong><br><video controls><source src="殭屍先生-整蠱.mp4"></video></li>
+      <li><strong>《一眉道人戰鬥曲》</strong><br><video controls><source src="一眉道人.mp4"></video></li>
+      <li><strong>《殭屍復活II》</strong><br><video controls><source src="殭屍復活II.mp4"></video></li>
+      <li><strong>《百鬼霧林》</strong><br><video controls><source src="百鬼霧林.mp4"></video></li>
+    </ol>
+  </div>
+
+  <!-- 鎧甲勇士配樂 -->
+  <div id="armorHero" class="video-list">
+    <p>鎧甲勇士配樂：</p>
+    <ol>
+      <li><strong>《光的戰役-女聲版》</strong><br><video controls><source src="光的戰役.mp4"></video></li>
+      <li><strong>《光的戰役》</strong><br><video controls><source src="光的戰役鋼琴版.mp4"></video></li>
+      <li><strong>《戰鬥-通往勝利》</strong><br><video controls><source src="戰鬥-通往勝利.mp4"></video></li>
+      <li><strong>《查理九世》</strong><br><video controls><source src="查理九世.mp4"></video></li>
+      <li><strong>《淡淡的愛意》</strong><br><video controls><source src="淡淡的愛意.mp4"></video></li>
+      <li><strong>《帝皇再臨》</strong><br><video controls><source src="帝皇再臨2.mp4"></video></li>
+      <li><strong>《帝皇再臨 抒情版》</strong><br><video controls><source src="帝皇再臨.mp4"></video></li>
+      <li><strong>《不敗的英雄》</strong><br><video controls><source src="不敗的英雄.mp4"></video></li>
+      <li><strong>《Just KO》</strong><br><video controls><source src="Just%20K.O%20.mp4"></video></li>
+    </ol>
+  </div>
+
+  <!-- 超人力霸王配樂 -->
+  <div id="ultraman" class="video-list">
+    <p>超人力霸王配樂：</p>
+    <ol>
+      <li><strong>《ウルトラマンの歌》</strong><br><video controls><source src="ウルトラマンの歌.mp4"></video></li>
+      <li><strong>《ウルトラセブンの歌》</strong><br><video controls><source src="ウルトラセブンの歌.mp4"></video></li>
+      <li><strong>《帰ってきたウルトラマンの歌》</strong><br><video controls><source src="帰ってきたウルトラマンの歌.mp4"></video></li>
+      <li><strong>《ウルトラマンエースの歌》</strong><br><video controls><source src="ultraman_ace.mp4"></video></li>
+      <li><strong>《ウルトラマンタロウの歌》</strong><br><video controls><source src="ウルトラマンタロウ.mp4"></video></li>
+      <li><strong>《ウルトラマンレオの歌》</strong><br><video controls><source src="ウルトラマンレオの歌.mp4"></video></li>
+      <li><strong>《Take Me Higher》</strong><br><video controls><source src="Take%20Me%20%20Higher.mp4"></video></li>
+      <li><strong>《Love Theme from Tiga》</strong><br><video controls><source src="Love_Theme_From_Tiga.mp4"></video></li>
+      <li><strong>《light of Humanity》</strong><br><video controls><source src="light_of_humanity.mp4"></video></li>
+      <li><strong>《君だけを守りたい》</strong><br><video controls><source src="君だけを守りたい.mp4"></video></li>
+      <li><strong>《Theme of Ultraman Gaia Fighting》</strong><br><video controls><source src="超人力霸王蓋亞至高戰鬥曲.mp4"></video></li>
+      <li><strong>《Spirit》</strong><br><video controls><source src="spirit.mp4"></video></li>
+      <li><strong>《Something You Can Do》</strong><br><video controls><source src="Something_You_Can_Do.mp4"></video></li>
+      <li><strong>《Eiyuu》</strong><br><video controls><source src="eiyuu.mp4"></video></li>
+      <li><strong>《ウルトラマンメビウスの歌》</strong><br><video controls><source src="ultraman_mebius.mp4"></video></li>
+      <li><strong>《ジードの証》</strong><br><video controls><source src="ジードの証.mp4"></video></li>
+    </ol>
+  </div>
+
+  <!-- 超級戰隊配樂 -->
+  <div id="superSentai" class="video-list">
+    <p>超級戰隊配樂：</p>
+    <ol>
+      <li><strong>《響きの調べ》</strong><br><video controls><source src="Hibiki_No_Shirabe.mp4"></video></li>
+      <li><strong>《ハリケンジャー参上》</strong><br><video controls><source src="ハリケンジャー参上.mp4"></video></li>
+      <li><strong>《幸せShaking Hands》</strong><br><video controls><source src="幸せShaking_Hands.mp4"></video></li>
+      <li><strong>《忍風シノビチェンジ》</strong><br><video controls><source src="ninpuu_shinobi_change.mp4"></video></li>
+    </ol>
+  </div>
+    <!-- 假面騎士配樂 -->
+    <div id="kamenRider" class="video-list">
+    <p>假面騎士配樂：</p>
+      <ol>
+        <li><strong>《仮面ライダークウガ》</strong><br><video controls><source src="仮面ライダークウガ.mp4"></video></li>
+        <li><strong>《Alive A Life》</strong><br><video controls><source src="Alive_A_Life.mp4"></video></li>
+      </ol>
+    </div>
+
+  <!-- 東寶特攝配樂 -->
+  <div id="tokusatsu" class="video-list">
+    <p>東寶特攝配樂：</p>
+    <strong>《Life Goes On》</strong><br><video controls><source src="Life_Goes_On.mp4"></video>
+  </div>
+
+  <!-- 其他 -->
+  <div id="others" class="video-list">
+    <p>其他：</p>
+    <ol>
+      <li><strong>《三星Galaxy 鈴聲 - 歸來》</strong><br><video controls><source src="samsung_galaxy_alarm_homecoming.mp4"></video></li>
+      <li><strong>《穿越時空的思念》</strong><br><video controls><source src="穿越時空的思念.mp4"></video></li>
+      <li><strong>《River Flows In You》</strong><br><video controls><source src="River_Flows_In_You.mp4"></video></li>
+      <li><strong>《好想大聲說喜歡你》</strong><br><video controls><source src="好想大聲說喜歡你.mp4"></video></li>
+      <li><strong>《斯斯感冒膠囊》</strong><br><video controls><source src="斯斯感冒膠囊.mp4"></video></li>
+      <li><strong>《益可膚》</strong><br><video controls><source src="益可膚.mp4"></video></li>
+      <li><strong>《收酒矸》</strong><br><video controls><source src="資源回收車音樂.mp4"></video></li>
+    </ol>
+  </div>
+</section>
+
+<script>
+  // 顯示/隱藏影片分類
+  function showCategory(category) {
+    // 隱藏所有分類
+    const categories = document.querySelectorAll('.video-list');
+    categories.forEach(function(item) {
+      item.classList.remove('show');
+    });
+
+    // 顯示被選中的分類
+    const selectedCategory = document.getElementById(category);
+    if (selectedCategory) {
+      selectedCategory.classList.add('show');
+    }
+  }
+</script>
+
+</body>
+</html>
