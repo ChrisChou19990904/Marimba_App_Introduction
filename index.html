@@ -219,23 +219,17 @@
 </section>
 <h2>🔔 總結：</h2>
 <p>對於習慣鋼琴鍵盤、但想嘗試打擊樂器音色的朋友來說，<strong>Marimba Real</strong> 是一款不錯的入門工具。如果你對馬林巴、木琴、管鐘等聲音感興趣，不妨也來玩玩看！</p>
-<form id="comment-form">
-    <input type="text" id="name" placeholder="你的名字" required />
-    <br />
-    <textarea id="message" placeholder="留言內容" required></textarea>
-    <br />
-    <label for="image">上傳圖片：</label>
-    <input type="file" id="image" accept="image/*" />
-    <br />
-    <label for="video">上傳影片：</label>
-    <input type="file" id="video" accept="video/*" />
-    <br />
-    <button type="submit">送出</button>
-</form>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
+</script>
 
-<hr />
-<h3>留言內容：</h3>
-<div id="comments"></div>
+<div class="fb-comments"
+     data-href="https://chrischou19990904.github.io/harp_app_introduction"
+     data-width="100%"
+     data-numposts="5">
+</div>
+
 
 <script>
     document.getElementById('comment-form').addEventListener('submit', function (e) {
