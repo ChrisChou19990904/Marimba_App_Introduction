@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Marimba Real開發技術介紹</title>
+    <style>
+        body {
+            font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+            line-height: 1.8;
+            margin: 2em auto;
+            max-width: 850px;
+            padding: 0 1em;
+            background: #f9f9f9;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #444;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.6em;
+            text-align: left;
+        }
+        th {
+            background-color: #efefef;
+        }
+        code {
+            background: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .note {
+            background: #fffce6;
+            border-left: 4px solid #ffb400;
+            padding: 1em;
+            margin: 1.5em 0;
+        }
+        #google_translate_element {
+            top: 10px;  /* 距離頁面頂端 10px */
+            left: 10px; /* 距離頁面左側 10px */
+            z-index: 9999; /* 保證它不會被其他元素遮蓋 */
+        }
+        header {
+            background-color: pink;
+            padding: 10px 0;
+        }
+        nav {
+            text-align: center;
+        }
+        nav a {
+            color: black;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<header><nav><a href="index.html">首頁</a><a href="music_category.html">🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a><a href="quantity_of_my_songs.html">我的曲目記憶表（52 首）</a></nav></header>
+<h1>🎹 Marimba Real - 技術原理與架構推測（非官方）</h1>
+
+<p>這是我在深入使用《Marimba Real》應用程式後，針對它的 <strong>操作邏輯、功能實現方式與可能的開發技術架構</strong> 所做的整理與推測，目的是幫助自己與其他有興趣製作類似樂器 App 的人理解背後的可能實作邏輯。</p>
+
+<div class="note">
+    📌 <strong>注意：</strong>本文為非官方技術分析，根據實際操作與使用行為做出的合理推論，無法保證與原開發者完全一致。
+</div>
+
+<h2>🧩 App 類型與核心功能</h2>
+<table>
+    <tr><th>類別</th><th>說明</th></tr>
+    <tr><td>樂器類型</td><td>擬真馬林巴琴（Marimba）打擊樂器</td></tr>
+    <tr><td>操作介面</td><td>多區塊觸控感應，模擬琴鍵排列</td></tr>
+    <tr><td>核心功能</td><td>多點觸控演奏、即時音效播放、擬真鍵盤排列、打擊動態感應（疑似）</td></tr>
+</table>
+
+<h2>🔊 聲音播放與處理（推測）</h2>
+<table>
+    <tr><th>功能面向</th><th>推測技術或實現方式</th></tr>
+    <tr><td>音效來源</td><td>每個音符一個獨立的聲音 sample（.wav 或 .mp3）</td></tr>
+    <tr><td>聲音播放引擎</td><td>使用低延遲的聲音 API，如 iOS 的 <code>AVAudioEngine</code> 或 Android 的 <code>SoundPool</code> / <code>OpenSL ES</code></td></tr>
+    <tr><td>延遲處理</td><td>音效預先加載（preload），避免觸發時載入延遲</td></tr>
+    <tr><td>同音播放</td><td>支援相同音符連打時建立新的播放通道（避免被中斷）</td></tr>
+</table>
+
+<h2>✋ 觸控操作細節（推測）</h2>
+<table>
+    <tr><th>特性</th><th>描述與觀察</th></tr>
+    <tr><td>多點觸控支援</td><td>可同時敲擊多個音符，表現和聲或和弦</td></tr>
+    <tr><td>滑動操作反應</td><td>滑動經過多個鍵也會觸發相對應音效</td></tr>
+    <tr><td>視覺反饋</td><td>每個琴鍵會在按下時短暫變色或閃爍（模擬物理反饋）</td></tr>
+    <tr><td>音量動態調整？</td><td>未觀察到力度變化，可能不支援 velocity sensitivity</td></tr>
+</table>
+
+<h2>🎛️ UI / UX 設計特點</h2>
+<ul>
+    <li>琴鍵排列仿實體 Marimba（多層排列）</li>
+    <li>支援橫向全螢幕顯示，更接近真實打擊感</li>
+    <li>使用簡化視覺風格，不追求高度寫實，而是偏重操作性</li>
+</ul>
+
+<h2>🛠️ 開發上可能用到的技術</h2>
+<table>
+    <tr><th>平台</th><th>技術（推測）</th></tr>
+    <tr><td>iOS</td><td>Swift / Objective‑C + AVFoundation / AudioKit</td></tr>
+    <tr><td>Android</td><td>Java / Kotlin + SoundPool / NDK / OpenSL ES</td></tr>
+    <tr><td>跨平台可能性</td><td>Unity / Cocos2d-x 亦有可能</td></tr>
+</table>
+
+<h2>🧠 學習與參考價值</h2>
+<p>這款 App 對我來說的學習價值：</p>
+<ul>
+    <li>清楚感受到音效延遲的重要性</li>
+    <li>發現 UI 設計與觸控區反應細節，對於操作體驗的影響極大</li>
+    <li><strong>提醒我：簡單好用比炫技更重要</strong></li>
+</ul>
+
+<h2>🎬 我的實作與演奏分享</h2>
+<p>📁 點這裡查看我用 Marimba Real 彈奏的 32 首作品與影片：<br>
+    👉 <a href="index.html">/marimba-real-recordings</a></p>
+
+<h2>✅ 後續計畫</h2>
+<ul>
+    <li>製作自己的簡易 Marimba 網頁版（HTML + JS）</li>
+    <li>嘗試使用 AudioKit 或 Web Audio API 模擬馬林巴鍵盤</li>
+    <li>寫一篇完整教學「如何做一個打擊樂器 App」</li>
+</ul>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二五年五月二十六日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+</body>
+</html>
