@@ -51,7 +51,7 @@
             padding: 10px 0;
         }
         nav {
-            text-align: center;
+            text-align: left;
         }
         nav a {
             color: black;
@@ -80,7 +80,15 @@
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <p>點擊上方的語言選單以切換語言</p>
 </div>
-<header><nav><a href="index.html">首頁</a><a href="music_category.html">🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a><a href="quantity_of_my_songs.html">我的曲目記憶表（52 首）</a></nav></header>
+<header>
+    <nav>
+        <ul>
+        <li><a href="index.html">首頁</a></li>
+        <li><a href="music_category.html">演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
+        <li><a href="quantity_of_my_songs.html">我的曲目記憶表（52 首）</a></li>
+        </ul>
+    </nav>
+</header>
 <h1>🎹 Marimba Real - 技術原理與架構推測（非官方）</h1>
 
 <p>這是我在深入使用《Marimba Real》應用程式後，針對它的 <strong>操作邏輯、功能實現方式與可能的開發技術架構</strong> 所做的整理與推測，目的是幫助自己與其他有興趣製作類似樂器 App 的人理解背後的可能實作邏輯。</p>
