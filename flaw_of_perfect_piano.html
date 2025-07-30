@@ -32,6 +32,19 @@
             color: #d35400;
         }
 
+        .supplementary-info {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin-top: 40px;
+        }
+
+        .supplementary-info h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #2980b9;
+        }
+
         @media (max-width: 600px) {
             body {
                 margin: 20px;
@@ -63,25 +76,6 @@
 </p>
 
 <p>
-    這裡的&lt;video&gt;元素是HTML中一個用來播放視頻的標籤，讓你可以在網頁上嵌入和播放各種視頻檔案。透過這個元素，我們可以像觀看YouTube影片那樣直接在網頁內播放視頻。不過，有時候，視頻格式或解析度等技術問題會影響其播放效果，就像這次《Perfect Piano》的問題一樣。
-</p>
-
-<p>
-    如果你將影片文件上傳到專案中，必須在&lt;video&gt;元素裡使用&lt;source&gt;來指定影片的路徑。比如，假設你的影片檔案叫做`example.mp4`並放在專案的`videos`資料夾中，代碼會是：
-</p>
-<pre>
-&lt;video controls&gt;
-    &lt;source src="videos/example.mp4" type="video/mp4"&gt;
-    &lt;source src="videos/example.ogv" type="video/ogg"&gt;
-    您的瀏覽器不支援影片播放。
-&lt;/video&gt;
-</pre>
-
-<p>
-    如果影片存放在外部伺服器上，也可以提供完整的URL來引入影片。這樣，瀏覽器就會根據指定的路徑來尋找並播放影片。
-</p>
-
-<p>
     這個問題其實來自於視覺回饋的呈現。在《Perfect Piano》裡，當按下琴鍵時，畫面只顯示琴鍵被按下去的結果，但並沒有顯示手指觸摸或按壓的過程，這使得視覺回饋比較不清楚，使用者無法直觀地看到觸發動作的細節。相比之下，《Marimba Real》則展示了琴槌敲擊琴鍵的動畫，這樣的視覺回饋能夠更清楚地告訴使用者每個動作是如何發生的，增加了互動的直覺性。
 </p>
 
@@ -93,8 +87,30 @@
     所以，我覺得這個看似單純的播放問題，實際上也可以作為一個例子，幫助大家更了解在數位音樂背後，計算機科學技術所扮演的重要角色。
 </p>
 
+<!-- 補充說明區塊 -->
+<div class="supplementary-info">
+    <h2>補充說明：如何使用 HTML 的 <code>&lt;video&gt;</code> 元素</h2>
+    <p>
+        這裡的&lt;video&gt;元素是HTML中一個用來播放視頻的標籤，讓你可以在網頁上嵌入和播放各種視頻檔案。透過這個元素，我們可以像觀看YouTube影片那樣直接在網頁內播放視頻。不過，有時候，視頻格式或解析度等技術問題會影響其播放效果，就像這次《Perfect Piano》的問題一樣。
+    </p>
+    <p>
+        如果你將影片文件上傳到專案中，必須在&lt;video&gt;元素裡使用&lt;source&gt;來指定影片的路徑。比如，假設你的影片檔案叫做`example.mp4`並放在專案的`videos`資料夾中，代碼會是：
+    </p>
+    <pre>
+    &lt;video controls&gt;
+        &lt;source src="videos/example.mp4" type="video/mp4"&gt;
+        &lt;source src="videos/example.ogv" type="video/ogg"&gt;
+        您的瀏覽器不支援影片播放。
+    &lt;/video&gt;
+    </pre>
+    <p>
+        如果影片存放在外部伺服器上，也可以提供完整的URL來引入影片。這樣，瀏覽器就會根據指定的路徑來尋找並播放影片。
+    </p>
+</div>
+
 </body>
 </html>
+
 
 
 
