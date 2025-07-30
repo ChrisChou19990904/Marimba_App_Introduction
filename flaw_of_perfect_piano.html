@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>數位樂器與計算機科學</title>
+    <style>
+        body {
+            font-family: "Noto Sans TC", "微軟正黑體", sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-indent: 2em;
+        }
+
+        strong {
+            color: #d35400;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 20px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<h1>數位樂器與計算機科學</h1>
+
+<p>
+    在我錄製《Perfect Piano》的操作影片時，使用的是手機內建的螢幕錄影功能，影片本身聲音和畫面都是正常的。
+    不過，當我把影片上傳到WebStorm的個人專案並透過HTML的&lt;video&gt;元素播放時，<strong>聲音有出來，但畫面卻沒辦法正確顯示琴鍵被按下去的觸控動畫</strong>。
+</p>
+
+<p>
+    這個問題其實來自於視覺回饋的呈現。在《Perfect Piano》裡，當按下琴鍵時，畫面只顯示琴鍵被按下去的結果，但並沒有顯示手指觸摸或按壓的過程，這使得視覺回饋比較不清楚，使用者無法直觀地看到觸發動作的細節。相對來說，《Marimba Real》則展示了琴槌敲擊琴鍵的動畫，這樣的視覺回饋能夠更清楚地告訴使用者每個動作是如何發生的，增加了互動的直覺性。
+</p>
+
+<p>
+    這可能是因為手機錄下來的影片使用的是 HEVC（H.265）壓縮格式，這種格式在播放時需要較高的解碼能力，因此畫面可能無法順利顯示。另外，《Perfect Piano》中的動畫變化比較複雜，畫面更新頻率較高，也加重了播放器的負擔，這可能是造成畫面顯示不完全的原因。
+</p>
+
+<p>
+    相較之下，《Marimba Real》的畫面設計比較簡單且清楚，動畫不複雜，錄出來的影片在HTML檔案裡播放時就沒有這個問題。
+</p>
+
+<p>
+    總的來說，這個小插曲提醒我們，數位樂器的體驗除了聲音輸出外，還包括觸控回饋、畫面反應、以及多媒體資料的壓縮與播放等多個層面，而這些細節其實都是<strong>計算機科學的一部分</strong>。
+</p>
+
+<p>
+    所以，我覺得這個看似單純的播放問題，實際上也可以作為一個例子，幫助大家更了解在數位音樂背後，計算機科學技術所扮演的重要角色。
+</p>
+</body>
+</html>
+
