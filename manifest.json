@@ -1,0 +1,21 @@
+{
+  "name": "Marimba App",
+  "short_name": "Marimba",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#A47CCB",
+  "description": "馬林巴介紹與推廣平台",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

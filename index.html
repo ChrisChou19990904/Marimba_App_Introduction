@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>樂器 App 推薦｜Marimba Real</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#A47CCB">
     <style>
         body {
             font-family: "Microsoft JhengHei", sans-serif;
@@ -253,6 +255,17 @@
 
 
 <script>
+        if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("service-worker.js")
+                .then((reg) => {
+                    console.log("✅ Service Worker registered:", reg);
+                })
+                .catch((err) => {
+                    console.error("❌ Service Worker registration failed:", err);
+                });
+        });
+    }
     document.getElementById('comment-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
