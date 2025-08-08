@@ -87,6 +87,27 @@
         a:visited {
             color: #2980b9;
         }
+        @media (max-width: 768px) {
+            footer {
+                padding: 10px;
+                text-align: center; /* 讓文字居中對齊 */
+            }
+
+            footer img {
+                max-width: 100%; /* 確保圖片不會超過容器寬度 */
+                height: auto;    /* 保持圖片比例 */
+            }
+            a{
+                color: #2980b9;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            a:visited {
+                color: #2980b9;
+            }
+        }
     </style>
     <style>
         #comments > div {
@@ -128,7 +149,7 @@
     <nav>
         <ul>
         <li><a href="music_category.html">演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
-        <li><a href="quantity_of_my_songs.html">我的曲目記憶表（53 首）</a></li>
+        <li><a href="quantity_of_my_songs.html">我的曲目記憶表（54 首）</a></li>
         <li><a href="process_of_developing_the_app.html">Marimba Real開發技術介紹</a></li>
         <li><a href="process_of_developing_perfect_piano.html">Perfect Piano開發技術介紹</a></li>
         </ul>
@@ -213,7 +234,7 @@
     <p><em><video controls><source src="perfect_piano_tutorial.mp4"></video></em></p>
 </div>
 <section id="songs_played_on_perfect_piano">
-<p>以下是我用《Perfect Piano》彈奏的十三段旋律影片，大家也可以參考一下：</p>
+<p>以下是我用《Perfect Piano》彈奏的十四段旋律影片，大家也可以參考一下：</p>
 <ol class="video-list">
     <li id="armor_hero_typical_ost"><strong>《戰鬥-通往勝利》</strong><br><video controls><source src="戰鬥-通往勝利-鋼琴版.mp4"></video></li>
     <li><strong>《帝皇再臨 完美鋼琴版》（Perfect Piano提供的音域更廣，因此終止式更豐富，然後伴奏的部分也多加一些修飾）</strong><br><video controls><source src="帝皇再臨鋼琴版.mp4"></video></li>
@@ -228,6 +249,7 @@
     <li><strong>《一笑江湖》</strong><br><video controls><source src="一笑江湖.mp4"></video></li>
     <li id="inuyasha"><strong>《穿越時空的思念》</strong><br><video controls><source src="穿越時空的思念_日本箏.mp4"></video></li>
     <li><strong>《幻化成風》（此為《貓的報恩》主題曲，後來被梁靜茹改編成《小手拉大手》）</strong><br><video controls><source src="幻化成風.mp4"></video></li>
+<li><strong>《夜幕下的旅途》（此為知名轉珠遊戲《神魔之塔》插曲，作曲者為Alan Ng）</strong><br><video controls><source src="夜幕下的旅途.mp4"></video></li>
 </ol>
     <p>註：想知道播放《Something You Can Do》這段旋律的影片為何會出現視覺回饋與聲音不連貫的問題，可以點入下方的連結：<br>
         <a href="flaw_of_perfect_piano.html" target="_blank">數位樂器與計算機科學</a>

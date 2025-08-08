@@ -67,6 +67,16 @@
     nav a:hover {
       text-decoration: underline;
     }
+    a{
+      color: #2980b9;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #2980b9;
+    }
     @media (max-width: 768px) {
       footer {
         padding: 10px;
@@ -87,16 +97,6 @@
       a:visited {
         color: #2980b9;
       }
-    }
-    a{
-      color: #2980b9;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    a:visited {
-      color: #2980b9;
     }
   </style>
 </head>
@@ -120,7 +120,7 @@
   <nav>
     <ul>
     <li><a href="index.html">首頁</a></li>
-    <li><a href="quantity_of_my_songs.html">我的曲目記憶表（53 首）</a></li>
+    <li><a href="quantity_of_my_songs.html">我的曲目記憶表（54 首）</a></li>
     <li><a href="process_of_developing_the_app.html">Marimba Real開發技術介紹</a></li>
       <li><a href="process_of_developing_perfect_piano.html">Perfect Piano開發技術介紹</a></li>
     </ul>
@@ -140,6 +140,7 @@
   <button onclick="showCategory('Advertisement')">廣告配樂</button>
     <button onclick="showCategory('alarm_song')">系統提示配樂</button>
   <button onclick="showCategory('tiktok_music')">抖音神曲</button>
+    <button onclick="showCategory('game_music')">電玩配樂</button>
 </div>
 
 <!-- 每個分類的曲目列表 -->
@@ -262,6 +263,13 @@
     </ol>
   </div>
 
+  <div id="game_music" class="video-list">
+    <p>電玩配樂：</p>
+    <ul>
+      <li><strong>《夜幕下的旅途》</strong><br><video controls><source src="夜幕下的旅途.mp4"></video></li>
+    </ul>
+
+  </div>
 </section>
 
 <script>
