@@ -21,31 +21,26 @@
     h1 {
       color: #b22222;
     }
-    .category-buttons {
-      margin-bottom: 20px;
-    }
-    .category-buttons button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #b22222;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin: 0 5px;
-    }
-    .category-buttons button:hover {
-      background-color: #9b1c1c;
-    }
     .video-list {
       display: none;
       margin-top: 20px;
     }
+
     .video-list.show {
       display: block;
     }
-    .video-list li {
-      margin-bottom: 10px;
+
+    .category-dropdown {
+      margin-bottom: 20px;
+    }
+
+    .category-dropdown select {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
     video {
       width: 100%;
@@ -129,18 +124,22 @@
 <h1>🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</h1>
 
 <!-- 分類按鈕區域 -->
-<div class="category-buttons">
-  <button onclick="showCategory('Jiangshi')">香港殭屍片配樂</button>
-  <button onclick="showCategory('Armor_Hero')">鎧甲勇士配樂</button>
-  <button onclick="showCategory('Ultraman')">超人力霸王配樂</button>
-  <button onclick="showCategory('Super_Sentai')">超級戰隊配樂</button>
-  <button onclick="showCategory('Kamen_Rider')">假面騎士配樂</button>
-  <button onclick="showCategory('Other_Tokusatsu')">其他特攝配樂</button>
-  <button onclick="showCategory('Anime')">動畫配樂</button>
-  <button onclick="showCategory('Advertisement')">廣告配樂</button>
-    <button onclick="showCategory('alarm_song')">系統提示配樂</button>
-  <button onclick="showCategory('tiktok_music')">抖音神曲</button>
-    <button onclick="showCategory('game_music')">電玩配樂</button>
+<div class="category-dropdown">
+  <label for="categorySelect">選擇分類：</label>
+  <select id="categorySelect" onchange="showCategory(this.value)">
+    <option value="">請選擇分類</option>
+    <option value="Jiangshi">香港殭屍片配樂</option>
+    <option value="Armor_Hero">鎧甲勇士配樂</option>
+    <option value="Ultraman">超人力霸王配樂</option>
+    <option value="Super_Sentai">超級戰隊配樂</option>
+    <option value="Kamen_Rider">假面騎士配樂</option>
+    <option value="Other_Tokusatsu">其他特攝配樂</option>
+    <option value="Anime">動畫配樂</option>
+    <option value="Advertisement">廣告配樂</option>
+    <option value="alarm_song">系統提示配樂</option>
+    <option value="tiktok_music">抖音神曲</option>
+    <option value="game_music">電玩配樂</option>
+  </select>
 </div>
 
 <!-- 每個分類的曲目列表 -->
@@ -274,7 +273,6 @@
 </section>
 
 <script>
-  // 顯示/隱藏影片分類
   function showCategory(category) {
     // 隱藏所有分類
     const categories = document.querySelectorAll('.video-list');
