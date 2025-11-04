@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML 與 Vue 的結構差異說明（含三種架構示意圖）</title>
+    <style>
+        body {
+            font-family: "Noto Sans TC", sans-serif;
+            background-color: #f9fafc;
+            color: #333;
+            margin: 2em;
+            line-height: 1.8;
+        }
+        h1, h2, h3 {
+            color: #1e70bf;
+        }
+        code {
+            background-color: #f1f3f5;
+            color: #c7254e;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: "JetBrains Mono", monospace;
+        }
+        pre {
+            background-color: #f4f6f8;
+            padding: 10px;
+            border-left: 4px solid #4a90e2;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e6f2ff;
+        }
+        .highlight {
+            background-color: #fff7e6;
+            padding: 8px;
+            border-left: 4px solid #ffb84d;
+        }
+        .diagram {
+            margin: 2em 0;
+            text-align: center;
+        }
+        svg {
+            max-width: 90%;
+            height: auto;
+        }
+        .intro-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+        a{
+            color: #2980b9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<h1>HTML 與 Vue 的結構差異說明（含三種架構示意圖）</h1>
+<div class="intro-box">
+    <p>此頁面是為了說明本專案中名為<a href="music_category.html" target="_blank">演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a>的頁面及與其為原形而開發的<a href="https://chrischou19990904.github.io/music-site">Vue.js框架版本</a>的差異</p>
+</div>
+<p>
+    傳統 HTML 是單一靜態檔案，而 Vue 採用「<strong>組件化 (Component-based)</strong>」的動態架構。
+    Vue 又可分為兩種主要開發形式：多檔案的標準專案架構，以及單一檔案的 Vue 組件（SFC）。
+</p>
+
+<h2>一、HTML：單檔式靜態結構</h2>
+
+<p>傳統 HTML 把所有內容都放在同一個檔案中，簡單但不易維護。</p>
+
+<div class="diagram">
+    <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="100" y="20" width="200" height="160" rx="10" ry="10" fill="#dceeff" stroke="#1e70bf" stroke-width="2"/>
+        <text x="200" y="50" text-anchor="middle" font-size="16" fill="#1e70bf">index.html</text>
+        <rect x="130" y="70" width="140" height="30" fill="#fff" stroke="#1e70bf" stroke-dasharray="4,2"/>
+        <text x="200" y="90" text-anchor="middle" font-size="13">HTML 結構</text>
+        <rect x="130" y="105" width="140" height="30" fill="#fff" stroke="#1e70bf" stroke-dasharray="4,2"/>
+        <text x="200" y="125" text-anchor="middle" font-size="13">CSS 樣式</text>
+        <rect x="130" y="140" width="140" height="30" fill="#fff" stroke="#1e70bf" stroke-dasharray="4,2"/>
+        <text x="200" y="160" text-anchor="middle" font-size="13">JavaScript</text>
+    </svg>
+    <p><em>▲ 傳統 HTML：所有內容集中在單一檔案中。</em></p>
+</div>
+
+<h2>二、Vue 專案：組件化、多檔結構</h2>
+
+<p>
+    Vue 將畫面切成多個「組件 (Component)」，每個組件有自己的
+    <code>&lt;template&gt;</code>、<code>&lt;script&gt;</code>、<code>&lt;style&gt;</code> 區塊。
+</p>
+
+<div class="diagram">
+    <svg width="600" height="280" xmlns="http://www.w3.org/2000/svg">
+        <!-- index.html -->
+        <rect x="20" y="30" width="120" height="60" rx="6" ry="6" fill="#dceeff" stroke="#1e70bf" stroke-width="2"/>
+        <text x="80" y="65" text-anchor="middle" font-size="13" fill="#1e70bf">index.html</text>
+
+        <!-- main.js -->
+        <rect x="170" y="30" width="120" height="60" rx="6" ry="6" fill="#dceeff" stroke="#1e70bf" stroke-width="2"/>
+        <text x="230" y="65" text-anchor="middle" font-size="13" fill="#1e70bf">main.js</text>
+
+        <!-- App.vue -->
+        <rect x="320" y="20" width="200" height="80" rx="6" ry="6" fill="#fff7e6" stroke="#ff9900" stroke-width="2"/>
+        <text x="420" y="45" text-anchor="middle" font-size="13" fill="#ff9900">App.vue</text>
+
+        <!-- 子組件 -->
+        <rect x="340" y="120" width="160" height="40" rx="4" ry="4" fill="#e6ffe6" stroke="#00aa44" stroke-width="1.5"/>
+        <text x="420" y="143" text-anchor="middle" font-size="12">Header.vue</text>
+
+        <rect x="340" y="170" width="160" height="40" rx="4" ry="4" fill="#e6ffe6" stroke="#00aa44" stroke-width="1.5"/>
+        <text x="420" y="193" text-anchor="middle" font-size="12">TableView.vue</text>
+
+        <rect x="340" y="220" width="160" height="40" rx="4" ry="4" fill="#e6ffe6" stroke="#00aa44" stroke-width="1.5"/>
+        <text x="420" y="243" text-anchor="middle" font-size="12">Footer.vue</text>
+
+        <!-- arrows -->
+        <line x1="140" y1="60" x2="170" y2="60" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)" />
+        <line x1="290" y1="60" x2="320" y2="60" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)" />
+        <line x1="420" y1="100" x2="420" y2="120" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)" />
+
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#999" />
+            </marker>
+        </defs>
+    </svg>
+    <p><em>▲ Vue 標準專案架構：App.vue 為主組件，下方有多個子組件。</em></p>
+</div>
+
+<h2>三、單檔 Vue 組件（Single File Component, SFC）</h2>
+
+<p>
+    Vue 也能以「單一檔案」的方式存在，即一個 <code>.vue</code> 檔中同時包含
+    HTML、CSS、與 JavaScript，方便快速展示或教學使用。
+</p>
+
+<div class="diagram">
+    <svg width="500" height="250" xmlns="http://www.w3.org/2000/svg">
+        <rect x="100" y="30" width="300" height="190" rx="8" ry="8" fill="#fff7e6" stroke="#ff9900" stroke-width="2"/>
+        <text x="250" y="55" text-anchor="middle" font-size="15" fill="#ff9900">App.vue</text>
+
+        <rect x="130" y="70" width="240" height="40" fill="#fff" stroke="#ff9900" stroke-dasharray="4,2"/>
+        <text x="250" y="93" text-anchor="middle" font-size="13">&lt;template&gt; HTML 結構 &lt;/template&gt;</text>
+
+        <rect x="130" y="115" width="240" height="40" fill="#fff" stroke="#ff9900" stroke-dasharray="4,2"/>
+        <text x="250" y="138" text-anchor="middle" font-size="13">&lt;script&gt; 邏輯 &lt;/script&gt;</text>
+
+        <rect x="130" y="160" width="240" height="40" fill="#fff" stroke="#ff9900" stroke-dasharray="4,2"/>
+        <text x="250" y="183" text-anchor="middle" font-size="13">&lt;style scoped&gt; 樣式 &lt;/style&gt;</text>
+    </svg>
+    <p><em>▲ 單檔 Vue 組件 (SFC)：結構、邏輯與樣式集中於同一檔案。</em></p>
+</div>
+
+<h2>四、三種開發模式比較</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>類型</th>
+        <th>檔案結構</th>
+        <th>特性</th>
+        <th>適用情境</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>傳統 HTML</td>
+        <td>單一檔案</td>
+        <td>靜態、簡單、無狀態綁定</td>
+        <td>靜態頁面、簡單展示</td>
+    </tr>
+    <tr>
+        <td>Vue 標準專案</td>
+        <td>多檔案（App.vue + main.js + components）</td>
+        <td>模組化、支援 reactivity、維護性高</td>
+        <td>正式開發專案</td>
+    </tr>
+    <tr>
+        <td>單檔 Vue 組件 (SFC)</td>
+        <td>單一 .vue 檔</td>
+        <td>簡潔、可展示、支援 Vue 語法</td>
+        <td>教學、範例、Demo</td>
+    </tr>
+    </tbody>
+</table>
+
+<p class="highlight">
+    ✅ <strong>總結：</strong><br>
+    - <strong>HTML</strong> 是靜態文件導向，強調結構；<br>
+    - <strong>Vue 標準專案</strong> 是組件化開發，強調模組化與資料驅動；<br>
+    - <strong>單檔 Vue 組件</strong> 則是簡化版的 Vue，用於快速展示與教學。<br>
+</p>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二五年十一月五日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
+</script>
+
+<div class="fb-comments"
+     data-href="https://chrischou19990904.github.io/harp_app_introduction"
+     data-width="100%"
+     data-numposts="5">
+</div>
+</body>
+</html>

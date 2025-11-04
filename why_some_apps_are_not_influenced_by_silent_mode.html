@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>為何有些應用程式的聲音會受靜音影響？</title>
+    <style>
+        body {
+            font-family: "Noto Sans TC", sans-serif;
+            line-height: 1.8;
+            background-color: #f7f8fa;
+            color: #333;
+            margin: 2em;
+        }
+        h1, h2, h3 {
+            color: #0055a5;
+        }
+        header {
+            background-color: pink;
+            padding: 10px 0;
+        }
+        nav {
+            text-align: left;
+        }
+        .intro-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #eef2f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.95em;
+            color: #c7254e;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e5f1fb;
+        }
+        a{
+            color: #2980b9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<header>
+    <nav>
+        <ul>
+            <li><strong class="guide">本頁內容：</strong><br>
+                <a>為何有些應用程式的聲音會受靜音影響？</a></li>
+            <li><strong class="guide">其他文章連結：</strong>
+                <ol>
+                    <li><a href="index.html" target="_blank"> 樂器 App 推薦｜Marimba Real與Perfect Piano</a></li>
+                    <li><a href="music_category.html" target="_blank">演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
+                    <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（59 首）</a></li>
+                    <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+                    <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+                </ol>
+        </ul>
+    </nav>
+</header>
+<h1>為何有些應用程式的聲音會受靜音影響？</h1>
+<div class="intro-box">
+    <p>我創建這個頁面是因為我之前使用<strong>Perfect Piano</strong>、<strong>Marimba Real</strong>、<strong>Harp Real</strong>這三款數位樂器演奏時，發現第一款不受靜音模式影響但後兩者卻受靜音模式影響。</p>
+    <p>因此，在透過螢幕錄影錄製演奏過程時，使用<strong>Perfect Piano</strong>錄製的影片不會被訊息通知聲打斷，而<strong>Harp Real</strong>與<strong>Marimba Real</strong>則會在錄影過程中被訊息通知聲中斷。</p>
+    <p>所以創建本頁面的目的是向各位說明為何會有這種現象以及這背後的計算機科學原理。</p>
+
+</div>
+<p>
+    在智慧型手機上，不同應用程式的聲音行為會依照它們使用的
+    <strong>音訊通道（Audio Session / Audio Stream）</strong> 而有所不同。
+    這些通道由作業系統（如 <strong>iOS</strong> 或 <strong>Android</strong>）提供，用來告訴系統「這個聲音的重要程度」。
+</p>
+
+<h2>一、iOS 的音訊類別 (<code>AVAudioSessionCategory</code>)</h2>
+
+<p>
+    在 iOS 中，每個 App 播放音訊時都需設定 <code>AVAudioSession</code> 的「類別」，
+    不同類別會決定是否受靜音開關（Mute Switch）影響。
+</p>
+
+<table>
+    <thead>
+    <tr><th>音訊類別</th><th>用途</th><th>是否受靜音影響</th></tr>
+    </thead>
+    <tbody>
+    <tr><td><code>AVAudioSessionCategoryAmbient</code></td><td>背景音效、遊戲環境音</td><td>✅ 會靜音</td></tr>
+    <tr><td><code>AVAudioSessionCategorySoloAmbient</code></td><td>需獨占聲音但尊重靜音</td><td>✅ 會靜音</td></tr>
+    <tr><td><code>AVAudioSessionCategoryPlayback</code></td><td>音樂、影片播放</td><td>❌ 不受靜音影響</td></tr>
+    <tr><td><code>AVAudioSessionCategoryPlayAndRecord</code></td><td>通話、錄音</td><td>❌ 不受靜音影響</td></tr>
+    </tbody>
+</table>
+
+<h2>二、Android 的音訊串流 (<code>AudioManager.STREAM_*</code>)</h2>
+
+<p>
+    Android 系統使用「音訊串流 (Audio Stream Types)」的概念，
+    每一種串流代表不同的音訊類型與優先權。
+</p>
+
+<table>
+    <thead>
+    <tr><th>串流類型</th><th>用途</th><th>是否受靜音模式影響</th></tr>
+    </thead>
+    <tbody>
+    <tr><td><code>STREAM_MUSIC</code></td><td>音樂、影片、遊戲</td><td>✅ 受靜音與音量控制影響</td></tr>
+    <tr><td><code>STREAM_ALARM</code></td><td>鬧鐘</td><td>❌ 不受靜音影響</td></tr>
+    <tr><td><code>STREAM_RING</code></td><td>來電鈴聲</td><td>❌ 或部分受控</td></tr>
+    <tr><td><code>STREAM_NOTIFICATION</code></td><td>通知音效</td><td>✅ / ❌ 視勿擾設定</td></tr>
+    <tr><td><code>STREAM_SYSTEM</code></td><td>系統提示音</td><td>✅ 通常受控</td></tr>
+    </tbody>
+</table>
+
+<h2>三、實際案例分析：三款數位樂器 App</h2>
+
+<ul>
+    <li><strong>Perfect Piano</strong>
+        使用了 <code>AVAudioSessionCategoryPlayback</code>（iOS）或 <code>STREAM_MUSIC</code>（Android），
+        屬於「主動媒體播放」。因此：
+        <ul>
+            <li>🔊 不受靜音開關影響</li>
+            <li>📹 錄影時聲音不會被通知打斷</li>
+        </ul>
+    </li>
+
+    <li><strong>Harp Real</strong> 與 <strong>Marimba Real</strong>
+        可能使用了 <code>AVAudioSessionCategoryAmbient</code> 或 <code>STREAM_SYSTEM</code>。
+        這些通道被系統視為「背景音效」，因此：
+        <ul>
+            <li>🔇 在靜音模式下會被靜音</li>
+            <li>📱 錄影時若有通知音（例如訊息），演奏聲會被中斷</li>
+        </ul>
+    </li>
+</ul>
+
+<h2>四、通知中斷的技術原因</h2>
+<p>
+    當系統接收到通知時，它會暫時佔用 <code>STREAM_NOTIFICATION</code> 或 <code>STREAM_RING</code> 通道。
+    若應用程式的聲音也使用這些受控串流，系統就會「暫停或壓低」該 App 音量，導致錄影時聽見訊息聲。
+</p>
+
+<h2>五、解決方案</h2>
+
+<ol>
+    <li><strong>啟用「勿擾模式」</strong>：在錄影前開啟勿擾模式，防止通知音打斷。</li>
+    <li><strong>使用錄影 App 鎖定音訊焦點</strong>：例如 AZ Screen Recorder、Mobizen，可設定只錄製媒體音。</li>
+    <li><strong>開發層面修正</strong>：開發者可指定正確的音訊類別：
+        <pre><code>// Android 範例
+audioManager.setStreamType(AudioManager.STREAM_MUSIC);
+
+// iOS 範例
+try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)</code></pre>
+    </li>
+</ol>
+
+<h2>六、總結</h2>
+<p>
+    應用程式是否受靜音開關影響，取決於開發者選用的音訊通道：
+</p>
+
+<table>
+    <thead>
+    <tr><th>平台</th><th>控制機制</th><th>主要影響因素</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>iOS</td><td><code>AVAudioSessionCategory</code></td><td>開發者設定的音訊類別</td></tr>
+    <tr><td>Android</td><td><code>AudioManager.STREAM_*</code></td><td>指定的音訊串流類型</td></tr>
+    </tbody>
+</table>
+
+<p>
+    因此，像 <strong>Perfect Piano</strong> 這樣使用「播放類別」的應用不受靜音影響；
+    而 <strong>Harp Real</strong>、<strong>Marimba Real</strong> 則使用「環境音」通道，導致靜音或通知中斷。
+</p>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二五年十一月五日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
+</script>
+
+<div class="fb-comments"
+     data-href="https://chrischou19990904.github.io/harp_app_introduction"
+     data-width="100%"
+     data-numposts="5">
+</div>
+</body>
+</html>
