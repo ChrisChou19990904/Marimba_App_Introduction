@@ -61,6 +61,30 @@
         a:visited {
             color: #2980b9;
         }
+        @media (max-width: 768px) {
+            footer {
+                padding: 10px;
+                text-align: center; /* 讓文字居中對齊 */
+            }
+
+            footer img {
+                max-width: 100%; /* 確保圖片不會超過容器寬度 */
+                height: auto;    /* 保持圖片比例 */
+            }
+            a{
+                color: #2980b9;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            a:visited {
+                color: #2980b9;
+            }
+            iframe{
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -157,6 +181,8 @@
             <li>🔊 不受靜音開關影響</li>
             <li>📹 錄影時聲音不會被通知打斷</li>
         </ul>
+        影片示範：<br>
+        <iframe width="410" height="730" src="https://www.youtube.com/embed/SYQ4eKXKNvk" title="铠甲勇士拿瓦主题曲 Just K.O MIDI录制 #铠甲勇士 #特摄 #特摄剧 #特撮ソング #midi #perfectpiano" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
 
     <li><strong>Harp Real</strong> 與 <strong>Marimba Real</strong>
