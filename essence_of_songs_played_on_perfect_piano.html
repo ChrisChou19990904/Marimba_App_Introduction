@@ -10,6 +10,13 @@
     left: 10px; /* 距離頁面左側 10px */
     z-index: 9999; /* 保證它不會被其他元素遮蓋 */
   }
+  header {
+    background-color: pink;
+    padding: 10px 0;
+  }
+  nav {
+    text-align: left;
+  }
   a{
     color: #2980b9;
     text-decoration: none;
@@ -20,7 +27,17 @@
   a:visited {
     color: #2980b9;
   }
+  video{
+    max-width: 80%;
+    height: auto;
+    border:solid 10px red;
+  }
   @media (max-width: 768px) {
+    video{
+      max-width: 80%;
+      height: auto;
+      border:solid 10px red;
+    }
     footer {
       padding: 10px;
       text-align: center; /* 讓文字居中對齊 */
@@ -58,6 +75,27 @@
   <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <p>點擊上方的語言選單以切換語言</p>
 </div>
+<header>
+  <nav>
+    <div class="hamburger" id="hamburger"></div>
+    <ul>
+      <li><strong>本頁內容：<br></strong>
+        <a>Perfect Piano演奏精華</a></li>
+      <li id="menu"><strong>其他文章連結：</strong><br>
+        <ol>
+          <li><a href="index.html" target="_blank">首頁</a></li>
+          <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
+          <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
+          <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
+          <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（59 首）</a></li>
+          <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+          <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+          <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
+        </ol>
+      </li>
+    </ul>
+  </nav>
+</header>
 <ol class="video-list">
   <li><strong>《戰鬥-通往勝利》</strong><br><video controls><source src="戰鬥-通往勝利-鋼琴版.mp4"></video></li>
   <li><strong>《帝皇再臨 完美鋼琴版》</strong><br><video controls><source src="帝皇再臨鋼琴版.mp4"></video></li>
@@ -70,7 +108,7 @@
   <li><strong>《影となりて悪を討つ》</strong><br><video controls><source src="影となりて悪をうつ.mp4"></video></li>
   <li><strong>《Alive A Life》</strong><br><video controls><source src="alive_a_life_piano_tutorial.mp4"></video></li>
   <li><strong>《Life Goes On》</strong><br><video controls><source src="life-goes-on.mp4"></video></li>
-  <li><strong>《魔弾戦記リュウケンドー》</strong><br><video controls><source src="ryukendo_piano.mp4"></video></li>
+  <li><strong>《魔弾戦記リュウケンドー》</strong><br><video controls><source src="madan_senki_ryukendo.mp4"></video></li>
   <li><strong>《一笑江湖》</strong><br><video controls><source src="一笑江湖.mp4"></video></li>
   <li><strong>《穿越時空的思念》</strong><br><video controls><source src="穿越時空的思念_日本箏.mp4"></video></li>
   <li><strong>《哀歌》</strong><br><video controls><source src="elegy.mp4"></video></li>

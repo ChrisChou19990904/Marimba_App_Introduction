@@ -26,9 +26,11 @@
             background-color: #f9f9f9;
             margin: 10px 0;
         }
-        .video-list {
-            margin-top: 20px;
+        video{
+            max-width: 80%;
+            border:solid 10px red;
         }
+
         .video-list li {
             margin-bottom: 8px;
         }
@@ -43,27 +45,8 @@
             background-color: #f9f9f9;
             margin: 10px 0;
         }
-        #songs_played_on_marimba_real{
-            border: 1px solid #ccc;
-            padding: 8px;
-            background-color: #f9f9f9;
-            margin: 10px 0;
-        }
-        #songs_played_on_perfect_piano{
-            border: 1px solid #ccc;
-            padding: 8px;
-            background-color: #f9f9f9;
-            margin: 10px 0;
-        }
-        #songs_played_on_the_real_piano{
-            border: 1px solid #ccc;
-            padding: 8px;
-            background-color: #f9f9f9;
-            margin: 10px 0;
-        }
         header {
             background-color: pink;
-            padding: 10px 0;
         }
         nav {
             text-align: left;
@@ -78,7 +61,64 @@
         a:visited {
             color: #2980b9;
         }
+        #menu {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+        }
+        /* 當菜單被打開時，menu 顯示 */
+        #menu.active {
+            display: flex;
+        }
+
+        .hamburger {
+            display: block;  /* 確保顯示 */
+            cursor: pointer;
+            font-size: 30px;
+            color: black;
+            position: absolute;
+            right: 20px;  /* 正確放置 */
+            top: 15px;
+        }
+
+        .hamburger.active::before {
+            content: '\00d7';  /* 叉叉符號 */
+        }
+
+        .hamburger::before {
+            content: '\2630';  /* 三條橫線符號 */
+            font-size: 30px;
+            color: black;
+            display: block;
+            text-align: center;
+        }
+        #comments > div {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .media-wrapper img,
+        .media-wrapper video {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 4px;
+        }
         @media (max-width: 768px) {
+            #menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            /* 顯示漢堡選單按鈕 */
+            .hamburger {
+                display: block;  /* 在手機端顯示 */
+            }
+
+            /* 顯示菜單項目（當漢堡選單被點擊時） */
+            #menu.active {
+                display: flex;
+            }
             footer {
                 padding: 10px;
                 text-align: center; /* 讓文字居中對齊 */
@@ -98,25 +138,10 @@
             a:visited {
                 color: #2980b9;
             }
-        }
-    </style>
-    <style>
-        #comments > div {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-        .media-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: center; /* 垂直置中 */
-            margin-top: 8px;
-        }
-        .media-wrapper img,
-        .media-wrapper video {
-            max-width: 200px;
-            max-height: 150px;
-            border-radius: 4px;
+            video{
+                max-width: 80%;
+                border:solid 10px red;
+            }
         }
     </style>
 </head>
@@ -138,23 +163,37 @@
 </div>
 <header>
     <nav>
-        <ul>
-            <li><strong class="guide">本頁內容：</strong><br>
-                <a>🎵 樂器 App 推薦｜Marimba Real與Perfect Piano</a></li>
-            <li><strong class="guide">其他文章連結：</strong>
-                <ol>
+        <div class="hamburger" id="hamburger"></div>
+                <ol id="menu">
+                    <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real演奏精華</a></li>
+                    <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
+                    <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
                     <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
                     <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（59 首）</a></li>
                     <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
                     <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
                     <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
                 </ol>
-        </ul>
     </nav>
 </header>
-<h1>🎵 樂器 App 推薦｜Marimba Real與Perfect Piano</h1>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.getElementById('hamburger');
+        const menu = document.getElementById('menu');
 
-<p>想和各位音樂同好分享一款我最近覺得很有趣的樂器 App —— <strong>Marimba Real</strong>（如下圖紅框所示）：</p>
+        hamburger.addEventListener('click', function() {
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+    });
+</script>
+<h1>我的音樂表演</h1>
+<p>我建立此GitHubPages專案的目的是為了向各位展示我在音樂演奏方面的才華。</p>
+<p>此頁面為首頁，主題是簡單介紹Marimba Real與Perfect Piano兩款數位樂器的使用方式與使用後的心得感想。</p>
+<p>想進入其他主題的連結，請點右上方的三條線。</p>
+<h2>🎵 樂器 App 推薦｜Marimba Real與Perfect Piano</h2>
+
+<p>我要先和各位音樂介紹一款我覺得很有趣的樂器 App —— <strong>Marimba Real</strong>（如下圖紅框所示）：</p>
 
 <div class="screenshot">
     <p>📱 Marimba Real App 畫面：</p>
@@ -175,7 +214,7 @@
     <p><em><video controls><source src="marimba_app.mp4"></video></em></p>
 </div>
 
-<h2>🎹 使用心得分享：</h2>
+<h3>🎹 使用心得分享：</h3>
 <p>我自己本身是學鋼琴的（想看我彈鋼琴的朋友可以在<a href="https://www.xiaohongshu.com/user/profile/64ef3ade000000000500110a?xhsshare=CopyLink&appuid=64ef3ade000000000500110a&apptime=1733489995&share_id=6a056f4bf121447c8feb695f29dc7b14&fbclid=IwY2xjawKgL-FleHRuA2FlbQIxMABicmlkETFkWEZTVTFETk9vVERPYzY0AR4r-4-LdQVRuH8PpLwtemnd9qbiTjA5aRa1le55FKIivhQMfKjgA0-9-Js58w_aem_fjyWHJVT-brGeHqZ5VKJcA" target="_blank">小紅書</a>上關注我），但由於這些打擊樂器的琴鍵排列和鋼琴一樣，所以蠻容易上手。</p>
 
 <p><strong>👉 優缺點簡評：</strong></p>
@@ -183,119 +222,11 @@
     <li><strong>優點：</strong> 琴鍵面積大、不容易誤觸，適合彈奏旋律與簡易合奏。</li>
     <li><strong>缺點：</strong> 琴鍵數量少，不利於多八度跨越與複雜雙手演奏，有時伴奏與旋律會「搶鍵」。</li>
 </ul>
-
-<p>相較之下，另一款名為《<a href="#perfect_piano">Perfect Piano</a>》的樂器App允許顯示更多琴鍵，更適合完整雙手演奏，且在靜音模式下也能發出聲音，但音域過大時會導致琴鍵鍵較小並且容易彈錯音。</p>
-<section id="songs_played_on_marimba_real">
-<h2>🎧 彈奏影片分享：</h2>
-<p>以下是我用 Marimba Real 彈奏的三十六段旋律影片，歡迎大家收聽🎶：</p>
-
-<ol class="video-list">
-    <li><strong>《殭屍復活II》（此旋律出自香港電影《殭屍家族》）</strong><br><video controls><source src="殭屍復活II.mp4"></video></li>
-    <li><strong>《一眉道人戰鬥曲》（此旋律出自林正英自導自演的電影《<a href="https://vt.tiktok.com/ZSkLRMvXn/" target="_blank">一眉道人</a>》，我也有上傳<a href="#vampire_vs_vampire">實體鋼琴</a>的版本）</strong><br><video controls><source src="一眉道人.mp4"></video></li>
-    <li><strong>《百鬼霧林》（此旋律出自香港電影《新殭屍先生》中經典的紅白雙煞片段）</strong><br><video controls><source src="百鬼霧林.mp4"></video></li>
-    <li><strong>《光的戰役-女聲版》（此旋律改編自《鎧甲勇士光影傳奇》片尾曲《<a href="#armor_hero_bgm_battle_of_light">光的戰役</a>》）</strong><br><video controls><source src="光的戰役.mp4"></video></li>
-    <li><strong>《戰鬥-通往勝利》（此旋律為《鎧甲勇士光影傳奇》插入曲，透過C大調呈現，我也有上傳《<a href="#armor_hero_typical_ost">Perfect Piano</a>》的版本）</strong><br><video controls><source src="戰鬥-通往勝利.mp4"></video></li>
-    <li><strong>《查理九世》（此旋律為《戰鬥-通往勝利》之抒情版，且透過G大調呈現，我也有上傳<a href="#the_road_toward_victory">實體鋼琴</a>的版本）</strong><br><video controls><source src="查理九世.mp4"></video></li>
-    <li><strong>《淡淡的愛意》（此旋律為《鎧甲勇士光影傳奇》插入曲，我也有上傳<a href="#armor_hero_ost">實體鋼琴</a>的版本）</strong><br><video controls><source src="淡淡的愛意.mp4"></video></li>
-    <li><strong>《帝皇再臨 正常版》（此旋律為《鎧甲勇士之帝皇俠》插入曲，我也有上傳<a href="#armor_hero_emperor_a_major">實體鋼琴的版本</a>）</strong><br><video controls><source src="帝皇再臨2.mp4"></video></li>
-    <li><strong>《帝皇再臨 抒情版》（此旋律為《鎧甲勇士之帝皇俠》插入曲，我也有上傳<a href="#armor_hero_emperor">實體鋼琴</a>的版本）</strong><br><video controls><source src="帝皇再臨.mp4"></video></li>
-    <li><strong>《不敗的英雄》（此旋律為《鎧甲勇士刑天》主題曲，我也有上傳《<a href="#invincible_hero">Perfect Piano</a>》的版本和<a href="#armor-hero-xt">實體鋼琴</a>的版本）</strong><br><video controls><source src="不敗的英雄.mp4"></video></li>
-    <li><strong>《Just K.O》（此旋律為《鎧甲勇士拿瓦》主題曲，我也有上傳<a href="#armor-hero-lava">實體鋼琴</a>的版本）</strong><br><video controls><source src="Just%20K.O%20.mp4"></video></li>
-    <li><strong>《ウルトラセブンの歌》（此旋律為《超人七號》主題曲）</strong><br><video controls><source src="ウルトラセブンの歌.mp4"></video></li>
-    <li><strong>《帰ってきたウルトラマンの歌》（此旋律為《歸來的超人力霸王》主題曲，我也有上傳<a href="#ultraman_jack">實體鋼琴</a>的版本）</strong><br><video controls><source src="帰ってきたウルトラマンの歌.mp4"></video></li>
-    <li><strong>《ウルトラマンレオの歌》（此旋律為《超人力霸王雷歐》主題曲，我也有上傳<a href="#ultraman_leo">實體鋼琴</a>的版本）</strong><br><video controls><source src="ウルトラマンレオの歌.mp4"></video></li>
-    <li><strong>《Take Me Higher》（此旋律為《超人力霸王迪卡》主題曲）</strong><br><video controls><source src="Take%20Me%20%20Higher.mp4"></video></li>
-    <li><strong>《Love Theme From Tiga》（此旋律為《超人力霸王迪卡》插入曲，改編自其主題曲《Take Me Higher》。不過兩者的差別在於，《Take Me Higher》是熱血風格且演奏過程是A大調再轉成升F大調，而《Love Theme From Tiga》是悲壯風格且演奏過程是C大調再轉成A大調）</strong><br><video controls><source src="Love_Theme_From_Tiga.mp4"></video></li>
-    <li><strong>《君だけを守りたい》（此旋律為《超人力霸王帝納》片尾曲，翻成中文為"只想守護你"，我也有上傳<a href="#ultraman_dyna">實體鋼琴</a>的版本）</strong><br><video controls><source src="君だけを守りたい.mp4"></video></li>
-    <li><strong>《Theme of Ultraman Gaia Fighting Easy Version》</strong><br><video controls><source src="超人力霸王蓋亞至高戰鬥曲.mp4"></video></li>
-    <li><strong>《悲しみの沼》（此旋律為《超人力霸王蓋亞》第三十九話插入曲，翻成中文為"悲傷的沼澤"，我也有上傳<a href="#kanashimi_no_numa">實體鋼琴</a>的版本）</strong><br><video controls><source src="悲傷的沼澤.mp4"></video></li>
-    <li><strong>《Spirit》（此旋律為《超人力霸王高斯》主題曲，不過我也有上傳《<a href="#ultraman_cosmos_theme">perfect piano</a>》版本與<a href="#ultraman_cosmos_op">實體鋼琴</a>版本到這個專案中，且這兩個版本還包含前奏，不過後者的伴奏有點不一樣就是了）</strong><br><video controls><source src="spirit_marimba.mp4"></video></li>
-    <li><strong>《Something You Can Do》（此旋律為《超人力霸王高斯》片尾曲，原名為"君にできるなにか"）</strong><br><video controls><source src="Something_You_Can_Do.mp4"></video></li>
-    <li><strong>《ジードの証》（此旋律為《超人力霸王捷德》主題曲，我也有上傳<a href="#geed-no-akashi">實體鋼琴</a>的版本）</strong><br><video controls><source src="ジードの証.mp4"></video></li>
-    <li><strong>《ハリケンジャー参上》（此旋律為《忍風戰隊破裏劍者》主題曲）</strong><br><video controls><source src="ハリケンジャー参上.mp4"></video></li>
-    <li><strong>《幸せShaking Hands》（此旋律為《忍風戰隊破裏劍者》第三十話插入曲）</strong><br><video controls><source src="幸せShaking_Hands.mp4"></video></li>
-    <li><strong>《仮面ライダークウガ》（此旋律為《假面騎士空我》主題曲）</strong><br><video controls><source src="仮面ライダークウガ.mp4"></video></li>
-    <li><strong>《Alive A Life》（此旋律為《假面騎士龍騎》主題曲，我還有上傳《<a href="#alive-a-life">perfect piano</a>》版本與<a href="#alive_a_life">實體鋼琴</a>版本）</strong><br><video controls><source src="alive_a_life_marimba.mp4"></video></li>
-    <li><strong>《Life Goes On》（此旋律為《超星神格蘭賽沙》主題曲，我還有上傳《<a href="#life-goes-on">perfect piano</a>》版本）</strong><br><video controls><source src="Life_Goes_On.mp4"></video></li>
-    <li><strong>《魔弾戦記リュウケンドー》（此旋律為《魔彈戰記龍劍道》主題曲，我也有上傳《<a href="#ryukendo">perfect piano</a>》版本）</strong><br><video controls><source src="魔弾戦記リュウケンドー.mp4"></video></li>
-    <li><strong>《好想大聲說喜歡你》（此旋律為《灌籃高手》主題曲）</strong><br><video controls><source src="君が好きだと叫びたい.mp4"></video></li>
-    <li><strong>《穿越時空的思念》（此旋律出自動畫電影《犬夜叉：穿越時空的思念》，我也有上傳《<a href="#inuyasha">perfect piano</a>》版本與<a href="#inuyasha_piano">實體鋼琴</a>的版本）</strong><br><video controls><source src="穿越時空的思念.mp4"></video></li>
-    <li><strong>《哀歌》（此旋律出自動畫《犬夜叉》，我也有上傳《<a href="#elegy">perfect piano</a>》版本）</strong><br><video controls><source src="elegy_marimba.mp4"></video></li>
-    <li><strong>《Samsung Galaxy Ringtone - Homecoming》</strong><br><video controls><source src="samsung_galaxy_alarm_homecoming.mp4"></video></li>
-    <li><strong>《感冒用斯斯》</strong><br><video controls><source src="感冒用斯斯.mp4"></video></li>
-    <li><strong>《收酒矸》</strong><br><video controls><source src="資源回收車音樂.mp4"></video></li>
-    <li><strong>《綠油精》</strong><br><video controls><source src="綠油精.mp4"></video></li>
-    <li><strong>《全家便利商店新鈴聲》</strong><br><video controls><source src="全家便利商店新鈴聲.mp4"></video></li>
-</ol>
-</section>
+<p>📱 講解完Marimba Real後，接下來是《Perfect Piano》的部分 —— 如我剛才所說，不管你是否把手機調成靜音模式，它都能彈出聲音。與此同時它也能像《Marimba Real》一樣選擇音色，而且音色種類與可以跨的八度範圍更廣，同時還有單排模式、雙排模式、對彈模式（如下影片所示）：</p>
 <div id="perfect_piano">
-    <p>📱 講解完Marimba Real後，接下來是《Perfect Piano》的部分 —— 如我剛才所說，不管你是否把手機調成靜音模式，它都能彈出聲音。與此同時它也能像《Marimba Real》一樣選擇音色，而且音色種類與可以跨的八度範圍更廣，同時還有單排模式、雙排模式、對彈模式（如下影片所示）：</p>
     <p><em><video controls><source src="perfect_piano_tutorial.mp4"></video></em></p>
 </div>
-<section id="songs_played_on_perfect_piano">
-<p>以下是我用《Perfect Piano》彈奏的十八段旋律影片，大家也可以參考一下：</p>
-<ol class="video-list">
-    <li id="armor_hero_typical_ost"><strong>《戰鬥-通往勝利》</strong><br><video controls><source src="戰鬥-通往勝利-鋼琴版.mp4"></video></li>
-    <li><strong>《帝皇再臨 完美鋼琴版》（Perfect Piano提供的音域更廣，因此終止式更豐富，然後伴奏的部分也多加一些修飾）</strong><br><video controls><source src="帝皇再臨鋼琴版.mp4"></video></li>
-    <li id="invincible_hero"><strong>《不敗的英雄》</strong><br><video controls><source src="不敗的英雄-完美鋼琴.mp4"></video></li>
-    <li><strong>《Ultraman Ace Theme Song》</strong><br><video controls><source src="ultraman_ace.mp4"></video></li>
-    <li><strong>《奇蹟再現》（此為超人力霸王迪卡的中文版主題曲，我也有上傳<a href="#ultraman_tiga">實體鋼琴</a>的版本）</strong><br><video controls><source src="奇蹟再現.mp4"></video></li>
-    <li id="ultraman_cosmos_theme"><strong>《Spirit》</strong><br><video controls><source src="spirit_perfectpiano.mp4"></video></li>
-    <li><strong>《Something You Can Do Piano Tutorial Easy》（我這部影片在<a href="http://xhslink.com/m/6kGZx9lCagX" target="_blank">小紅書</a>上獲得四十幾個讚與二十幾個收藏）</strong><br><video controls><source src="something_you_can_do_piano_tutorial.mp4"></video></li>
-    <li><strong>《Ultraman Mebius Theme Song》（我也有上傳<a href="#ultraman_mebius">實體鋼琴</a>的版本）</strong><br><video controls><source src="ultraman_mebius.mp4"></video></li>
-    <li><strong>《影となりて悪を討つ》（此旋律為《忍風戰隊破裏劍者》插入曲）</strong><br><video controls><source src="影となりて悪をうつ.mp4"></video></li>
-    <li id="alive-a-life"><strong>《Alive A Life》（我是用雙排模式彈奏，其中上排為主旋律，下排為伴奏）</strong><br><video controls><source src="alive_a_life_piano_tutorial.mp4"></video></li>
-    <li id="life-goes-on"><strong>《Life Goes On》</strong><br><video controls><source src="life-goes-on.mp4"></video></li>
-    <li id="ryukendo"><strong>《魔弾戦記リュウケンドー》</strong><br><video controls><source src="ryukendo_piano.mp4"></video></li>
-    <li><strong>《一笑江湖》</strong><br><video controls><source src="一笑江湖.mp4"></video></li>
-    <li id="inuyasha"><strong>《穿越時空的思念》</strong><br><video controls><source src="穿越時空的思念_日本箏.mp4"></video></li>
-    <li id="elegy"><strong>《哀歌》</strong><br><video controls><source src="elegy.mp4"></video></li>
-    <li><strong>《幻化成風》（此為《貓的報恩》主題曲，後來被梁靜茹改編成《小手拉大手》）</strong><br><video controls><source src="幻化成風.mp4"></video></li>
-<li><strong>《夜幕下的旅途》（此為知名轉珠遊戲《神魔之塔》插曲，作曲者為Alan Ng）</strong><br><video controls><source src="夜幕下的旅途.mp4"></video></li>
-    <li><strong>《Way Back Home》</strong><br><video controls><source src="way_back_home.mp4"></video></li>
-</ol>
-    <p>註：想知道播放《Something You Can Do》這段旋律的影片為何會出現視覺回饋與聲音不連貫的問題，可以點入下方的連結：<br>
-        <a href="flaw_of_perfect_piano.html" target="_blank">數位樂器與計算機科學</a>
-    </p>
-</section>
-<section id="songs_played_on_the_real_piano">
-    <p>註：為了向各位展示我在真實鋼琴上的彈奏水平，我也彈奏了以下三十二首我認為很好聽的旋律，各位也可以聆聽</p>
-    <ol class="video-list">
-        <li><strong>《鬼新娘》</strong><br><video controls><source src="鬼新娘.mp4"></video></li>
-        <li><strong>《殭屍先生》（此旋律出自同名電影《殭屍先生》中，九叔與四目道長合力制伏殭屍的片段）</strong><br><video controls><source src="殭屍先生.mp4"></video></li>
-        <li><strong>《殭屍先生-整蠱》</strong><br><video controls><source src="殭屍先生-整蠱.mp4"></video></li>
-        <li id="vampire_vs_vampire"><strong>《一眉道人戰鬥曲》</strong><br><video controls><source src="一眉道人鋼琴版.mp4"></video></li>
-        <li id="armor_hero_ost"><strong>《淡淡的愛意》</strong><br><video controls><source src="淡淡的愛意_實體鋼琴.mp4"></video></li>
-        <li id="armor_hero_bgm_battle_of_light"><strong>《光的戰役》</strong><br><video controls><source src="光的戰役鋼琴版.mp4"></video></li>
-        <li id="the_road_toward_victory"><strong>《查理九世》</strong><br><video controls><source src="查理九世鋼琴版.mp4"></video></li>
-        <li id="armor_hero_emperor_a_major"><strong>《帝皇再臨》</strong><br><video controls><source src="帝皇再臨A大調實體鋼琴演奏.mp4"></video></li>
-        <li id="armor_hero_emperor"><strong>《帝皇再臨 治癒版》</strong><br><video controls><source src="帝皇再臨實體鋼琴版.mp4"></video></li>
-        <li id="armor-hero-xt"><strong>《不敗的英雄》</strong><br><video controls><source src="不敗的英雄-鋼琴.mp4"></video></li>
-        <li id="armor-hero-lava"><strong>《Just K.O》</strong><br><video controls><source src="Just-Ko-Piano.mp4"></video></li>
-        <li><strong>《ウルトラマンの歌》（此旋律為《初代超人力霸王》主題曲）</strong><br><video controls><source src="ウルトラマンの歌.mp4"></video></li>
-        <li><strong>《遊星から来た兄弟　勝利》（此旋律為《初代超人力霸王》插入曲）</strong><br><video controls><source src="勝利.mp4"></video></li>
-        <li id="ultraman_jack"><strong>帰ってきたウルトラマンの歌</strong><br><video controls><source src="帰ってきたウルトラマンの歌ーピアノ.mp4"></video></li>
-        <li><strong>《ウルトラマンタロウの歌》（此旋律為《超人力霸王太郎》主題曲）</strong><br><video controls><source src="ウルトラマンタロウ.mp4"></video></li>
-        <li id="ultraman_leo"><strong>《ウルトラマンレオの歌》</strong><br><video controls><source src="ultraman_leo.mp4"></video></li>
-        <li id="ultraman_tiga"><strong>《奇蹟再現》</strong><br><video controls><source src="奇蹟再現鋼琴版.mp4"></video></li>
-        <li><strong>《The Light of Humanity》（此旋律為《超人力霸王迪卡》插入曲）</strong><br><video controls><source src="light_of_humanity.mp4"></video></li>
-        <li><strong>《光を継ぐもの》（此旋律為《超人力霸王迪卡》插入曲）</strong><br><video controls><source src="光を継ぐもの.mp4"></video></li>
-        <li id="ultraman_dyna"><strong>《君だけを守りたい》</strong><br><video controls><source src="君だけを守りたいーピアノ.mp4"></video></li>
-        <li id="kanashimi_no_numa"><strong>《悲しみの沼》</strong><br><video controls><source src="悲しみの沼.mp4"></video></li>
-        <li id="ultraman_cosmos_op"><strong>《Spirit》</strong><br><video controls><source src="spirit.mp4"></video></li>
-        <li><strong>《Eiyuu》（此旋律為《超人力霸王納克斯》主題曲）</strong><br><video controls><source src="eiyuu.mp4"></video></li>
-        <li id="ultraman_mebius"><strong>《Ultraman Mebius Theme Song》</strong><br><video controls><source src="ultraman_mebius_op.mp4"></video></li>
-        <li><strong>《ウルトラの奇跡》</strong><br><video controls><source src="ウルトラの奇跡.mp4"></video></li>
-        <li id="geed-no-akashi"><strong>《ジードの証》</strong><br><video controls><br><source src="geed_no_akashi.mp4"></video></li>
-        <li><strong>《Hibiki No Shirabe》（此旋律為《百獸戰隊牙吠連者》插入曲）</strong><br><video controls><source src="Hibiki_No_Shirabe.mp4"></video></li>
-        <li id="alive_a_life"><strong>《Alive A Life》</strong><br><video controls><source src="Alive_A_Life.mp4"></video></li>
-        <li id="inuyasha_piano"><strong>《穿越時空的思念》</strong><br><video controls><source src="穿越時空的思念降B大調實體鋼琴演奏.mp4"></video></li>
-        <li><strong>《River Flows In You》</strong><br><video controls><source src="River_Flows_In_You.mp4"></video></li>
-        <li><strong>《益可膚》</strong><br><video controls><source src="益可膚.mp4"></video></li>
-        <li><strong>《中華民國軍樂：下課號》</strong><br><video controls><source src="中華民國軍樂_下課號.mp4"></video></li>
-    </ol>
-</section>
-<h2>🔔 總結：</h2>
+<h3>🔔 總結：</h3>
 <p>對於習慣鋼琴鍵盤但想嘗試打擊樂器音色的朋友來說，<strong>Marimba Real</strong> 是一款不錯的入門工具。如果你對馬林巴、木琴、管鐘等聲音感興趣，不妨也來玩玩看！<br>當然，如果你想接觸更多音色且在更廣的音域下彈奏，<strong>Perfect Piano</strong>也是不錯的選擇！</p>
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous"
