@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 與多頁 HTML 架構差異說明</title>
+    <style>
+        body {
+            font-family: "Noto Sans TC", sans-serif;
+            line-height: 1.8;
+            background-color: #fafafa;
+            color: #333;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        code, pre {
+            background-color: #f4f4f4;
+            border-radius: 4px;
+            padding: 8px;
+            display: block;
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #e8e8e8;
+        }
+        ul {
+            list-style: disc;
+            margin-left: 1.5em;
+        }
+        .highlight {
+            background: #eef8ff;
+            padding: 6px 10px;
+            border-left: 4px solid #3498db;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<header>
+    <nav>
+        <ul>
+            <li><strong class="guide">本頁內容：</strong><br>
+                <a>Vue 與多頁 HTML 架構的差異與對應</a></li>
+            <li><strong class="guide">其他文章連結：</strong>
+                <ol>
+                    <li><a href="index.html" target="_blank">首頁</a></li>
+                    <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
+                    <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
+                    <li><a href="flaw_of_perfect_piano.html" target="_blank">數位樂器出現畫面與聲音不連貫的原因探討</a></li>
+                    <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
+                    <li><a href="music_category.html" target="_blank">演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
+                    <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（59 首）</a></li>
+                    <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+                    <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+                    <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
+                    <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
+                </ol>
+        </ul>
+    </nav>
+</header>
+<h1>Vue 與多頁 HTML 架構的差異與對應</h1>
+<div class="intro-box">
+    <p>此頁面是根據本專案中名為<a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a>的頁面延伸出來的教學筆記，可供想做前端的朋友們參考。</p>
+</div>
+<div class="highlight">
+    <p><strong>結論先說：</strong>
+        Vue 裡面多檔案（多 <code>.vue</code>） ≠ 傳統 HTML 的「多頁面」。
+        Vue 採用的是單頁應用（SPA）架構，用多個 <code>view</code> 元件取代多個 HTML 檔案。</p>
+</div>
+
+<h2>一、傳統 HTML 網站 vs Vue 應用（SPA）</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>項目</th>
+        <th>傳統 HTML 網站</th>
+        <th>Vue 應用（SPA）</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>檔案結構</td>
+        <td>每個頁面是一個 <code>.html</code> 檔案</td>
+        <td>整個網站通常只有一個 <code>index.html</code></td>
+    </tr>
+    <tr>
+        <td>導覽方式</td>
+        <td><code>&lt;a href="page2.html"&gt;</code></td>
+        <td><code>&lt;router-link to="/page2"&gt;</code></td>
+    </tr>
+    <tr>
+        <td>頁面刷新</td>
+        <td>每次重新載入整個頁面</td>
+        <td>不會重新載入，只切換「視圖」</td>
+    </tr>
+    <tr>
+        <td>組件數量</td>
+        <td>每個 HTML 為獨立頁面</td>
+        <td>一個頁面可由多個 Vue 元件組成</td>
+    </tr>
+    <tr>
+        <td>維護方式</td>
+        <td>分頁維護、結構分散</td>
+        <td>集中式管理、邏輯統一</td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>二、Vue 專案的常見結構</h2>
+
+<pre><code>src/
+├─ App.vue                # 主框架 (共用導覽列、頁尾)
+├─ main.js                # 入口
+├─ router/
+│   └─ index.js           # 路由設定
+├─ views/                 # 各個「頁面」
+│   ├─ HomeView.vue
+│   ├─ AboutView.vue
+│   ├─ ContactView.vue
+│   └─ ProductView.vue
+└─ components/            # 可重用的元件
+    ├─ Navbar.vue
+    └─ Footer.vue
+</code></pre>
+
+<h2>三、Vue Router：Vue 的「多頁面導航系統」</h2>
+
+<p>在傳統網站中：</p>
+<pre><code>&lt;a href="page2.html" target="_blank"&gt;開新頁&lt;/a&gt;</code></pre>
+
+<p>在 Vue 中：</p>
+<pre><code>&lt;router-link to="/page2" target="_blank"&gt;開新頁&lt;/router-link&gt;</code></pre>
+
+<p>在 <code>router/index.js</code> 中設定對應頁面：</p>
+<pre><code>import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import Page2View from '../views/Page2View.vue'
+
+const routes = [
+  { path: '/', component: HomeView },
+  { path: '/page2', component: Page2View },
+]
+
+export default createRouter({
+  history: createWebHistory(),
+  routes
+})
+</code></pre>
+
+<h2>四、是否需要「很多 Vue 檔案」？</h2>
+<p>若你的專案原本有 10 個 HTML 頁面，那在 Vue 裡通常會有：</p>
+<ul>
+    <li>10 個「頁面元件（views）」；</li>
+    <li>若有共用區塊（例如下拉式谷歌翻譯、導覽列、頁尾、臉書留言外掛、社群轉貼分享的按鈕），則放在 <code>components/</code>。</li>
+</ul>
+
+<p>這樣的架構可以：</p>
+<ul>
+    <li>讓共用部分只需維護一份；</li>
+    <li>頁面切換更快（無需重新載入整個頁面）；</li>
+    <li>方便日後擴充與管理。</li>
+</ul>
+
+<h2>五、簡單範例對照</h2>
+
+<p>原本的 HTML 架構：</p>
+<pre><code>index.html
+about.html
+contact.html
+</code></pre>
+
+<p>Vue 架構轉換後：</p>
+<pre><code>src/
+  views/
+    HomeView.vue
+    AboutView.vue
+    ContactView.vue
+  components/
+    Navbar.vue
+  App.vue
+</code></pre>
+
+<p>共用導覽列範例：</p>
+<pre><code>&lt;!-- Navbar.vue --&gt;
+&lt;nav&gt;
+  &lt;router-link to="/"&gt;首頁&lt;/router-link&gt;
+  &lt;router-link to="/about"&gt;關於我們&lt;/router-link&gt;
+  &lt;router-link to="/contact"&gt;聯絡我們&lt;/router-link&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<h2>六、結論整理</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>問題</th>
+        <th>解答</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>能否用 Vue 製作十頁以上網站？</td>
+        <td>✅ 可以，非常常見</td>
+    </tr>
+    <tr>
+        <td>是否需要十幾個 Vue 檔案？</td>
+        <td>✅ 通常會有十幾個「view」檔案，但共用元件可重用</td>
+    </tr>
+    <tr>
+        <td>是否等同於十個 HTML？</td>
+        <td>❌ 不同概念，只需一個 <code>index.html</code></td>
+    </tr>
+    <tr>
+        <td>主要好處</td>
+        <td>共用集中、切換快速、邏輯一致</td>
+    </tr>
+    <tr>
+        <td>壞處</td>
+        <td>❌ 無法像傳統 HTML 網站那樣直接在新視窗中開啟多個頁面進行對比，SPA 無法同時顯示多個頁面視圖。</td>
+    </tr>
+    </tbody>
+</table>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二五年十一月七日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
+</script>
+
+<div class="fb-comments"
+     data-href="https://chrischou19990904.github.io/harp_app_introduction"
+     data-width="100%"
+     data-numposts="5">
+</div>
+</body>
+</body>
+</html>
