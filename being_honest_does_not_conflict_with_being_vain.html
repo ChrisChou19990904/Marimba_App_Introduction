@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>關於真實、自我呈現與數位樂器演奏的說明</title>
+
+    <style>
+        body {
+            font-family: "Noto Sans TC", sans-serif;
+            background: #eef2f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #82b4ff, #5d8bf4);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.6em;
+            letter-spacing: 1.5px;
+        }
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0px 4px 16px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #364f88;
+        }
+
+        h3 {
+            color: #4d6cb5;
+        }
+
+        .highlight {
+            background: #fff3b0;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .media-box {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .media-box img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .video-frame {
+            width: 100%;
+            height: 315px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border: none;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-q {
+            font-weight: bold;
+            color: #2b3e67;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+        nav{
+            background-color: pink;
+            text-align:left;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        a{
+            color: #2980b9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+    <nav>
+        <ul>
+            <li><strong class="guide">本頁內容：</strong><br>
+                <a>關於真實、自我呈現與數位樂器演奏的說明</a></li>
+            <li><strong class="guide">其他文章連結：</strong>
+                <ol>
+                    <li><a href="index.html" target="_blank">首頁</a></li>
+                    <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
+                    <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
+                    <li><a href="flaw_of_perfect_piano.html" target="_blank">數位樂器出現畫面與聲音不連貫的原因探討</a></li>
+                    <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
+                    <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴<br>彈奏的曲目）</a></li>
+                    <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（59 首）</a></li>
+                    <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+                    <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+                    <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
+                    <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
+                    <li><a href="vue_vs_multiple_html.html" target="_blank">Vue 與多頁 HTML 架構的差異與對應</a></li>
+                </ol>
+        </ul>
+    </nav>
+<header>
+    <h1>真實、自我呈現與演奏證據</h1>
+    <p>— 展示能力沒有錯，只是我想展示真正的自己 —</p>
+</header>
+
+<div class="content">
+
+    <!-- 第一章：網路虛假 -->
+    <div class="card">
+        <h2>一、在社群媒體上，「虛假版本的自己」比真實更普遍</h2>
+        <p>
+            社群媒體是個讓人可以自由「塑造形象」的地方。
+            有人靠濾鏡變身俊男美女，有人用翻譯工具偽裝成母語者，
+            更有人乾脆捏造整套身分背景，從職業到生活都可以重新寫一遍。
+        </p>
+        <p>
+            說句現實話：<span class="highlight">大家都想被看見，但不一定想讓真正的自己被看見。</span>
+        </p>
+    </div>
+
+    <!-- 第二章：你的作法 -->
+    <div class="card">
+        <h2>二、我的選擇：我也愛慕虛榮，但我選擇誠實的虛榮</h2>
+
+        <p>
+            我不否認我喜歡被肯定、被欣賞。
+            但比起「看起來很厲害」，我更希望你看到的是真正的我。
+        </p>
+
+        <p>因此，我用一些方式增加我的影片的「可驗證性」：</p>
+
+        <ul>
+            <li>展示正式證照或身分證明</li>
+            <li>演奏實體鋼琴時，會將學生證直接放在鋼琴上或畫面中，或者乾脆直接露臉，確保不是他人代演</li>
+            <li>使用數位樂器（例如 Perfect Piano）錄影時，會在開始螢幕錄影前先滑下通知欄</li>
+            <li>錄影過程會把通知欄慢慢滑回去，證明影片為連續錄製，而非後製合成</li>
+        </ul>
+
+        <p>這些方法聽起來麻煩，但它們讓影片更可信、更能證明是我本人演奏。</p>
+    </div>
+
+    <!-- 第三章：AI辨識 -->
+    <div class="card">
+        <h2>三、人類演奏 vs AI 自動彈奏：物理層面的差異</h2>
+        <p>
+            其實，不用看手指，也能分辨是不是 AI 自動演奏，
+            因為人類在小螢幕上有明顯的「生物限制」。
+        </p>
+
+        <h3>1. 手指寬度讓人類難以同時按多個鍵</h3>
+        <p>
+            小螢幕琴鍵很窄，不可能像 AI/MIDI 那樣在高速曲目中彈出整齊的三四音和弦。
+        </p>
+
+        <h3>2. 快速段落中，人類只能彈單音或雙音</h3>
+        <p>
+            如果出現三音和弦，通常都是在較慢、較穩定的段落，這完全符合人體工學。
+        </p>
+
+        <h3>3. AI / MIDI 的超人特徵</h3>
+        <ul>
+            <li>和弦永遠完美同步</li>
+            <li>可跨大距離的鍵位</li>
+            <li>高速時仍能彈複雜和弦</li>
+            <li>沒有自然的觸控延遲</li>
+        </ul>
+
+        <p><span class="highlight">而我的演奏具有明顯的人類特質，因此更能排除 AI。</span></p>
+    </div>
+
+    <!-- 第四章：錄製過程 -->
+    <div class="card">
+        <h2>四、錄製時的現實：錯音、分段錄製與 MIDI 的說服力</h2>
+
+        <p>
+            錄製到一半彈錯音、或琴鍵接觸不良的情況其實很常見，
+            尤其是使用 <strong>Marimba Real</strong> 這類觸發較敏感的 App。
+        </p>
+
+        <p>
+            為避免整段作廢，我偶爾會選擇分段錄製，但分段錄影其實聽得出來：
+            音色、節奏銜接都會有「接縫感」。
+        </p>
+
+        <h3>1. Marimba Real：音色好但容易失誤</h3>
+        <ul>
+            <li>琴鍵偶爾不觸發</li>
+            <li>按了卻沒出聲</li>
+            <li>容易影響整段錄影</li>
+        </ul>
+
+        <h3>2. Perfect Piano：反應穩定、視覺回饋弱</h3>
+        <p>
+            它幾乎不會錯觸，但亮燈效果（視覺回饋）比較不足。
+        </p>
+
+        <h3>3. MIDI 錄製：最強的「一次彈到底」證據</h3>
+        <p>
+            Perfect Piano 的 <strong>MIDI 錄製功能</strong>會自動產生完整的時間軸。
+            當螢幕錄影搭配 MIDI 錄製時，觀眾能看到：
+        </p>
+
+        <ul>
+            <li>MIDI 時間軸完全連續</li>
+            <li>節奏沒有斷點（任何剪輯都會穿幫）</li>
+            <li>每個音符的觸發時間都有記錄</li>
+            <li>演奏過程不可能作弊或補錄</li>
+        </ul>
+
+        <p>
+            因此，搭配 MIDI 的影片證明我是真正從頭彈到尾，沒有任何分段或替換。
+            <span class="highlight">這是最具說服力的真實證據。</span>
+        </p>
+    </div>
+    <div class="card">
+        <h2>五、演奏影片（可嵌入 YouTube 或本地影片）</h2>
+        <div class="media-box">
+            <h3>君だけを守りたい</h3>
+            <iframe width="409" height="730" src="https://www.youtube.com/embed/RxzG9XFqlZk" title="ウルトラマンダイナED 君だけを守りたい ピアノ演奏 Ultraman Dyna ED Kimi Dake Wo Mamoritai Piano Cover" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/0QVm7lBoqjg" title="Ultraman Dyna ED Kimi Dake Wo Mamoritai Marimba App Glockenspiel Mode Cover" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>ウルトラの奇跡</h3>
+            <iframe width="432" height="730" src="https://www.youtube.com/embed/rQL78Uhqi68" title="ウルトラマンメビウスの挿入歌　ウルトラの奇跡　ピアノ演奏　#ウルトラマンメビウス  #ウルトラマン #ultramanmebius #ultraman #超人力霸王 #奧特曼 #奥特曼 #特撮ソング" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/Z1zLOtMJQg8" title="ウルトラの奇跡　ピアノアプリ　ニ長調　MIDI録画 #ウルトラマンメビウス #ウルトラマン #特撮ソング #ultraman #ultramanmebius #pianoapp #特攝 #特撮 #特摄" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>悲しみの沼</h3>
+            <iframe width="388" height="730" src="https://www.youtube.com/embed/vQK4mtT-vAk" title="ウルトラマンガイアOST 悲しみの沼　ピアノ演奏 #特撮ソング #ウルトラマンガイア #ultramangaia #反戰 #healingmusic #簡單鋼琴" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/Ydwfi_kHF34" title="ウルトラマンガイア挿入曲　悲しみの沼　ピアノアプリバージョン　#ウルトラマンガイア #ultramangaia #pianoapp #perfectpiano #musicbox #特撮ソング #特攝" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>魔弾戦記リュウケンドーOP</h3>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/TQ2ckbuCkXM" title="Madan Senki Ryukendo OP Electronic Keyboard Cover #ryukendo #特撮ソング #電子琴 #electronickeyboard #特摄 #特攝" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/_GPgEaQYnsg" title="Madan Senki Ryukendo OP Extended Version Piano App Cover #ryukendo #特撮ソング #pianoapp #perfectpiano" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>戰鬥-通往勝利</h3>
+            <iframe width="666" height="730" src="https://www.youtube.com/embed/KOwef99I_Ts" title="鎧甲勇士插曲 戰鬥-通往勝利 鋼琴彈奏" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/eCVUevvNA6o" title="战斗-通往胜利 C大调 马林巴软件敲奏" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>查理九世（戰鬥-通往勝利 抒情版）</h3>
+            <iframe width="328" height="730" src="https://www.youtube.com/embed/U8YqhTr9Q80" title="查理九世（战斗-通往胜利 G大调治愈版）钢琴弹奏" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/o3THse4rD1Q" title="查理九世 （战斗-通往胜利 抒情版） G大调" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>帝皇再臨</h3>
+            <iframe width="466" height="730" src="https://www.youtube.com/embed/9c37QYpThS8" title="铠甲勇士帝皇侠插曲 帝皇再临 C大调治愈版 钢琴弹奏 #铠甲勇士 #特摄 #特摄剧 #特撮ソング #治愈系音乐 #治癒音樂 #healingmusic #healingmelodies #簡單鋼琴" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="459" height="730" src="https://www.youtube.com/embed/Yba6s7IGgM0" title="铠甲勇士之帝皇侠插曲 帝皇再临 A大调 钢琴演奏 #铠甲勇士 #唐禹哲 #特撮ソング #特摄 #特摄剧 #tokusatsu #amajor" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>Kamen Rider Kuuga OP</h3>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/32KbPbddwGQ?si=Yj3Sz8VNtzP96bG9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/zD4HDSDfSBw?si=xqWgwRR7_KE5Eg64" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>Life Goes On</h3>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/mJwz-n_gqho" title="Chouseishin Gransazer OP Marimba App Cover 超星神グランセイザー主題歌 マリンバアプリバージョン" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/WNHKOcy_8o4" title="超星神グランセイザーOP ピアノアプリバージョン" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>ハリケンジャー参上</h3>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/2F5269YuFl4" title="ハリケンジャー参上 マリンバアプリ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/ol_8WmZUw8w" title="Hurricaneger Sanjou MIDI Recording" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>幸せShaking Hands</h3>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/MyInHiYg_XM" title="忍風戦隊ハリケンジャー挿入歌 幸せShaking Hands Electronic Keyboard Cover #スーパー戦隊 #超級戰隊  #supersentaiseries #特撮ソング" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/7pUgECdGu4o" title="幸せShaking Hands 忍風戦隊ハリケンジャーOST     マリンバアプリ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>君が好きだと叫びたい</h3>
+            <video controls><source src="君が好きだと叫びたいピアノ.mp4"></video><br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/_HHI-ug8SJg" title="Slam Dunk OP Kimi Ga Suki Da To Sakebitai Marimba App Cover" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br><br>
+            <h3>Inuyasha OST elegy</h3>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/k9AsME93JFY" title="Inuyasha OST elegy Piano Cover #inuyasha #犬夜叉 #高橋留美子" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <br>
+            <iframe width="410" height="730" src="https://www.youtube.com/embed/NegH0Gog1As" title="Inuyasha OST An Elegy C Major Piano App Cover #inuyasha #犬夜叉 #perfectpiano #pianoapp #cmajor #高橋留美子" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p>你可以把此處替換成你的鋼琴演奏或數位樂器演奏影片。</p>
+    </div>
+    <!-- FAQ -->
+    <div class="card">
+        <h2>FAQ：常見疑問</h2>
+
+        <div class="faq-item">
+            <div class="faq-q">Q1：你的和弦為什麼常常是單音或雙音？</div>
+            <div>A：因為我用的是人的手指，不是 AI 的機械精準演算法。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Q2：為什麼影片開頭常看到通知欄？</div>
+            <div>A：這是用來證明螢幕錄影是真實開始，而不是後製合成。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Q3：AI 能模仿你的人類演奏特徵嗎？</div>
+            <div>A：它能模仿畫面，但很難模仿「人體工學限制」。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Q4：演奏實體鋼琴時為什麼放學生證？</div>
+            <div>A：為了確保畫面中的演奏者一定是我本人，而不是代彈。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Q5：MIDI 是真的不能剪輯嗎？</div>
+            <div>A：不能。一旦剪輯，MIDI 時間軸會立刻破相。</div>
+        </div>
+    </div>
+
+    <!-- 結語 -->
+    <div class="card">
+        <h2>結語：我想讓你看到真實的我</h2>
+        <p>
+            在這個 AI、濾鏡、美化遍地開花的網路世界，
+            我選擇用「真實可驗證的方式」呈現我自己。
+        </p>
+
+        <p>
+            我的演奏不完美，但它是真實的。
+            <span class="highlight">而真實，正是它有價值的地方。</span>
+        </p>
+    </div>
+
+</div>
+
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二五年十一月二十六日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
+</script>
+
+<div class="fb-comments"
+     data-href="https://chrischou19990904.github.io/harp_app_introduction"
+     data-width="100%"
+     data-numposts="5">
+</div>
+
+</body>
+</html>
