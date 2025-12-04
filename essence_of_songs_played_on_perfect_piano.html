@@ -30,6 +30,25 @@
   video{
     border:solid 10px red;
   }
+  #social-share a {
+    text-decoration: none;
+    font-weight: bold;
+  }
+  #social-share a:hover {
+    text-decoration: underline;
+  }
+  #social-share span {
+    margin: 0 5px;
+  }
+  #social-share a#fb-share {
+    color: #4267B2;
+  }
+  #social-share a#line-share {
+    color: #00C300;
+  }
+  #social-share a#twitter-share {
+    color: #1DA1F2;
+  }
   @media (max-width: 768px) {
     video{
       max-width: 80%;
@@ -118,6 +137,27 @@
 <li><strong>《夜幕下的旅途》</strong><br><video controls><source src="夜幕下的旅途.mp4"></video></li>
   <li><strong>《Way Back Home》</strong><br><video controls><source src="way_back_home_perfect_piano.mp4"></video></li>
 </ol>
+<ul id="messages"></ul>
+<div id="social-share" style="margin-top: 20px;">
+  <a id="fb-share" href="#" target="_blank" style="color: #4267B2; font-weight: bold;">分享到 Facebook</a>
+  <span> | </span>
+  <a id="line-share" href="#" target="_blank" style="color: #00C300; font-weight: bold;">分享到 Line</a>
+  <span> | </span>
+  <a id="twitter-share" href="#" target="_blank" style="color: #1DA1F2; font-weight: bold;">分享到 X</a>
+</div>
+<script>
+  // 自動抓取當前頁面的 URL
+  var currentUrl = window.location.href;
+  // Facebook 分享
+  document.getElementById("fb-share").href =
+          "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
+  // Line 分享
+  document.getElementById("line-share").href =
+          "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
+  // X (Twitter) 分享
+  document.getElementById("twitter-share").href =
+          "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=你的文章標題";
+</script>
 <footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
   作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
   <br>創作日期：西元二零二五年八月七日<br>
