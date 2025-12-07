@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InShot 使用心得與技術推測分析</title>
+    <style>
+        body {
+            font-family: "Segoe UI", "PingFang TC", sans-serif;
+            max-width: 900px;
+            margin: auto;
+            line-height: 1.8;
+            padding: 20px;
+            color: #222;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        code {
+            background: #f2f2f2;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+        .note {
+            background: #fff9c4;
+            padding: 10px;
+            border-left: 4px solid #ff9800;
+            margin: 20px 0;
+        }
+        .section {
+            margin-top: 50px;
+        }
+        nav {
+            background-color: pink;
+            text-align: left;
+        }
+        a{
+            color: #2980b9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #2980b9;
+        }
+        #social-share a {
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #social-share a:hover {
+            text-decoration: underline;
+        }
+        #social-share span {
+            margin: 0 5px;
+        }
+        #social-share a#fb-share {
+            color: #4267B2;
+        }
+        #social-share a#line-share {
+            color: #00C300;
+        }
+        #social-share a#twitter-share {
+            color: #1DA1F2;
+        }
+        @media (max-width: 767px) {
+            img{
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<nav>
+    <ul>
+        <li><strong class="guide">本頁內容：</strong><br>
+            <a>InShot 使用心得與技術推測分析</a></li>
+        <li><strong class="guide">其他文章連結：</strong>
+            <ol>
+                <li><a href="index.html" target="_blank">首頁</a></li>
+                <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
+                <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
+                <li><a href="flaw_of_perfect_piano.html" target="_blank">數位樂器出現畫面與聲音不連貫的原因探討</a></li>
+                <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
+                <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴<br>彈奏的曲目）</a></li>
+                <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（59 首）</a></li>
+                <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+                <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+                <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
+                <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
+                <li><a href="vue_vs_multiple_html.html" target="_blank">Vue 與多頁 HTML 架構的差異與對應</a></li>
+                <li><a href="being_honest_does_not_conflict_with_being_vain.html" target="_blank">關於真實、自我呈現與數位樂器演奏的說明</a></li>
+            </ol>
+    </ul>
+</nav>
+<h1>InShot 使用心得與技術推測分析</h1>
+<p>
+    InShot 是一款在全球擁有極高使用量的手機影音編輯 App，以簡潔介面、強大的功能與平易近人的學習門檻著稱。
+    作為使用者與前端工程背景的角度，我想透過此文分析它的功能、技術可能性、以及為什麼它能在市場上取得如此成功。
+</p>
+
+<div class="note">
+    <strong>聲明：</strong>本文屬於「使用者經驗＋工程推測」，由於官方未公開技術架構，本篇文章的技術部分皆屬合理推斷。
+</div>
+
+<!-- Section 1 -->
+<div class="section">
+    <h2>一、InShot 的主要功能概述</h2>
+    <p>InShot 的功能豐富且使用直覺，主要包含：</p>
+    <ul>
+        <li>影片剪輯（裁切、分割、合併）</li>
+        <li>字幕編輯（含自動字幕）</li>
+        <li>畫中畫（PIP）</li>
+        <li>速度編輯（定速、變速曲線）</li>
+        <li>過場特效 / 轉場效果</li>
+        <li>音樂混音、音效調整、Fade In / Fade Out</li>
+        <li>調色與濾鏡</li>
+    </ul>
+    <p>
+        更令人驚訝的是，即使是手機設備，InShot 仍能輸出高品質影片，這代表其背後處理流程高度優化。
+    </p>
+</div>
+
+<!-- Section 2 -->
+<div class="section">
+    <h2>二、改變影片速度與「音調選項」的技術推測</h2>
+
+    <p>
+        InShot 的速度調整功能具有兩種效果：
+    </p>
+
+    <ol>
+        <li>速度改變 → 音調也跟著變化（加速＝音高變高）</li>
+        <li>速度改變＋保持原音調（Pitch Correction）</li>
+    </ol>
+
+    <h3>1. 為什麼速度變快後音調會改變？</h3>
+    <p>
+        這是因為影片原本的音訊波形被等比例壓縮或拉長，是最基本的 <strong>Time-Stretching</strong> 行為。
+    </p>
+
+    <h3>2. 保持原音調的原理（推測）</h3>
+    <p>InShot 可能使用：</p>
+    <ul>
+        <li><strong>Phase Vocoder</strong>（相位頻譜法）</li>
+        <li><strong>WSOLA</strong>（音訊片段重組演算法）</li>
+        <li>或 FFmpeg 類似的 time-scale 與 pitch-shift 技術</li>
+    </ul>
+
+    <h3>3. 為什麼加速＋保持音調後輸出影片會出現雜音？</h3>
+    <p>
+        在我實際測試後發現，有時候將鋼琴演奏影片加速並保持原音調，輸出影片會出現「破音、顫動、金屬感」等雜音。
+    </p>
+
+    <p>推測可能原因：</p>
+
+    <ul>
+        <li><strong>Phase Vocoder 的相位對齊誤差</strong><br>
+            音色較複雜（如鋼琴泛音）時容易產生顫動或顆粒音。</li>
+
+        <li><strong>WSOLA 片段拼接造成相位不連續</strong><br>
+            速度變化幅度大時容易出現「波形接縫」噪音。</li>
+
+        <li><strong>音訊壓縮（AAC）造成細節流失</strong><br>
+            即使前端算法正確，輸出壓縮仍可能產生高頻 artifacts。</li>
+
+        <li><strong>手機效能限制</strong><br>
+            若演算法被迫做近似運算，也可能導致音訊失真。</li>
+    </ul>
+
+    <p>
+        因此，「加速並保持音調」的音訊品質在理論上本來就比原速差，而 InShot 的移動端實作在某些情況下會放大這些缺點。
+    </p>
+
+</div>
+
+<!-- Section 3 -->
+<div class="section">
+    <h2>三、InShot 的技術棧（合理推測）</h2>
+
+    <p>官方未公開技術架構，因此以下為根據功能表現與行業慣例的合理推測：</p>
+
+    <h3>1. iOS 版本</h3>
+    <ul>
+        <li>Swift / Objective-C</li>
+        <li>AVFoundation</li>
+        <li>CoreImage / CoreAnimation</li>
+        <li>C++ Native Modules</li>
+    </ul>
+
+    <h3>2. Android 版本</h3>
+    <ul>
+        <li>Kotlin / Java</li>
+        <li>MediaCodec</li>
+        <li>OpenGL ES 或 Vulkan</li>
+        <li>C++（JNI + FFmpeg 類型引擎）</li>
+    </ul>
+
+</div>
+
+<!-- Section 4 -->
+<div class="section">
+    <h2>四、InShot 的 UI/UX 為何成功？</h2>
+    <ul>
+        <li>操作層級少，不會迷路</li>
+        <li>按鈕大、觸控準確</li>
+        <li>重要功能全部放在第一層</li>
+        <li>影片特效反應快，優化良好</li>
+        <li>學習門檻極低，但功能強大</li>
+    </ul>
+</div>
+
+<!-- Section 5 -->
+<div class="section">
+    <h2>五、商業模式與可能收入（推測）</h2>
+
+    <p>
+        InShot 的收入模式包含：
+    </p>
+    <ul>
+        <li>廣告</li>
+        <li>年費訂閱 InShot Pro</li>
+        <li>濾鏡/特效內購</li>
+    </ul>
+
+    <h3 style="color:#d32f2f">推估每年營收：約 1–2 億美金（30–60 億台幣）</h3>
+
+</div>
+
+<!-- Section 6 -->
+<div class="section">
+    <h2>六、個人使用心得</h2>
+
+    <p>
+        我認為 InShot 在速度、特效、字幕與輸出品質方面表現突出，尤其在手機平台上能做到如此流暢的編輯體驗，非常不容易。
+    </p>
+
+    <p>
+        速度調整後能保持原音調的功能讓我能探索不同的音樂風格，但在某些影片中輸出後可能會出現雜音，雖不影響大多數用途，但仍值得注意。
+    </p>
+
+</div>
+
+<!-- Section 7 -->
+<div class="section">
+    <h2>七、我如何使用 InShot 製作鋼琴演奏影片（實際創作流程）</h2>
+
+    <h3>1. 使用 InShot 製作鋼琴演奏的字幕</h3>
+    <p>
+        我會根據歌曲拍點手動貼上歌詞字幕。這需要聽力敏感、節奏準確以及對畫面的構圖感。
+    </p>
+
+    <h3>2. 速度變化的實驗與發現</h3>
+    <p>
+        我會利用 InShot 的速度調整來探索不同風格的鋼琴演奏。有些曲子加速後變得更輕盈、有些減速後更感性。
+    </p>
+
+    <h3>3. 加速＋保持音調時的雜音現象（實際體驗）</h3>
+    <p>
+        在多次輸出後，我發現 InShot 在「加速並保持原音調」時，有時會產生細微噪點，例如：
+    </p>
+
+    <ul>
+        <li>輕微破音</li>
+        <li>金屬般的顫動</li>
+        <li>高頻音質變粗糙</li>
+    </ul>
+
+    <p>
+        根據前面技術分析，這可能與相位處理與 AAC 壓縮有關。
+        即便如此，InShot 的效果在手機 App 中仍算非常不錯。
+    </p>
+
+    <h3>4. 總結：音樂敏感度＋技術興趣的結合</h3>
+    <p>
+        對我來說，使用 InShot 不只是剪片，而是把音樂、節奏、視覺與技術思考結合的一種創作方式。
+    </p>
+
+</div>
+<div id="social-share" style="margin-top: 20px;">
+    <a id="fb-share" href="#" target="_blank" style="color: #4267B2; font-weight: bold;">分享到 Facebook</a>
+    <span> | </span>
+    <a id="line-share" href="#" target="_blank" style="color: #00C300; font-weight: bold;">分享到 Line</a>
+    <span> | </span>
+    <a id="twitter-share" href="#" target="_blank" style="color: #1DA1F2; font-weight: bold;">分享到 X</a>
+</div>
+<script>
+    // 自動抓取當前頁面的 URL
+    var currentUrl = window.location.href;
+    // Facebook 分享
+    document.getElementById("fb-share").href =
+        "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
+    // Line 分享
+    document.getElementById("line-share").href =
+        "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
+    // X (Twitter) 分享
+    document.getElementById("twitter-share").href =
+        "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=你的文章標題";
+</script>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
+</script>
+
+<div class="fb-comments"
+     data-href="https://chrischou19990904.github.io/harp_app_introduction"
+     data-width="100%"
+     data-numposts="5">
+</div>
+<div id="comments"></div>
+<ul id="messages"></ul>
+<hr>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二五年十二月七日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+</body>
+</html>
