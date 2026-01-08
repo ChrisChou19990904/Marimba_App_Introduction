@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI原理與應用說明</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #222;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        code {
+            background-color: #eaeaea;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #eaeaea;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        ul {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .note {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 5px solid #ffeeba;
+            margin-bottom: 20px;
+        }
+        #social-share a {
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #social-share a:hover {
+            text-decoration: underline;
+        }
+        #social-share span {
+            margin: 0 5px;
+        }
+        #social-share a#fb-share {
+            color: #4267B2;
+        }
+        #social-share a#line-share {
+            color: #00C300;
+        }
+        #social-share a#twitter-share {
+            color: #1DA1F2;
+        }
+        nav {
+            text-align: left;
+            background-color: pink;
+            padding: 10px 0;
+        }
+        a{
+            color: #2980b9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<nav>
+    <ul>
+        <li><strong class="guide">本頁內容：</strong><br>
+            <a>MIDI原理與應用說明</a></li>
+        <li><strong class="guide">其他文章連結：</strong>
+            <ol>
+                <li><a href="index.html" target="_blank">首頁</a></li>
+                <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
+                <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
+                <li><a href="flaw_of_perfect_piano.html" target="_blank">數位樂器出現畫面與聲音不連貫的原因探討</a></li>
+                <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
+                <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴<br>彈奏的曲目）</a></li>
+                <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（59 首）</a></li>
+                <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+                <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+                <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
+                <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
+                <li><a href="vue_vs_multiple_html.html" target="_blank">Vue 與多頁 HTML 架構的差異與對應</a></li>
+                <li><a href="being_honest_does_not_conflict_with_being_vain.html" target="_blank">關於真實、自我呈現與數位樂器演奏的說明</a></li>
+                <li><a href="InShot.html" target="_blank">InShot 使用心得與技術推測分析</a></li>
+            </ol>
+    </ul>
+</nav>
+<h1>MIDI原理與應用說明</h1>
+<div>
+    <h2>目錄</h2>
+    <ul>
+        <li><a href="#section1">1. MIDI是什麼？</a></li>
+        <li><a href="#section2">2. MIDI的原理</a></li>
+        <li><a href="#section3">3. MIDI vs 音頻 (WAV/MP3)</a></li>
+        <li><a href="#section4">4. 對資工系和音樂系的重要性</a></li>
+        <li><a href="#section5">5. MIDI與應用程式的互動</a></li>
+        <li><a href="#section6">6. MuseScore vs Marble Music 優缺點比較</a></li>
+        <li><a href="#section7">7. MIDI與程式語言的關係</a></li>
+        <li><a href="#section8">8. 實體電子琴與手機應用的差異</a></li>
+        <li><a href="#section9">9. Marble Music自創作品上傳的條件</a></li>
+        <li><a href="#section10">10. MIDI創作流程圖</a></li>
+        <li><a href="#section11">11. 我透過MIDI創作的作品</a></li>
+    </ul>
+</div>
+<h2 id="section1">1. MIDI是什麼？</h2>
+<p>
+    MIDI（<strong>Musical Instrument Digital Interface</strong>）是一種數位音樂通訊協議，用來讓電子樂器、電腦、控制器之間互相「說話」。
+    它不直接產生聲音，而是告訴音源：
+</p>
+<ul>
+    <li>哪個音符要彈</li>
+    <li>音符的強弱（力度）</li>
+    <li>持續時間</li>
+    <li>音色、音量、表情控制</li>
+</ul>
+<p>可以把MIDI想像成「數位樂譜」，而音源才是演奏出聲音的工具。</p>
+
+<h2 id="section2">2. MIDI的原理</h2>
+<ul>
+    <li><strong>事件(Event)</strong>：例如按下 C4 音符、力度 100 或放開 C4 音符。</li>
+    <li><strong>通訊方式</strong>：傳統MIDI使用5針DIN接口，每秒傳送31,250位元；現代則多用USB或藍牙。</li>
+    <li><strong>數據結構</strong>：MIDI訊息通常只需幾個bytes，例如：
+        <pre>0x90 0x3C 0x64  （Note On, C4, Velocity 100）</pre>
+    </li>
+    <li><strong>解釋與播放</strong>：接收端（合成器或軟體音源）讀取MIDI指令 → 產生聲音。</li>
+</ul>
+
+<h2 id="section3">3. MIDI vs 音頻 (WAV/MP3)</h2>
+<table>
+    <tr>
+        <th></th>
+        <th>MIDI</th>
+        <th>音頻</th>
+    </tr>
+    <tr>
+        <td>內容</td>
+        <td>樂譜指令、控制訊息</td>
+        <td>聲音波形</td>
+    </tr>
+    <tr>
+        <td>檔案大小</td>
+        <td>非常小</td>
+        <td>通常很大</td>
+    </tr>
+    <tr>
+        <td>可調性</td>
+        <td>音色、速度、力度可自由修改</td>
+        <td>改動困難，需要再編輯音軌</td>
+    </tr>
+    <tr>
+        <td>依賴</td>
+        <td>需要音源（合成器或軟體）</td>
+        <td>自帶聲音</td>
+    </tr>
+</table>
+
+<h2 id="section4">4. 對資工系和音樂系的重要性</h2>
+<h3>資工系</h3>
+<ul>
+    <li>音樂軟體開發（DAW、合成器模擬器）</li>
+    <li>演算法與資料結構（MIDI訊息序列、事件排序、同步）</li>
+    <li>硬體通訊（USB、藍牙MIDI）</li>
+</ul>
+<h3>音樂系</h3>
+<ul>
+    <li>編曲與演奏：快速修改音符、力度、音色</li>
+    <li>跨樂器協作：鋼琴鍵盤、鼓組、合成器同步演奏</li>
+    <li>混音與製作：調整速度、音高、延音</li>
+</ul>
+
+<div class="note">
+    核心公式：<br>
+    <strong>MIDI ≈ 數位樂譜 + 控制訊號 → 音源合成 → 聲音</strong>
+</div>
+
+<h2 id="section5">5. MIDI與應用程式的互動</h2>
+<p>以 <strong>Perfect Piano</strong> 為例：</p>
+<ul>
+    <li>彈奏鍵盤 → 錄製MIDI事件（Note On/Off, 力度）</li>
+    <li>儲存MIDI檔案 → 可命名管理</li>
+    <li>上傳至 MuseScore → 自動生成樂譜（可能誤判拍子）</li>
+    <li>上傳至 Marble Music → 生成動畫彈珠音效（動畫長度有限制）</li>
+</ul>
+
+<pre>
+鍵盤彈奏 → Perfect Piano錄製MIDI → 儲存檔案
+        ├─> MuseScore: 轉成樂譜
+        └─> Marble Music: 轉成彈珠動畫音效
+  </pre>
+
+<h2 id="section6">6. MuseScore vs Marble Music 優缺點比較</h2>
+<table>
+    <tr>
+        <th>功能/平台</th>
+        <th>MuseScore</th>
+        <th>Marble Music</th>
+    </tr>
+    <tr>
+        <td>用途</td>
+        <td>樂譜製作、編輯、正式呈現</td>
+        <td>動畫視覺化、彈珠音效展示</td>
+    </tr>
+    <tr>
+        <td>優點</td>
+        <td>
+            <ul>
+                <li>自動把 MIDI 轉成樂譜</li>
+                <li>可修改音符、節奏、速度、音色</li>
+                <li>適合學術或正式樂譜呈現</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li>動畫直觀，視覺效果好</li>
+                <li>原始 MIDI 速度保留，無拍子誤判</li>
+                <li>操作簡單，上傳即生成動畫</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>缺點</td>
+        <td>
+            <ul>
+                <li>有時誤判拍子速度</li>
+                <li>初學者需要手動調整量化與速度線</li>
+                <li>MIDI演奏速度不穩，樂譜可能不忠實</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li>動畫長度有限（約1分鐘）</li>
+                <li>創作自由度受限，僅短片展示</li>
+                <li>不適合正式樂譜編輯</li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+<h2 id="section7">7. MIDI與程式語言的關係</h2>
+<ul>
+    <li>MIDI本身不是程式語言，而是一種協議。</li>
+    <li>程式語言用於處理、解析、生成或控制MIDI檔案。</li>
+</ul>
+<table>
+    <tr>
+        <th>程式語言</th>
+        <th>用途</th>
+        <th>常用庫 / API</th>
+    </tr>
+    <tr>
+        <td>Python</td>
+        <td>生成、解析、分析MIDI檔案</td>
+        <td>mido, pretty_midi, music21</td>
+    </tr>
+    <tr>
+        <td>C / C++</td>
+        <td>低延遲MIDI處理、硬體控制</td>
+        <td>RtMidi, JUCE</td>
+    </tr>
+    <tr>
+        <td>Java</td>
+        <td>跨平台音樂程式、樂譜軟體</td>
+        <td>javax.sound.midi</td>
+    </tr>
+    <tr>
+        <td>JavaScript</td>
+        <td>網頁MIDI應用、音樂可視化</td>
+        <td>Web MIDI API, Tone.js</td>
+    </tr>
+    <tr>
+        <td>Swift / Objective-C</td>
+        <td>iOS / macOS 音樂App</td>
+        <td>CoreMIDI, AudioKit</td>
+    </tr>
+    <tr>
+        <td>C# / .NET</td>
+        <td>Windows 音樂App、遊戲</td>
+        <td>NAudio, Midi.Net</td>
+    </tr>
+</table>
+
+<h2 id="section8">8. 實體電子琴與手機應用的差異</h2>
+<ul>
+    <li>實體電子琴可同時按下多個鍵 → MIDI能完整記錄和弦、主旋律+伴奏</li>
+    <li>手機應用如 Perfect Piano 螢幕小 → 難以同時按下多個鍵，多音演奏受限</li>
+    <li>網路上的多軌樂譜影片多來源於實體鍵盤錄製的MIDI檔</li>
+</ul>
+
+<h2 id="section9">9. Marble Music自創作品上傳的條件</h2>
+<ul>
+    <li>必須有 MIDI 檔案</li>
+    <li>創作者可以自己演奏錄製 MIDI（實體電子琴或數位鍵盤）</li>
+    <li>或者使用別人提供的 MIDI 檔案</li>
+</ul>
+<pre>
+1️⃣ 自己演奏 → 錄製MIDI → 上傳Marble Music → 生成動畫
+2️⃣ 使用別人MIDI檔 → 上傳Marble Music → 生成動畫
+  </pre>
+
+<!-- 在 <body> 適當位置加入流程圖，建議放在 8. 實體電子琴與手機應用的差異 後面 -->
+
+<h2 id="section10">10. MIDI創作流程圖</h2>
+<svg width="100%" height="400" xmlns="http://www.w3.org/2000/svg">
+    <!-- 箭頭定義 -->
+    <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#2c3e50"/>
+        </marker>
+    </defs>
+
+    <!-- 實體鍵盤節點 -->
+    <rect x="50" y="50" width="150" height="50" fill="#d1ecf1" stroke="#0c5460" stroke-width="2" rx="5" ry="5"/>
+    <text x="125" y="80" font-size="14" text-anchor="middle" fill="#0c5460">實體電子琴</text>
+
+    <!-- 手機應用節點 -->
+    <rect x="50" y="150" width="150" height="50" fill="#f8d7da" stroke="#721c24" stroke-width="2" rx="5" ry="5"/>
+    <text x="125" y="180" font-size="14" text-anchor="middle" fill="#721c24">手機應用鍵盤</text>
+
+    <!-- MIDI檔案節點 -->
+    <rect x="300" y="100" width="150" height="50" fill="#fff3cd" stroke="#856404" stroke-width="2" rx="5" ry="5"/>
+    <text x="375" y="130" font-size="14" text-anchor="middle" fill="#856404">錄製 MIDI 檔</text>
+
+    <!-- MuseScore節點 -->
+    <rect x="550" y="50" width="150" height="50" fill="#d4edda" stroke="#155724" stroke-width="2" rx="5" ry="5"/>
+    <text x="625" y="80" font-size="14" text-anchor="middle" fill="#155724">MuseScore (樂譜)</text>
+
+    <!-- Marble Music節點 -->
+    <rect x="550" y="150" width="150" height="50" fill="#cce5ff" stroke="#004085" stroke-width="2" rx="5" ry="5"/>
+    <text x="625" y="180" font-size="14" text-anchor="middle" fill="#004085">Marble Music (動畫)</text>
+
+    <!-- 箭頭連線 -->
+    <line x1="200" y1="75" x2="300" y2="125" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="200" y1="175" x2="300" y2="125" stroke="#721c24" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrow)"/>
+
+    <line x1="450" y1="125" x2="550" y2="75" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="450" y1="125" x2="550" y2="175" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- 標註說明 -->
+    <text x="230" y="90" font-size="12" fill="#2c3e50">完整和弦/多音</text>
+    <text x="230" y="150" font-size="12" fill="#721c24">單指受限</text>
+</svg>
+<h2 id="section11">11. 我透過MIDI創作的作品</h2>
+<ol>
+    <li>
+        帝皇再臨A大調樂譜
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/cydqv1t0Ljc?si=8PaMFmJw07DMvplY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        帝皇再臨C大調樂譜
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/omgZstaqcQk?si=1DiwkM1qUvS-e4IY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        鬼新娘 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/kFtGnkQnNbk?si=TgNo7hNy7Y00mHRv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        殭屍先生 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/ngkhJo6XmVo?si=cfQKCU_SsAo5-liG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        殭屍復活II 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/xy_RSzT1_A4?si=xr70vveff7EDrpci" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        一眉道人 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/1PUVG9Ms4_U?si=_Zhv8QE7UTcWzGn1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        淡淡的愛意 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/g8-Eg5irucU?si=kQ_7a5d5PJs_MSzz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        戰鬥-通往勝利 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/FUmlW5EuC3w?si=HIRBdDkYk31LzyEV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        光的戰役 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/4PC3Czgm_Cw?si=I030GZWbnJ-OARc6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        帝皇再臨A大調 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/hv3jLuliFB8?si=VYszEtog4EVWhkRq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        帝皇再臨C大調 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/iWQSHJhJ_PE?si=Xv1FDVrlGxCgSh5l" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        Just K.O 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/Nxp_g72oWa8?si=5EHaSXaZg7LU530j" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        ウルトラマンの歌 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/K6gT5JAOuNA?si=kPq-WIt0iQev31nm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        ウルトラセブンの歌 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/QnJA1M_cOH8?si=x33VBWfTklbWPbtY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        帰ってきたウルトラマンの歌 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/9V_JYw27cio?si=3nc3i0SZgS12Wegp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        V6 Take Me Higher 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/dfQE2VE4Pf8?si=djoG6xOwVlvidh0z" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        君だけを守りたい 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/yzjWOe4VCXc?si=j4qO8g6dpZlLjOn8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        Eiyuu 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/EumyOOIejEo?si=oh2OVTBKoI8nFIDu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        ウルトラの奇跡 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/B7afXxz5BUg?si=lr2zwtYSc84I5d1L" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        ジードの証 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/bucOp0yZiKA?si=1pV7GlibKW55Cji6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        Kamen Rider Kuuga 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/lWJLMQHvuRM?si=QErHBUu1osCo16cG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        Hurricaneger Sanjou 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/hPclTxdAWlM?si=Olnilhdd-fRt6Brx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        Shiawase Shaking Hands 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/Jc_pEEYhYcU?si=2KqU5ng3KNE-1a8v" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        life Goes On 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/FiGBe151ZFo?si=wnZiLZtRPxhLCWmj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        Madan Senki Ryukendo 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/gy4Ttc1frwA?si=GiSizVGv31XKJ5Y3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+    <li>
+        君が好きだと叫びたい 音樂小球
+        <br>
+        <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/LIAKVo7QsJI?si=REuIO-kAWRiLTc0W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </li>
+</ol>
+<div class="note">
+    核心結論：MIDI是靈魂，演奏能力是創作的橋梁；沒有演奏能力就只能靠現成MIDI。
+</div>
+<div id="social-share" style="margin-top: 20px;">
+    <a id="fb-share" href="#" target="_blank" style="color: #4267B2; font-weight: bold;">分享到 Facebook</a>
+    <span> | </span>
+    <a id="line-share" href="#" target="_blank" style="color: #00C300; font-weight: bold;">分享到 Line</a>
+    <span> | </span>
+    <a id="twitter-share" href="#" target="_blank" style="color: #1DA1F2; font-weight: bold;">分享到 X</a>
+</div>
+<script>
+    // 自動抓取當前頁面的 URL
+    var currentUrl = window.location.href;
+    // Facebook 分享
+    document.getElementById("fb-share").href =
+        "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
+    // Line 分享
+    document.getElementById("line-share").href =
+        "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
+    // X (Twitter) 分享
+    document.getElementById("twitter-share").href =
+        "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=你的文章標題";
+</script>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
+</script>
+
+<div class="fb-comments"
+     data-href="https://chrischou19990904.github.io/harp_app_introduction"
+     data-width="100%"
+     data-numposts="5">
+</div>
+<ul id="messages"></ul>
+<hr>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二六年一月八日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+</body>
+</html>
