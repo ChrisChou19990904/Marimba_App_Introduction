@@ -216,10 +216,19 @@
     let midiData = null;
     let transpose = 0;
 
-    // 監聽檔案上傳
+    // 監聽選單變動
+    document.getElementById("keySelect").addEventListener("change", (e) => {
+        transpose = parseInt(e.target.value);
+    });
+
+    // 監聽檔案上傳 (優化連續上傳邏輯)
     document.getElementById("midiUpload").addEventListener("change", async (e) => {
+        // 每次選取新檔案時先重置狀態
+        document.getElementById("playBtn").disabled = true;
+        midiData = null;
+
         if (typeof Midi === 'undefined') {
-            alert("錯誤：MIDI 程式庫尚未載入成功！請檢查網路連線。");
+            alert("錯誤：MIDI 程式庫尚未載入成功！");
             return;
         }
 
@@ -228,36 +237,38 @@
 
         try {
             const arrayBuffer = await file.arrayBuffer();
-            midiData = new Midi(arrayBuffer); // 解析二進位數據
+            // 解析新檔案並覆蓋 midiData 變數
+            const newMidi = new Midi(arrayBuffer);
 
-            if (midiData.tracks.length > 0) {
-                alert("演奏數據讀取成功！");
+            if (newMidi.tracks.length > 0) {
+                midiData = newMidi;
+                alert("新演奏數據讀取成功！檔案：" + file.name);
                 document.getElementById("playBtn").disabled = false;
             }
         } catch (err) {
             console.error("解析失敗:", err);
-            alert("檔案解析失敗，請確認格式是否正確。");
+            alert("檔案解析失敗。");
         }
     });
 
-    document.getElementById("keySelect").addEventListener("change", (e) => {
-        transpose = parseInt(e.target.value);
-    });
-
-    // 播放邏輯
+    // 播放邏輯 (修正時間排程問題)
     document.getElementById("playBtn").addEventListener("click", async () => {
         if (!midiData) return;
 
-        await Tone.start(); // 啟動 AudioContext
+        // 啟動音訊引擎
+        await Tone.start();
+
+        // 設定一個微小的起始延遲，並將播放時間對齊到「現在」
+        const startTime = Tone.now() + 0.1;
         const synth = new Tone.PolySynth(Tone.Synth).toDestination();
 
         midiData.tracks.forEach(track => {
             track.notes.forEach(note => {
-                // 執行移調運算並播放
+                // 核心修正：將 note.time 改為相對 startTime 的偏移量，確保從現在開始完整播放
                 synth.triggerAttackRelease(
                     Tone.Frequency(note.midi + transpose, "midi"),
                     note.duration,
-                    note.time
+                    startTime + note.time
                 );
             });
         });
