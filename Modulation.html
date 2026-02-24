@@ -103,18 +103,18 @@
 
     <label for="keySelect">選擇升降調：</label>
     <select id="keySelect">
-        <option value="0">C (原調)</option>
-        <option value="1">C# (+1)</option>
-        <option value="2">D (+2)</option>
-        <option value="3">D# (+3)</option>
-        <option value="4">E (+4)</option>
-        <option value="5">F (+5)</option>
-        <option value="6">F# (+6)</option>
-        <option value="7">G (+7)</option>
-        <option value="8">G# (+8)</option>
-        <option value="9">A (+9)</option>
-        <option value="10">A# (+10)</option>
-        <option value="11">B (+11)</option>
+        <option value="0">(原調)</option>
+        <option value="1">(+1)</option>
+        <option value="2">(+2)</option>
+        <option value="3">(+3)</option>
+        <option value="4">(+4)</option>
+        <option value="5">(+5)</option>
+        <option value="6">(+6)</option>
+        <option value="7">(+7)</option>
+        <option value="8">(+8)</option>
+        <option value="9">(+9)</option>
+        <option value="10">(+10)</option>
+        <option value="11">(+11)</option>
     </select><br><br>
 
     <button id="playBtn" disabled>▶ 播放你自己的演奏數據</button>
@@ -122,12 +122,26 @@
 </div>
 <div class="section">
     <h2>🎵 點擊播放我的演奏 (支援即時轉調)</h2>
-    <p>以下旋律皆為我使用 Perfect Piano 錄製，點擊後會依據下方選單的「升降調」設定直接播放：</p>
-    <button onclick="fetchAndPlayMidi('Take Me Higher.mid')">▶ 播放：Take Me Higher (超人力霸王迪卡主題曲)</button>
+    <p>以下旋律皆為我使用 Perfect Piano 錄製，點擊後會依據下方選單的「升降調」設定直接播放（我沒有將所有錄製好的檔案上傳過來，因為我不想佔太多空間）：</p>
+    <button onclick="fetchAndPlayMidi('戰鬥通往勝利.mid')">▶ 播放：戰鬥–通往勝利 (鎧甲勇士光影傳奇插曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('淡淡的愛意C大調.mid')">▶ 播放：淡淡的愛意 (鎧甲勇士光影傳奇插曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('帝皇再臨A大調.mid')">▶ 播放：帝皇再臨 (鎧甲勇士之帝皇俠插曲)</button>
     <br><br>
     <button onclick="fetchAndPlayMidi('不敗的英雄.mid')">▶ 播放：不敗的英雄 (鎧甲勇士刑天主題曲)</button>
     <br><br>
+    <button onclick="fetchAndPlayMidi('Take Me Higher.mid')">▶ 播放：Take Me Higher (超人力霸王迪卡主題曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('只想守护你.mid')">▶ 播放：只想守護你 (超人力霸王帝納片尾曲)</button>
+    <br><br>
     <button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('影となりて悪を討つ.mid')">▶ 播放：影となりて悪を討つ (忍風戰隊破裏劍者主插曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('幸せShaking Hands.mid')">▶ 播放：幸せShaking Hands (忍風戰隊破裏劍者插曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('仮面ライダークウガ.mid')">▶ 播放：仮面ライタークウカ (假面騎士空我主題曲)</button>
     <br><br>
     <button onclick="fetchAndPlayMidi('Be the one.mid')">▶ 播放：Be the one (假面騎士Build主題曲)</button>
     <br><br>
