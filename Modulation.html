@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI 轉調原理與演奏實證</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; color: #333; }
+        .section { background: #f4f7f6; padding: 20px; border-radius: 10px; margin-bottom: 30px; border-left: 5px solid #2980b9; }
+        .highlight { color: #b22222; font-weight: bold; }
+        .controls { background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
+        button { background: #2980b9; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        a{
+            color: #2980b9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div id="google-translate-box">
+    <div id="google_translate_element"></div>
+    <!-- Google Translate 的自動翻譯功能 -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'zh-TW',  // 頁面原語言
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p>點擊上方的語言選單以切換語言</p>
+</div>
+<header>
+    <nav>
+        <ul>
+            <li><strong class="guide">本頁內容：</strong><br>
+                <a>🎹 MIDI 數據處理：升降調原理與演奏實證</a></li>
+            <li><strong class="guide">其他文章連結：</strong>
+                <ol>
+                    <li><a href="index.html" target="_blank">首頁</a></li>
+                    <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
+                    <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
+                    <li><a href="flaw_of_perfect_piano.html" target="_blank">數位樂器出現畫面與聲音不連貫的原因探討</a></li>
+                    <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
+                    <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
+                    <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（61 首）</a></li>
+                    <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+                    <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+                    <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
+                    <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
+                    <li><a href="vue_vs_multiple_html.html" target="_blank">Vue 與多頁 HTML 架構的差異與對應</a></li>
+                    <li><a href="being_honest_does_not_conflict_with_being_vain.html" target="_blank">關於真實、自我呈現與數位樂器演奏的說明</a></li>
+                    <li><a href="InShot.html" target="_blank">InShot 使用心得與技術推測分析</a></li>
+                    <li><a href="About_MIDI.html" target="_blank">MIDI原理與應用說明</a></li>
+                    <li><a href="video_situation_in_html_and_vue.html" target="_blank">為什麼原生 HTML + JavaScript 影片會繼續播放，但 Vue 3 不會？</a></li>
+                </ol>
+        </ul>
+    </nav>
+</header>
+<h1>🎹 MIDI 數據處理：升降調原理與演奏實證</h1>
+
+<div class="section">
+    <h2>💡 JavaScript 轉調原理</h2>
+    <p>
+        在數位音樂協議中，每個音符都對應一個 0-127 的 <strong>MIDI Number</strong>。<br>
+        本程式透過 JavaScript 的算術運算達成轉調：程式會執行 <code>note.midi + transpose</code>。<br>
+        例如：原本錄好的 C (60) 加上 3 個半音，就會變為 63 (D#)，再由 <strong>Tone.js</strong> 轉換為對應頻率發聲。
+    </p>
+</div>
+
+<div class="section">
+    <h2>⚠️ 核心觀點：技術無法取代演奏能力</h2>
+    <p>
+        雖然程式可以輕鬆改變調性，但<span class="highlight">「優質的旋律數據」必須源於真實的演奏</span>。<br>
+        要播放理想的旋律，最專業的做法是透過電子琴或 <strong>Perfect Piano 開啟 MIDI 錄製模式</strong>。
+    </p>
+    <p>
+        這要求創作者具備實際演奏能力，才能捕捉到人類特有的節奏感與情感。<br>
+        本頁面展示的所有 MIDI 旋律，皆是我本人親自透過鍵盤演奏錄製而成，並非使用網路現成檔案。
+    </p>
+</div>
+
+<div class="controls">
+    <h2>🛠️ MIDI 處理器實作</h2>
+    <p>請上傳你使用 <strong>Perfect Piano</strong> 錄製的 <code>.mid</code> 檔案：</p>
+    <input type="file" id="midiUpload" accept=".mid,.midi"><br><br>
+
+    <label for="keySelect">選擇升降調：</label>
+    <select id="keySelect">
+        <option value="0">C (原調)</option>
+        <option value="1">C# (+1)</option>
+        <option value="2">D (+2)</option>
+        <option value="3">D# (+3)</option>
+        <option value="4">E (+4)</option>
+        <option value="5">F (+5)</option>
+        <option value="6">F# (+6)</option>
+        <option value="7">G (+7)</option>
+        <option value="8">G# (+8)</option>
+        <option value="9">A (+9)</option>
+        <option value="10">A# (+10)</option>
+        <option value="11">B (+11)</option>
+    </select><br><br>
+
+    <button id="playBtn" disabled>▶ 播放你自己的演奏數據</button>
+    <p><small>※ 下方所有演奏播放皆會套用此設定</small></p>
+</div>
+<div class="section">
+    <h2>🎵 點擊播放我的演奏 (支援即時轉調)</h2>
+    <p>以下旋律皆為我使用 Perfect Piano 錄製，點擊後會依據下方選單的「升降調」設定直接播放：</p>
+    <button onclick="fetchAndPlayMidi('Take Me Higher.mid')">▶ 播放：Take Me Higher (超人力霸王迪卡主題曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('不敗的英雄.mid')">▶ 播放：不敗的英雄 (鎧甲勇士刑天主題曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('Be the one.mid')">▶ 播放：Be the one (假面騎士Build主題曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('超星神主題曲.mid')">▶ 播放：Life Goes On (超星神格蘭賽沙主題曲)</button>
+    <br><br>
+    <button onclick="fetchAndPlayMidi('龍劍道.mid')">▶ 播放：龍劍道 (魔彈戰記龍劍道主題曲)</button>
+</div>
+
+<script>
+    // 核心功能：抓取遠端檔案並立即播放
+    async function fetchAndPlayMidi(url) {
+        try {
+            // 1. 從伺服器下載你錄製的 MIDI 檔案
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("找不到檔案：" + url);
+            const arrayBuffer = await response.arrayBuffer();
+
+            // 2. 解析 MIDI 數據
+            const remoteMidi = new Midi(arrayBuffer);
+
+            // 3. 啟動音訊引擎並播放 (套用當前的 transpose 值)
+            await Tone.start();
+            const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+
+            remoteMidi.tracks.forEach(track => {
+                track.notes.forEach(note => {
+                    // 原理說明：讀取當前下拉選單的 transpose 變數進行轉調
+                    synth.triggerAttackRelease(
+                        Tone.Frequency(note.midi + transpose, "midi"),
+                        note.duration,
+                        note.time
+                    );
+                });
+            });
+            console.log(`正在播放 ${url}，套用轉調值：${transpose}`);
+        } catch (err) {
+            console.error("播放預設檔案失敗:", err);
+            alert("無法播放伺服器上的檔案，請確認檔案路徑是否正確。");
+        }
+    }
+</script>
+<script>
+    let midiData = null;
+    let transpose = 0;
+
+    // 監聽檔案上傳
+    document.getElementById("midiUpload").addEventListener("change", async (e) => {
+        if (typeof Midi === 'undefined') {
+            alert("錯誤：MIDI 程式庫尚未載入成功！請檢查網路連線。");
+            return;
+        }
+
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            midiData = new Midi(arrayBuffer); // 解析二進位數據
+
+            if (midiData.tracks.length > 0) {
+                alert("演奏數據讀取成功！");
+                document.getElementById("playBtn").disabled = false;
+            }
+        } catch (err) {
+            console.error("解析失敗:", err);
+            alert("檔案解析失敗，請確認格式是否正確。");
+        }
+    });
+
+    document.getElementById("keySelect").addEventListener("change", (e) => {
+        transpose = parseInt(e.target.value);
+    });
+
+    // 播放邏輯
+    document.getElementById("playBtn").addEventListener("click", async () => {
+        if (!midiData) return;
+
+        await Tone.start(); // 啟動 AudioContext
+        const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+
+        midiData.tracks.forEach(track => {
+            track.notes.forEach(note => {
+                // 執行移調運算並播放
+                synth.triggerAttackRelease(
+                    Tone.Frequency(note.midi + transpose, "midi"),
+                    note.duration,
+                    note.time
+                );
+            });
+        });
+    });
+</script>
+<ul id="messages"></ul>
+<div id="social-share" style="margin-top: 20px;">
+    <a id="fb-share" href="#" target="_blank" style="color: #4267B2; font-weight: bold;">分享到 Facebook</a>
+    <span> | </span>
+    <a id="line-share" href="#" target="_blank" style="color: #00C300; font-weight: bold;">分享到 Line</a>
+    <span> | </span>
+    <a id="twitter-share" href="#" target="_blank" style="color: #1DA1F2; font-weight: bold;">分享到 X</a>
+</div>
+<script>
+    // 自動抓取當前頁面的 URL
+    var currentUrl = window.location.href;
+    // Facebook 分享
+    document.getElementById("fb-share").href =
+        "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
+    // Line 分享
+    document.getElementById("line-share").href =
+        "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
+    // X (Twitter) 分享
+    document.getElementById("twitter-share").href =
+        "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=你的文章標題";
+</script>
+<hr>
+<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
+    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
+    <br>創作日期：西元二零二六年二月二十四日<br>
+    <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
+    <br>
+</footer>
+</body>
+</html>
