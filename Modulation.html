@@ -151,7 +151,7 @@
 </div>
 
 <script>
-    // 核心功能：抓取遠端檔案並立即播放
+    // 核心功能：抓取遠端檔案並立即播放 (優化播放完整性版)
     async function fetchAndPlayMidi(url) {
         try {
             // 1. 從伺服器下載你錄製的 MIDI 檔案
@@ -162,21 +162,27 @@
             // 2. 解析 MIDI 數據
             const remoteMidi = new Midi(arrayBuffer);
 
-            // 3. 啟動音訊引擎並播放 (套用當前的 transpose 值)
+            // 3. 啟動音訊引擎
             await Tone.start();
+
+            // 設定一個微小的起始延遲 (0.1秒)，確保 AudioContext 已經完全準備好發聲
+            // Tone.now() 是目前的絕對時間，我們將所有音符掛載在「現在 + 0.1秒」之後
+            const startTime = Tone.now() + 0.1;
+
             const synth = new Tone.PolySynth(Tone.Synth).toDestination();
 
             remoteMidi.tracks.forEach(track => {
                 track.notes.forEach(note => {
-                    // 原理說明：讀取當前下拉選單的 transpose 變數進行轉調
+                    // 修正重點：將 note.time 改為相對 startTime 的偏移量
                     synth.triggerAttackRelease(
                         Tone.Frequency(note.midi + transpose, "midi"),
                         note.duration,
-                        note.time
+                        startTime + note.time // 這樣音符就會從當下完整播放
                     );
                 });
             });
-            console.log(`正在播放 ${url}，套用轉調值：${transpose}`);
+
+            console.log(`正在播放 ${url}，套用轉調值：${transpose}，起始時間：${startTime}`);
         } catch (err) {
             console.error("播放預設檔案失敗:", err);
             alert("無法播放伺服器上的檔案，請確認檔案路徑是否正確。");
