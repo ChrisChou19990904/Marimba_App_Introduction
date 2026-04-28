@@ -188,7 +188,18 @@
 <p>
     從計算機科學的角度來看，這樣的現象涉及多個層面：包含人機互動（Human–Computer Interaction, HCI）、多媒體資料壓縮與傳輸、以及使用者介面設計（User Interface Design）。因此，這次的案例不僅是影片播放的技術問題，更可作為探討數位音樂互動系統中技術與感知之間關係的具體例證。
 </p>
-
+<div class="supplementary-info" style="border-left: 5px solid #e67e22; background-color: #fffaf0;">
+    <h2 style="color: #d35400;">技術核心：空間壓力與影音品質的連鎖反應</h2>
+    <p>
+        從全端開發與多媒體處理的角度來看，影片品質與裝置的<strong>儲存空間（Disk Space）</strong>息息相關。當手機剩餘空間不足（例如低於 10%）時，作業系統為了維持運作，會強行降低螢幕錄影的<strong>位元率 (Bitrate)</strong> 以減輕寫入壓力。
+    </p>
+    <p>
+        這種「初級母帶」在經過小紅書等社群平台的<strong>暴力壓縮（Aggressive Compression）</strong>後，演算法會優先捨棄變動細節較小的像素。在《Perfect Piano》中，琴鍵變色屬於極微小的像素變動，常被演算法誤認為「數位雜訊」而遭到抹除，這正是造成<strong>「聲音在跑、畫面沒動」</strong>的技術主因。
+    </p>
+    <p>
+        <strong>實證建議：</strong>維持約 100 GB 的緩衝空間，能確保系統以最高位元率錄製原始訊號，保留更多視覺細節與真實音質，從根本上提升作品的「說服力」。
+    </p>
+</div>
 <!-- 補充說明區塊 -->
 <div class="supplementary-info">
     <h2>補充說明：如何使用 HTML 的 <code>&lt;video&gt;</code> 元素</h2>
