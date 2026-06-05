@@ -135,21 +135,21 @@
     <h2>🛠️ MIDI 處理器實作</h2>
     <p>請上傳你使用 <strong>Perfect Piano</strong> 或其他工具錄製的 <code>.mid</code> 檔案：</p>
     <input type="file" id="midiUpload" accept=".mid,.midi"><br><br>
-
+    <label for="keySelect">選擇升降調：</label>
     <label for="keySelect">選擇升降調：</label>
     <select id="keySelect">
-        <option value="0">(原調)</option>
+        <option value="0" selected>(原調)</option>
         <option value="1">(+1)</option>
         <option value="2">(+2)</option>
         <option value="3">(+3)</option>
         <option value="4">(+4)</option>
         <option value="5">(+5)</option>
         <option value="6">(+6)</option>
-        <option value="7">(+7)</option>
-        <option value="8">(+8)</option>
-        <option value="9">(+9)</option>
-        <option value="10">(+10)</option>
-        <option value="11">(+11)</option>
+        <option value="-5">(-5) 也就是原本的 +7</option>
+        <option value="-4">(-4) 也就是原本的 +8</option>
+        <option value="-3">(-3) 也就是原本的 +9</option>
+        <option value="-2">(-2) 也就是原本的 +10</option>
+        <option value="-1">(-1) 也就是原本的 +11</option>
     </select><br><br>
     <label for="typeSelect">選擇聲音類型：</label>
     <select id="typeSelect">
