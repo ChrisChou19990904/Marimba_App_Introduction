@@ -121,7 +121,16 @@
         <li><strong>柔和純音 (Sine)</strong>：使用正弦波。它是最純粹的單一頻率基音，沒有任何諧波成分，聽感極度平滑。</li>
     </ul>
 </div>
-
+<div class="section">
+    <h2>⚠️ 核心觀點：技術無法取代演奏能力</h2>
+    <p>
+        雖然程式可以透過演算法輕鬆改變調性與音色，但<span class="highlight">「優質的旋律數據」必須源於真實且紮實的演奏功底</span>。<br>
+        本網頁所展示的 32 首精選旋律，<strong>皆是我本人純手工在行動裝置狹小的螢幕上，完全僅憑「左手大拇指與右手大拇指」的極限協調，在 Perfect Piano 中開啟 MIDI 錄製模式辛苦彈奏而成</strong>，絕非使用網路上現成的數位音訊檔案。
+    </p>
+    <p>
+        在小螢幕上以雙拇指精準駕馭如《魔彈戰記龍劍道》或《假面騎士 Build》等每分鐘超過 130 拍（BPM）、音符密度極高的快節奏特攝曲目，要求創作者具備極高的節奏感、動態掌控力與鍵位空間感。這些親自演奏錄製的 MIDI 數據，完整保留了人類演奏特有的細微情感，是純程式動態生成或死板的 Q 點量化所無法比擬的。
+    </p>
+</div>
 <div class="controls">
     <h2>🛠️ MIDI 處理器實作</h2>
     <p>請上傳你使用 <strong>Perfect Piano</strong> 或其他工具錄製的 <code>.mid</code> 檔案：</p>
@@ -150,7 +159,16 @@
         <option value="square">復古 8-bit (Square)</option>
     </select><br><br>
     <button id="playBtn" disabled>▶ 播放你自己的演奏數據</button>
-    <p><small>※ 下方所有演奏播放皆會套用此設定。另外，當你用手機瀏覽時，也請關靜音，否則聲音會出不來。</small></p>
+
+    <div style="margin-top: 15px; text-align: left; font-size: 0.85em; color: #555; background: #fff8f8; padding: 12px; border-radius: 5px; border: 1px dashed #e74c3c;">
+        <strong>📱 行動裝置（手機）瀏覽發聲重要提示與 Web Audio 原理：</strong><br>
+        當你使用手機瀏覽本網頁時，<strong>請務必將手機側邊的「實體靜音開關」關閉（切換至響鈴模式）</strong>，否則網頁會完全沒有聲音。
+        <br><br>
+        <strong>💡 為什麼開啟靜音模式會導致網頁沒聲音？（技術原理探討）</strong><br>
+        本網頁是利用 HTML5 的 <code>AudioContext</code>（Web Audio API）在前端即時運算並合成波形。在 iOS（Safari/WebKit 核心）與部分 Android 系統的底層音訊類別（Audio Session Category）設計中，網頁即時合成音訊預設會被歸類為 <code>Ambient</code>（環境音效）或次要媒體。
+        <br><br>
+        當手機開啟實體靜音鍵時，系統為了不打擾使用者，會強制壓制所有 <code>Ambient</code> 類別的音訊輸出（如同遊戲背景音效會被切斷，但 YouTube 預錄影片的 <code>Playback</code> 類別不會被切斷）。因此，這並非程式邏輯發生 Bug，而是行動作業系統為了維護使用者體驗而設置的硬體層級攔截。播放前請確保響鈴已開啟！
+    </div>
 </div>
 <div class="section">
     <h2>🎵 點擊播放我的演奏 (支援即時轉調)</h2>
