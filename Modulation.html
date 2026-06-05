@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI 轉調原理與演奏實證</title>
+    <title>🎹 數位音訊與 MIDI 數據處理：多波形合成器與即時轉調實證</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
     <style>
@@ -72,7 +72,7 @@
     <nav>
         <ul>
             <li><strong class="guide">本頁內容：</strong><br>
-                <a>🎹 MIDI 數據處理：升降調原理與演奏實證</a></li>
+                <a>🎹 數位音訊與 MIDI 數據處理：多波形合成器與即時轉調實證</a></li>
             <li><strong class="guide">其他文章連結：</strong>
                 <ol>
                     <li><a href="index.html" target="_blank">首頁</a></li>
@@ -95,27 +95,31 @@
         </ul>
     </nav>
 </header>
-<h1>🎹 MIDI 數據處理：升降調原理與演奏實證</h1>
+<h1>🎹 數位音訊與 MIDI 數據處理：多波形合成器與即時轉調實證</h1>
 
 <div class="section">
-    <h2>💡 JavaScript 轉調原理</h2>
+    <h2>💡 數位音訊合成與轉調原理</h2>
     <p>
-        在數位音樂協議中，每個音符都對應一個 0-127 的 <strong>MIDI Number</strong>。<br>
-        本程式透過 JavaScript 的算術運算達成轉調：程式會執行 <code>note.midi + transpose</code>。<br>
-        例如：原本錄好的 C (60) 加上 3 個半音，就會變為 63 (D#)，再由 <strong>Tone.js</strong> 轉換為對應頻率發聲。
+        本網頁底層基於 <strong>Tone.js</strong> 網頁音訊架構（Web Audio API），核心運作包含以下兩個物理與數學邏輯：
     </p>
-</div>
 
-<div class="section">
-    <h2>⚠️ 核心觀點：技術無法取代演奏能力</h2>
+    <h3>1. JavaScript 轉調演算法</h3>
     <p>
-        雖然程式可以輕鬆改變調性，但<span class="highlight">「優質的旋律數據」必須源於真實的演奏</span>。<br>
-        要播放理想的旋律，最專業的做法是透過電子琴或 <strong>Perfect Piano 開啟 MIDI 錄製模式</strong>。
+        在數位音樂（MIDI）協議中，每個音階都對應一個 0 到 127 的整數 <strong>MIDI Number</strong>。<br>
+        本程式透過算術運算達成即時轉調：在音符觸發前執行 <code>note.midi + transpose</code>。<br>
+        例如：原本演奏錄製的 C4 (MIDI 編號 60) 加上 3 個半音（<code>transpose = 3</code>），數值會變為 63 (D#4)，再由音訊引擎將該編號換算成對應的物理頻率（Hz）發聲。
     </p>
+
+    <h3>2. 波形合成（Oscillator）與包絡線（Envelope）</h3>
     <p>
-        這要求創作者具備實際演奏能力，才能捕捉到人類特有的節奏感與情感。<br>
-        本頁面展示的所有 MIDI 旋律，皆是我本人親自透過鍵盤演奏錄製而成，並非使用網路現成檔案。
+        網頁能切換不同的聲音類型，是透過改變<strong>訊號產生器（Oscillator）</strong>的物理波形與<strong>振幅包絡線（ADSR Envelope）</strong>來模擬不同樂器的聽感：
     </p>
+    <ul>
+        <li><strong>圓潤鋼琴風 (Triangle)</strong>：使用三角形波。其奇數諧波衰減極快，音色相對圓潤純淨。搭配<strong>快攻擊（Attack）、長釋放（Release）</strong>的包絡線，能有效模擬鋼琴或打擊樂器敲擊後餘音繚繞的物理動態。</li>
+        <li><strong>明亮電子琴 (Sawtooth)</strong>：使用鋸齒波。它包含了所有的連續諧波，聲音非常明亮且飽滿，是 80 年代昭和特攝電子合成器（Synthesizer）最經典的標誌性音色。</li>
+        <li><strong>復古 8-bit (Square)</strong>：使用方波。僅包含強烈的奇數諧波，聲音生硬且帶有強烈的數位感，能完美還原早期紅白機（NES）遊戲音樂的復古氛圍。</li>
+        <li><strong>柔和純音 (Sine)</strong>：使用正弦波。它是最純粹的單一頻率基音，沒有任何諧波成分，聽感極度平滑。</li>
+    </ul>
 </div>
 
 <div class="controls">
@@ -138,7 +142,13 @@
         <option value="10">(+10)</option>
         <option value="11">(+11)</option>
     </select><br><br>
-
+    <label for="typeSelect">選擇聲音類型：</label>
+    <select id="typeSelect">
+        <option value="triangle">圓潤鋼琴風 (Triangle)</option>
+        <option value="sawtooth">明亮電子琴 (Sawtooth)</option>
+        <option value="sine">柔和純音 (Sine)</option>
+        <option value="square">復古 8-bit (Square)</option>
+    </select><br><br>
     <button id="playBtn" disabled>▶ 播放你自己的演奏數據</button>
     <p><small>※ 下方所有演奏播放皆會套用此設定。另外，當你用手機瀏覽時，也請關靜音，否則聲音會出不來。</small></p>
 </div>
@@ -183,56 +193,63 @@
 </div>
 
 <script>
-    // 核心功能：抓取遠端檔案並立即播放 (優化播放完整性版)
+    // 【修正】將所有全域變數集中到最頂層宣告，避免 ReferenceError
+    let midiData = null;
+    let transpose = 0;
+    let currentType = "triangle"; // 預設使用較圓潤的三角波
+
+    // 監聽轉調選單變動
+    document.getElementById("keySelect").addEventListener("change", (e) => {
+        transpose = parseInt(e.target.value);
+    });
+
+    // 監聽聲音類型選單變動
+    document.getElementById("typeSelect").addEventListener("change", (e) => {
+        currentType = e.target.value;
+    });
+
+    // 核心功能：抓取遠端檔案並立即播放
     async function fetchAndPlayMidi(url) {
         try {
-            // 1. 從伺服器下載你錄製的 MIDI 檔案
             const response = await fetch(url);
             if (!response.ok) throw new Error("找不到檔案：" + url);
             const arrayBuffer = await response.arrayBuffer();
 
-            // 2. 解析 MIDI 數據
             const remoteMidi = new Midi(arrayBuffer);
-
-            // 3. 啟動音訊引擎
             await Tone.start();
 
-            // 設定一個微小的起始延遲 (0.1秒)，確保 AudioContext 已經完全準備好發聲
-            // Tone.now() 是目前的絕對時間，我們將所有音符掛載在「現在 + 0.1秒」之後
             const startTime = Tone.now() + 0.1;
 
-            const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+            // 成功動態套用讀者選擇的音色與包絡線
+            const synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: currentType },
+                envelope: {
+                    attack: 0.005,
+                    decay: 0.1,
+                    sustain: 0.3,
+                    release: 1.2
+                }
+            }).toDestination();
 
             remoteMidi.tracks.forEach(track => {
                 track.notes.forEach(note => {
-                    // 修正重點：將 note.time 改為相對 startTime 的偏移量
                     synth.triggerAttackRelease(
                         Tone.Frequency(note.midi + transpose, "midi"),
                         note.duration,
-                        startTime + note.time // 這樣音符就會從當下完整播放
+                        startTime + note.time
                     );
                 });
             });
 
-            console.log(`正在播放 ${url}，套用轉調值：${transpose}，起始時間：${startTime}`);
+            console.log(`正在播放 ${url}，音色：${currentType}，轉調：${transpose}`);
         } catch (err) {
             console.error("播放預設檔案失敗:", err);
             alert("無法播放伺服器上的檔案，請確認檔案路徑是否正確。");
         }
     }
-</script>
-<script>
-    let midiData = null;
-    let transpose = 0;
 
-    // 監聽選單變動
-    document.getElementById("keySelect").addEventListener("change", (e) => {
-        transpose = parseInt(e.target.value);
-    });
-
-    // 監聽檔案上傳 (優化連續上傳邏輯)
+    // 監聽檔案上傳
     document.getElementById("midiUpload").addEventListener("change", async (e) => {
-        // 每次選取新檔案時先重置狀態
         document.getElementById("playBtn").disabled = true;
         midiData = null;
 
@@ -246,7 +263,6 @@
 
         try {
             const arrayBuffer = await file.arrayBuffer();
-            // 解析新檔案並覆蓋 midiData 變數
             const newMidi = new Midi(arrayBuffer);
 
             if (newMidi.tracks.length > 0) {
@@ -260,20 +276,26 @@
         }
     });
 
-    // 播放邏輯 (修正時間排程問題)
+    // 【修正】使用者自行上傳檔案的播放邏輯，同步支援音色切換
     document.getElementById("playBtn").addEventListener("click", async () => {
         if (!midiData) return;
 
-        // 啟動音訊引擎
         await Tone.start();
-
-        // 設定一個微小的起始延遲，並將播放時間對齊到「現在」
         const startTime = Tone.now() + 0.1;
-        const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+
+        // 這裡同步改為動態讀取 currentType 加上包絡線
+        const synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: currentType },
+            envelope: {
+                attack: 0.005,
+                decay: 0.1,
+                sustain: 0.3,
+                release: 1.2
+            }
+        }).toDestination();
 
         midiData.tracks.forEach(track => {
             track.notes.forEach(note => {
-                // 核心修正：將 note.time 改為相對 startTime 的偏移量，確保從現在開始完整播放
                 synth.triggerAttackRelease(
                     Tone.Frequency(note.midi + transpose, "midi"),
                     note.duration,
