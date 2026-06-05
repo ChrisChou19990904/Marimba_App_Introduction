@@ -171,21 +171,29 @@
     </div>
 </div>
 <div class="section">
-    <h2>🎵 點擊播放我的演奏 (支援即時轉調)</h2>
-    <p>以下旋律皆為我使用 Perfect Piano 錄製，點擊後會依據上方選單的「升降調」與「聲音類型」設定直接播放：</p>
+    <h2>🎵 點擊播放我的演奏 (支援即時轉調與調性還原)</h2>
+    <p>
+        以下旋律皆為我使用 Perfect Piano 錄製，點擊後會依據上方選單的「升降調」與「聲音類型」設定直接動態播放。
+    </p>
+    <p style="background: #f0f7fa; padding: 12px; border-radius: 5px; border-left: 4px solid #3498db; font-size: 0.9em;">
+        <strong>💡 演奏調性特調說明：</strong><br>
+        為了在行動裝置狹小的螢幕上確保雙拇指彈奏的最高精確度與流暢度，本清單中的某些曲子<b>並非按照原調演奏，而是由我改編為最適合鍵盤指法特徵的 C 大調進行實體錄製</b>（例如：原本為 B 大調的《不敗的英雄》、以及原本為 降 D 大調的《淡淡的愛意》，錄音主體皆已統一轉為 C 大調）。<br><br>
+        讀者若想聆聽原汁原味的原曲調性，<b>只需在上方「選擇升降調」選單中，動態切換至對應的半音偏移量</b>（例如：《不敗的英雄》選擇 <b>-1</b> 或 <b>+11</b> 即可動態還原為 B 大調），這正是本專案「即時移調演算法」與「演奏數據化」的核心實用價值所在！
+    </p>
+
     <ol>
         <li><button onclick="fetchAndPlayMidi('一笑江湖.mid')">▶ 播放：一笑江湖</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('homecoming.mid')">▶ 播放：homecoming（Samsung手機鈴聲）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('君が好きだと叫びたい.mid')">▶ 播放：好想大聲說喜歡你 (灌籃高手主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('君が好きだと叫びたい.mid')">▶ 播放：好想大聲說喜歡你 (灌籃高手主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('時代を越える想い.mid')">▶ 播放：穿越時空的思念 (犬夜叉插曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('戰鬥通往勝利.mid')">▶ 播放：戰鬥–通往勝利 (鎧甲勇士光影傳奇插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('淡淡的愛意C大調.mid')">▶ 播放：淡淡的愛意 (鎧甲勇士光影傳奇插曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('淡淡的愛意C大調.mid')">▶ 播放：淡淡的愛意 (鎧甲勇士光影傳奇插曲，原調降D，採集調C)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('光的戰役.mid')">▶ 播放：光的戰役 (鎧甲勇士光影傳奇片尾曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('帝皇再臨A大調.mid')">▶ 播放：帝皇再臨 (鎧甲勇士之帝皇俠插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('不敗的英雄.mid')">▶ 播放：不敗的英雄 (鎧甲勇士刑天主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('不敗的英雄.mid')">▶ 播放：不敗的英雄 (鎧甲勇士刑天主題曲，原調B，採集調C)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Just K.O.mid')">▶ 播放：Just K.O (鎧甲勇士拿瓦主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('ウルトラマンの歌.mid')">▶ 播放：ウルトラマンの歌 (初代超人力霸王主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ウルトラセブンの歌.mid')">▶ 播放：ウルトラセブンの歌 (超人七號主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('ウルトラセブンの歌.mid')">▶ 播放：ウルトラセブンの歌 (超人七號主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('帰ってきたウルトラマンの歌.mid')">▶ 播放：帰ってきたウルトラマンの歌 (歸來的超人力霸王主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('ウルトラマンエース.mid')">▶ 播放：ウルトラマンエースの歌 (超人力霸王衛司主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Ultraman Taro OP.mid')">▶ 播放：ウルトラマンタロウの歌 (超人力霸王太郎主題曲)</button><br><br></li>
@@ -194,15 +202,15 @@
         <li><button onclick="fetchAndPlayMidi('只想守护你.mid')">▶ 播放：君だけを守りたい (超人力霸王帝納片尾曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('悲しみの沼.mid')">▶ 播放：悲しみの沼 (超人力霸王蓋亞插曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Spirit .mid')">▶ 播放：Spirit (超人力霸王高斯主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('君にできる何か.mid')">▶ 播放：君にできるなにか (超人力霸王高斯片尾曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('君にできる何か.mid')">▶ 播放：君にできるなにか (超人力霸王高斯片尾曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Eiyuu .mid')">▶ 播放：英雄 (超人力霸王納克斯主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Ultraman Mebius OP.mid')">▶ 播放：ウルトラマンメビウスの歌 (超人力霸王梅比斯主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('ウルトラの奇跡.mid')">▶ 播放：ウルトラの奇跡 (超人力霸王梅比斯插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ジードの証.mid')">▶ 播放：ジードの証 (超人力霸王捷德主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('ジードの証.mid')">▶ 播放：ジードの証 (超人力霸王捷德主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('影となりて悪を討つ.mid')">▶ 播放：影となりて悪を討つ (忍風戰隊破裏劍者主插曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Shiawase Shaking Hands.mid')">▶ 播放：幸せShaking Hands (忍風戰隊破裏劍者插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('仮面ライダークウガ.mid')">▶ 播放：仮面ライダークウが (假面騎士空我主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('仮面ライダークウガ.mid')">▶ 播放：仮面ライダークウが (假面騎士空我主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Be the one.mid')">▶ 播放：Be the one (假面騎士Build主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Life Goes On.mid')">▶ 播放：Life Goes On (超星神格蘭賽沙主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('竜剣道.mid')">▶ 播放：龍劍道 (魔彈戰記龍劍道主題曲)</button></li>
