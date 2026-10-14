@@ -304,12 +304,14 @@
 <script>
     // ==================== 1. 全域變數與分析節點 ====================
     let midiData = null;
+    let currentMidiEvents = []; // 保留音符事件，便於重複播放
     let transpose = 0;
     let currentType = "triangle";
     let currentPart = null;
     let activeSynth = null;
     let currentTotalDuration = 0;
     let isSeeking = false;
+    let currentSongTitle = "";
 
     // 音訊分析節點
     const waveform = new Tone.Waveform(1024);
@@ -420,22 +422,12 @@
     drawSpectrum();
 
     // ==================== 5. Tone.Part 排程與播放器邏輯 ====================
-    function loadMidiIntoPart(midi, titleName = "") {
-        stopPlayback();
-        midiData = midi;
-        currentTotalDuration = midi.duration;
-
-        const events = [];
-        midi.tracks.forEach(track => {
-            track.notes.forEach(note => {
-                events.push({
-                    time: note.time,
-                    duration: note.duration,
-                    midi: note.midi,
-                    velocity: note.velocity || 0.8
-                });
-            });
-        });
+    function buildPartFromEvents() {
+        if (currentPart) {
+            currentPart.stop();
+            currentPart.dispose();
+            currentPart = null;
+        }
 
         const synth = getOrCreateSynth();
 
@@ -446,7 +438,31 @@
                 time,
                 event.velocity
             );
-        }, events).start(0);
+        }, currentMidiEvents).start(0);
+    }
+
+    function loadMidiIntoPart(midi, titleName = "") {
+        stopPlayback();
+        midiData = midi;
+        currentTotalDuration = midi.duration;
+
+        currentMidiEvents = [];
+        midi.tracks.forEach(track => {
+            track.notes.forEach(note => {
+                currentMidiEvents.push({
+                    time: note.time,
+                    duration: note.duration,
+                    midi: note.midi,
+                    velocity: note.velocity || 0.8
+                });
+            });
+        });
+
+        buildPartFromEvents();
+
+        // 設置標題
+        currentSongTitle = titleName;
+        document.getElementById("nowPlayingText").innerText = `正在播放：${currentSongTitle}`;
 
         // 重置 UI
         const progressBar = document.getElementById("progressBar");
@@ -455,23 +471,28 @@
         document.getElementById("totalTimeText").innerText = formatTime(currentTotalDuration);
         document.getElementById("currentTimeText").innerText = "00:00";
         document.getElementById("playBtn").disabled = false;
-        if (titleName) {
-            document.getElementById("nowPlayingText").innerText = `正在播放：${titleName}`;
-        }
     }
 
     async function togglePlay() {
-        if (!midiData) return;
+        if (!midiData || currentMidiEvents.length === 0) return;
         await Tone.start();
         getOrCreateSynth();
 
-        if (Tone.Transport.state === "started") return;
-
-        if (Tone.Transport.seconds >= currentTotalDuration) {
-            Tone.Transport.seconds = 0;
+        // 若 Part 被銷毀或處於結束狀態，重新構建
+        if (!currentPart) {
+            buildPartFromEvents();
         }
 
-        Tone.Transport.start();
+        // 若指針已走到末尾，重頭歸零
+        if (Tone.Transport.seconds >= currentTotalDuration - 0.1) {
+            Tone.Transport.seconds = 0;
+            document.getElementById("progressBar").value = 0;
+            document.getElementById("currentTimeText").innerText = "00:00";
+        }
+
+        if (Tone.Transport.state !== "started") {
+            Tone.Transport.start();
+        }
         document.getElementById("playBtn").innerText = "▶ 播放中";
     }
 
@@ -491,26 +512,26 @@
             activeSynth.releaseAll();
         }
 
-        if (currentPart) {
-            currentPart.stop();
-            currentPart.dispose();
-            currentPart = null;
-        }
-
         document.getElementById("progressBar").value = 0;
         document.getElementById("currentTimeText").innerText = "00:00";
         document.getElementById("playBtn").innerText = "▶ 播放";
     }
 
-    // ==================== 6. 進度條即時刷新與 Seek 拖曳 ====================
+    // ==================== 6. 進度條即時刷新與播放結束處理 ====================
     setInterval(() => {
         if (Tone.Transport.state === "started" && !isSeeking) {
             const currentSec = Tone.Transport.seconds;
             document.getElementById("progressBar").value = currentSec;
             document.getElementById("currentTimeText").innerText = formatTime(currentSec);
 
+            // 當播放至曲目末端，重置時間指針與狀態，保留 Part 以支援直接重播
             if (currentSec >= currentTotalDuration) {
-                stopPlayback();
+                Tone.Transport.stop();
+                Tone.Transport.seconds = 0;
+                if (activeSynth) activeSynth.releaseAll();
+                document.getElementById("progressBar").value = 0;
+                document.getElementById("currentTimeText").innerText = "00:00";
+                document.getElementById("playBtn").innerText = "▶ 重播";
             }
         }
     }, 100);
@@ -550,15 +571,21 @@
         }
     });
 
-    // 播放伺服器端 MIDI
-    async function fetchAndPlayMidi(url, titleName) {
+    // 播放伺服器端 MIDI：自動從檔案名稱解析歌名
+    async function fetchAndPlayMidi(url, customTitle = "") {
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error("找不到檔案：" + url);
             const arrayBuffer = await response.arrayBuffer();
 
+            // 若未提供 customTitle，自動去除副檔名作為歌名
+            let title = customTitle;
+            if (!title) {
+                title = decodeURIComponent(url.replace(/\.[^/.]+$/, ""));
+            }
+
             const remoteMidi = new Midi(arrayBuffer);
-            loadMidiIntoPart(remoteMidi, titleName);
+            loadMidiIntoPart(remoteMidi, title);
             await togglePlay();
         } catch (err) {
             console.error("載入預設檔案失敗:", err);
@@ -576,7 +603,8 @@
             const uploadedMidi = new Midi(arrayBuffer);
 
             if (uploadedMidi.tracks.length > 0) {
-                loadMidiIntoPart(uploadedMidi, file.name);
+                const displayName = file.name.replace(/\.[^/.]+$/, "");
+                loadMidiIntoPart(uploadedMidi, displayName);
                 alert("演奏數據讀取成功！檔案：" + file.name);
                 await togglePlay();
             }
