@@ -442,10 +442,19 @@
 </div>
 
 <div id="sec-video-encoding" class="supplementary-info" style="border-left: 5px solid #8e44ad; background-color: #fbf9ff;">
-    <h2 style="color: #6c3483;">🎥 5. 多媒體編碼原理：Perfect Piano vs. Marimba Real 體積懸殊的技術真相</h2>
     <p>
-        現代視訊壓縮的核心仰賴<strong>畫格間預測編碼（Inter-frame Compression）</strong>，只記錄畫面隨時間變動的「像素差異殘差（Residual）與運動向量（Motion Vector）」：
+        <strong>為什麼兩者檔案大小會有 3 到 5 倍的懸殊差距？其底層科學公式為：</strong><br>
+        <code>檔案大小 (Bytes) = [平均碼率 (Bitrate in bps) × 時長 (Seconds)] ÷ 8</code><br>
+        在時長相同的條件下，<strong>檔案體積完全由編碼器分配的「動態碼率（Bitrate）」決定</strong>：
     </p>
+    <ul>
+        <li>
+            <strong>Perfect Piano（低資訊熵 / 極高時間冗餘）</strong>：90% 的琴身像素完全靜止，按鍵變色僅產生微弱的像素差異。編碼器產生 P/B 影格時幾乎只需下達「複製上一幀」的極簡指令，殘差數據量極低，碼率自動縮減至 500~1,500 kb/s，檔案因而極小。
+        </li>
+        <li>
+            <strong>Marimba Real（高資訊熵 / 運動殘差暴增）</strong>：琴槌在立體木紋上方高速揮動並伴隨光影變化，畫面存在大量無法被上一幀預測的動態邊緣。編碼器為了避免木槌周圍破圖，必須分配高達 4,000~8,000+ kb/s 的資料頻寬來寫入運動向量與殘差數值，導致最終檔案體積呈數倍暴增。
+        </li>
+    </ul>
 
     <!-- 加入 table-responsive 外層包裝 -->
     <div class="table-responsive">
@@ -453,11 +462,16 @@
             <thead>
             <tr>
                 <th style="min-width: 120px;">分析維度</th>
-                <th style="min-width: 220px;">Perfect Piano 螢幕錄影</th>
-                <th style="min-width: 220px;">Marimba Real 螢幕錄影</th>
+                <th style="min-width: 220px;">Perfect Piano 螢幕錄影（低動態代表）</th>
+                <th style="min-width: 220px;">Marimba Real 螢幕錄影（高動態代表）</th>
             </tr>
             </thead>
             <tbody>
+            <tr>
+                <td><strong>最終檔案大小</strong></td>
+                <td><span style="color: #27ae60; font-weight: bold;">極小（通常僅 10 ~ 30 MB / 分）</span></td>
+                <td><span style="color: #c0392b; font-weight: bold;">龐大（動輒 80 ~ 150+ MB / 分）</span></td>
+            </tr>
             <tr>
                 <td><strong>視覺動態特徵</strong></td>
                 <td><strong>極低</strong>（僅琴鍵微幅變色，95% 畫面為靜態黑白琴體）</td>
@@ -484,18 +498,21 @@
 </div>
 
 <div id="sec-ffmpeg-wasm" class="supplementary-info" style="border-left: 5px solid #27ae60; background-color: #f6fcf8;">
-    <h2 style="color: #1e8449;">🧪 6. 實機前端檢驗：原生 Web API 即時碼率與結構分析</h2>
+    <h2 style="color: #1e8449;">🧪 6. 實機前端檢驗：原生 Web API 任意雙影片碼率與結構比對工具</h2>
     <p>
-        無需等待或下載外部龐大的 WebAssembly 檔案，瀏覽器透過本地 <code>File API</code> 與底層視訊容器解析，即可直接提取實際檔案大小、精確播放時間與平均位元率（Bitrate）：
+        無需等待或下載外部龐大的 WebAssembly 檔案，瀏覽器透過本地 <code>File API</code> 與底層視訊容器解析，即可直接提取實際檔案大小、精確播放時間與平均位元率（Bitrate）。
+    </p>
+    <p style="background: #e8f8f5; padding: 10px 14px; border-radius: 5px; font-size: 0.9em; color: #16a085;">
+        💡 <strong>實測提示：</strong> 您不一定要上傳上述兩款樂器影片！您可以<strong>從手機隨意選取任何兩部影片進行比對</strong>（例如：隨意挑選一部「靜態 PPT/網頁操作錄影」與一部「動態戶外實拍/遊戲錄影」），即可立即親自驗證畫格殘差對碼率與檔案大小的實質影響！
     </p>
 
     <div class="upload-section">
         <div class="upload-box">
-            <h4>選擇 Perfect Piano 影片</h4>
+            <h4>選擇影片 A（例：低動態/靜態操作）</h4>
             <input type="file" id="fileA" accept="video/mp4,video/*">
         </div>
         <div class="upload-box">
-            <h4>選擇 Marimba Real 影片</h4>
+            <h4>選擇影片 B（例：高動態/動作實拍）</h4>
             <input type="file" id="fileB" accept="video/mp4,video/*">
         </div>
     </div>
@@ -510,8 +527,8 @@
             <thead>
             <tr>
                 <th>分析指標</th>
-                <th>Perfect Piano 影片</th>
-                <th>Marimba Real 影片</th>
+                <th>影片 A（範例：Perfect Piano）</th>
+                <th>影片 B（範例：Marimba Real）</th>
             </tr>
             </thead>
             <tbody>
@@ -545,7 +562,7 @@
     </div>
 
     <h4>終端解析日誌 (Terminal Output)：</h4>
-    <pre id="logOutput" style="max-height: 180px;">系統就緒，請選取兩部影片後點擊「開始執行對比分析」。</pre>
+    <pre id="logOutput" style="max-height: 180px;">系統就緒，請隨機選取任意兩部影片後點擊「開始執行對比分析」。</pre>
 </div>
 
 <div id="sec-video-tag-guide" class="supplementary-info">
@@ -619,7 +636,7 @@
 </footer>
 
 <script>
-    // ----------------- 1. 互動容量計算機邏輯（語法乾淨修正版） -----------------
+    // ----------------- 1. 互動容量計算機邏輯 -----------------
     const slider = document.getElementById("recordMinutes");
     const minuteDisplay = document.getElementById("minuteDisplay");
     const qualitySelect = document.getElementById("qualitySelect");
@@ -634,11 +651,12 @@
 
         const baseVideoBitrate = parseFloat(qualitySelect.value) * 1000;
         const motionFactor = parseFloat(sceneTypeSelect.value);
-        const audioBitrate = 192 * 1000;
+        const audioBitrate = 192 * 1000; // 192 kbps
 
         const effectiveTotalBitrate = (baseVideoBitrate * motionFactor) + audioBitrate;
         const totalSeconds = minutes * 60;
 
+        // 容量 (MB) = 總碼率 (bps) * 總秒數 / 8 / 1024 / 1024
         const totalMB = (effectiveTotalBitrate * totalSeconds) / (8 * 1024 * 1024);
         const totalGB = totalMB / 1024;
 
@@ -667,7 +685,7 @@
     sceneTypeSelect.addEventListener("change", calculateSize);
     calculateSize();
 
-    // ----------------- 2. 原生極速視訊解析邏輯（語法乾淨修正版） -----------------
+    // ----------------- 2. 原生極速視訊解析邏輯（零依賴、無 CORS 限制） -----------------
     const logBox = document.getElementById("logOutput");
 
     function formatTime(seconds) {
@@ -697,6 +715,7 @@
                 const height = video.videoHeight;
                 const fileSize = file.size;
 
+                // 實際平均碼率公式：Bitrate (kb/s) = (檔案大小 in bits) / (時長 in seconds) / 1000
                 const bitrateKbps = duration > 0 ? Math.round((fileSize * 8) / duration / 1000) : 0;
 
                 resolve({
@@ -710,7 +729,7 @@
 
             video.onerror = function() {
                 URL.revokeObjectURL(url);
-                reject(new Error("視訊元數據讀取失敗，請確認檔案是否為受支援的 MP4 格式。"));
+                reject(new Error("視訊元數據讀取失敗，請確認檔案是否為受支援的視訊格式。"));
             };
         });
     }
@@ -735,19 +754,28 @@
             document.getElementById("durationA").innerText = statsA.duration;
             document.getElementById("resA").innerText = statsA.resolution;
             document.getElementById("bitrateA").innerText = statsA.bitrate;
-            document.getElementById("dynamicA").innerText = statsA.rawBitrate > 3500 ? "高動態殘差" : "低動態殘差 (符合靜態鍵盤特性)";
+            document.getElementById("dynamicA").innerText = statsA.rawBitrate > 3500 ? "高動態殘差" : "低動態殘差";
 
-            logBox.textContent += `✅ Perfect Piano 解析完成：時長 ${statsA.duration}，碼率 ${statsA.bitrate}\n`;
+            logBox.textContent += `✅ 影片 A [${fileA.name}] 解析完成：時長 ${statsA.duration}，碼率 ${statsA.bitrate}\n`;
 
             const statsB = await analyzeVideoFile(fileB);
             document.getElementById("sizeB").innerText = statsB.fileSize;
             document.getElementById("durationB").innerText = statsB.duration;
             document.getElementById("resB").innerText = statsB.resolution;
             document.getElementById("bitrateB").innerText = statsB.bitrate;
-            document.getElementById("dynamicB").innerText = statsB.rawBitrate > 3500 ? "高動態殘差 (符合木槌揮動特性)" : "中低動態";
+            document.getElementById("dynamicB").innerText = statsB.rawBitrate > 3500 ? "高動態殘差" : "中低動態";
 
-            logBox.textContent += `✅ Marimba Real 解析完成：時長 ${statsB.duration}，碼率 ${statsB.bitrate}\n`;
-            logBox.textContent += `📊 對比結論：在相似時長下，Marimba Real 碼率約為 Perfect Piano 的 ${(statsB.rawBitrate / (statsA.rawBitrate || 1)).toFixed(1)} 倍！完全符合殘差編碼理論！`;
+            logBox.textContent += `✅ 影片 B [${fileB.name}] 解析完成：時長 ${statsB.duration}，碼率 ${statsB.bitrate}\n`;
+
+            const ratio = (statsB.rawBitrate / (statsA.rawBitrate || 1)).toFixed(1);
+            logBox.textContent += `📊 對比結論：影片 B 的平均碼率約為影片 A 的 ${ratio} 倍！\n`;
+            if (ratio > 1.8) {
+                logBox.textContent += `👉 實證結論：影片 B 具有顯著較高之動態像素殘差，迫使編碼器分配更高位元率，完全符合畫格間預測編碼理論！`;
+            } else if (ratio < 0.6) {
+                logBox.textContent += `👉 實證結論：影片 A 具有顯著較高之動態像素殘差，因此需要更多碼率與儲存空間！`;
+            } else {
+                logBox.textContent += `👉 實證結論：兩部影片的碼率相當接近，表示兩者畫面的像素變動劇烈度與壓縮複雜度處於相似區間。`;
+            }
 
         } catch (err) {
             logBox.textContent += `❌ 分析過程發生錯誤: ${err.message}\n`;
