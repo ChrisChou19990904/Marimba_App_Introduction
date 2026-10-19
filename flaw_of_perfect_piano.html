@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 數位樂器影音連貫性探討：視訊編碼殘差、儲存空間管理與前端實機分析</title>
+    <title>🎬 數位樂器影音連貫性探討：視訊編碼殘差、儲存空間管理與實機分析</title>
     <style>
         html {
             scroll-behavior: smooth;
@@ -97,24 +97,36 @@
             margin: 10px auto 20px auto;
             display: block;
         }
+
+        /* 核心修復：表格響應式外層容器，確保超寬時可在手機內滑動，不撐破整頁 */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background: #fff;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
+            min-width: 580px; /* 保證在小螢幕上字體不被擠壓疊字 */
+            margin: 0;
         }
         th, td {
-            padding: 10px;
+            border: 1px solid #ddd;
+            padding: 10px 12px;
             text-align: left;
             font-size: 0.95em;
+            vertical-align: top;
         }
         th {
             background-color: #f7f9fa;
             color: #2c3e50;
+            white-space: nowrap;
         }
+
         pre {
             background-color: #2c3e50;
             color: #ecf0f1;
@@ -183,10 +195,16 @@
         a:visited {
             color: #2980b9;
         }
+
+        /* 手機螢幕優化適配 (RWD) */
         @media (max-width: 767px) {
             body {
-                margin: 20px;
-                padding: 15px;
+                margin: 10px;
+                padding: 12px;
+                box-shadow: none;
+            }
+            h1 {
+                font-size: 1.4em;
             }
             .upload-section {
                 flex-direction: column;
@@ -194,6 +212,14 @@
             video {
                 max-width: 100%;
                 border-width: 5px;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.88em;
             }
         }
     </style>
@@ -309,60 +335,63 @@
         為什麼手機空間常常在「不知不覺中被吃光」？下表清楚拆解了五種常見日常多媒體格式在檔案大小上的巨大級距差異及其背後的編碼原因：
     </p>
 
-    <table>
-        <thead>
-        <tr>
-            <th style="width: 18%;">多媒體型態</th>
-            <th style="width: 22%;">常見檔案大小 (基準預估)</th>
-            <th style="width: 25%;">資料吞吐量 / 碼率 (Bitrate)</th>
-            <th style="width: 35%;">技術原理與佔用容量之主因</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><strong>螢幕錄影<br>(Screen Recording)</strong></td>
-            <td><span style="color: #c0392b; font-weight: bold;">約 100 MB ~ 350 MB / 每分鐘</span><br>(視 UI 變動劇烈度而定)</td>
-            <td><strong>極高</strong><br>約 15,000 ~ 45,000 kb/s<br>(60 FPS 逐格採集)</td>
-            <td>
-                <b>空間殺手第一名！</b><br>
-                螢幕錄影記錄的是「像素級銳利」的數位介面（文字、線條、高對比圖示），包含大量空間高頻資訊。編碼器無法透過自然景深或運動模糊來偷懶壓縮，必須分配龐大碼率避免破圖，因此檔案肥大速度極驚人。
-            </td>
-        </tr>
-        <tr>
-            <td><strong>外部相機錄影<br>(Camera Video)</strong></td>
-            <td><strong>約 60 MB ~ 180 MB / 每分鐘</strong><br>(1080p 30/60 FPS 標準模式)</td>
-            <td><strong>中高</strong><br>約 8,000 ~ 20,000 kb/s</td>
-            <td>
-                實體鏡頭拍攝真實世界時，光學折射會自然帶有平滑漸層、背景散景與動態模糊。視訊編碼器（H.264/HEVC）極擅長壓縮這種平滑連續色彩，因此相同解析度下，通常比銳利的純數位螢幕錄影更省空間。
-            </td>
-        </tr>
-        <tr>
-            <td><strong>拍照相片<br>(Camera Photo)</strong></td>
-            <td><strong>約 2 MB ~ 8 MB / 每張</strong><br>(4800萬高畫素可達 15~25 MB)</td>
-            <td>單次寫入<br>(以靜態畫面為單位)</td>
-            <td>
-                僅包含單一時間點的二維影像陣列，經過現代感光元件的 ISP 降噪與演算法（JPEG / HEIF）壓縮，即便解析度極高，佔用容量仍遠小於連續視訊。
-            </td>
-        </tr>
-        <tr>
-            <td><strong>螢幕截圖<br>(Screenshot)</strong></td>
-            <td><strong>約 300 KB ~ 3 MB / 每張</strong><br>(視畫面純色區比例而定)</td>
-            <td>單次寫入<br>(通常存為 PNG / JPEG)</td>
-            <td>
-                僅捕捉單一畫格（Single Frame）。若畫面上大面積為純色背景（如聊天記錄白底），PNG 的字典演算法壓縮率極高；即使是全螢幕複雜畫面，容量也僅是螢幕錄影一秒鐘的數十分之一。
-            </td>
-        </tr>
-        <tr>
-            <td><strong>外部錄音<br>(Audio Recording)</strong></td>
-            <td><span style="color: #27ae60; font-weight: bold;">約 0.5 MB ~ 2 MB / 每分鐘</span><br>(AAC / M4A 壓縮格式)</td>
-            <td><strong>極低</strong><br>約 64 ~ 256 kb/s<br>(單純一維聲波訊號)</td>
-            <td>
-                <b>空間佔用最小！</b><br>
-                錄音僅記錄空氣壓力的「一維時間序列波形」，不包含任何二維像素點與色彩資訊。即便錄製一整小時的演講或彈奏，檔案往往也僅有 60 MB 上下，容量僅相當於數十秒的螢幕錄影。
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- 加入 table-responsive 外層包裝 -->
+    <div class="table-responsive">
+        <table>
+            <thead>
+            <tr>
+                <th style="min-width: 110px;">多媒體型態</th>
+                <th style="min-width: 140px;">常見檔案大小 (預估)</th>
+                <th style="min-width: 130px;">碼率 (Bitrate)</th>
+                <th style="min-width: 250px;">技術原理與佔用容量主因</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>螢幕錄影<br>(Screen Recording)</strong></td>
+                <td><span style="color: #c0392b; font-weight: bold;">約 100 ~ 350 MB / 分</span></td>
+                <td><strong>極高</strong><br>15,000 ~ 45,000 kb/s<br>(60 FPS 逐格採集)</td>
+                <td>
+                    <b>空間殺手第一名！</b><br>
+                    螢幕錄影記錄「像素級銳利」數位介面（文字、格線、高對比圖示），富含空間高頻資訊。編碼器無法透過自然景深偷懶，需龐大碼率避免破圖。
+                </td>
+            </tr>
+            <tr>
+                <td><strong>外部相機錄影<br>(Camera Video)</strong></td>
+                <td><strong>約 60 ~ 180 MB / 分</strong><br>(1080p 30/60 FPS)</td>
+                <td><strong>中高</strong><br>8,000 ~ 20,000 kb/s</td>
+                <td>
+                    真實世界光學拍攝自帶平滑漸層、背景散景與動態模糊。視訊編碼器極擅長壓縮平滑連續色塊，相同解析度下比螢幕錄影省空間。
+                </td>
+            </tr>
+            <tr>
+                <td><strong>拍照相片<br>(Camera Photo)</strong></td>
+                <td><strong>約 2 ~ 8 MB / 張</strong><br>(高畫素達 15~25 MB)</td>
+                <td>單次寫入<br>(以靜態影格為單位)</td>
+                <td>
+                    僅包含單一時間點的二維影像陣列，經感光元件 ISP 降噪與壓縮（JPEG/HEIF），容量遠小於連續視訊。
+                </td>
+            </tr>
+            <tr>
+                <td><strong>螢幕截圖<br>(Screenshot)</strong></td>
+                <td><strong>約 300 KB ~ 3 MB / 張</strong></td>
+                <td>單次寫入<br>(PNG / JPEG)</td>
+                <td>
+                    捕捉單一畫格。若大面積為純色背景（如聊天記錄白底），字典壓縮率極高，容量僅為錄影一秒鐘的數十分之一。
+                </td>
+            </tr>
+            <tr>
+                <td><strong>外部錄音<br>(Audio Recording)</strong></td>
+                <td><span style="color: #27ae60; font-weight: bold;">約 0.5 ~ 2 MB / 分</span></td>
+                <td><strong>極低</strong><br>64 ~ 256 kb/s</td>
+                <td>
+                    <b>空間佔用最小！</b><br>
+                    僅記錄空氣壓力的「一維時間序列波形」，不含任何像素資訊。連續錄音一小時往往僅約 60 MB。
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <p style="background: #fff; padding: 10px 15px; border-radius: 5px; border: 1px solid #ebd0b5; font-size: 0.95em; margin-top: 15px;">
         💡 <strong>實務建議：</strong> 在錄製樂器操作教學或示範時，若非必要展示全動態操作，<strong>優先使用截圖＋音訊輔助</strong>；若必須使用螢幕錄影，錄製完畢後應及時匯出至電腦或外接硬碟備份，並從手機相簿「最近刪除」中徹底清除，方能讓裝置常保最佳運作效能！
@@ -376,7 +405,7 @@
     </p>
 
     <div style="display: flex; flex-wrap: wrap; gap: 15px; margin: 15px 0; align-items: center; justify-content: space-between;">
-        <div style="flex: 1; min-width: 220px;">
+        <div style="flex: 1; min-width: 200px;">
             <label for="recordMinutes" style="font-weight: bold; color: #2c3e50;">錄製時長 (分鐘)：<span id="minuteDisplay" style="color: #e67e22;">10</span> 分鐘</label>
             <input type="range" id="recordMinutes" min="1" max="120" value="10" step="1" style="width: 100%; margin-top: 5px; accent-color: #16a085;">
         </div>
@@ -417,36 +446,43 @@
     <p>
         現代視訊壓縮的核心仰賴<strong>畫格間預測編碼（Inter-frame Compression）</strong>，只記錄畫面隨時間變動的「像素差異殘差（Residual）與運動向量（Motion Vector）」：
     </p>
-    <table>
-        <tr>
-            <th>分析維度</th>
-            <th>Perfect Piano 螢幕錄影</th>
-            <th>Marimba Real 螢幕錄影</th>
-        </tr>
-        <tr>
-            <td><strong>視覺回饋動態特徵</strong></td>
-            <td><strong>極低</strong>（僅琴鍵表面微幅變色，95% 畫面為靜態黑白琴體）</td>
-            <td><strong>極高</strong>（立體木槌大範圍揮動、木質共鳴板物理震動與陰影變化）</td>
-        </tr>
-        <tr>
-            <td><strong>畫格差異殘差 (Residual)</strong></td>
-            <td>編碼器判定前後影格差異極小，大量產生微小容量的 P 影格與 B 影格，近乎直接複製上一幀。</td>
-            <td>木槌高速大面積移位，無法直接參照上一幀，編碼器被迫寫入大量運動補償與高殘差數據。</td>
-        </tr>
-        <tr>
-            <td><strong>動態位元率 (Bitrate)</strong></td>
-            <td><strong>極低</strong>（約 500 ~ 1,500 kb/s 即可滿足）</td>
-            <td><strong>極高</strong>（需耗費 3,000 ~ 8,000+ kb/s 才能維持動態不模糊）</td>
-        </tr>
-        <tr>
-            <td><strong>平台壓縮容忍度</strong></td>
-            <td>上傳小紅書等平台後，琴鍵微弱變色極易被暴力壓縮視為「雜訊抹除」，導致<strong>「聲音有、畫面沒動」</strong>。</td>
-            <td>運動輪廓大且明確，抗壓縮演算法能力強，即使檔案肥大，但打擊節奏視覺連貫度清晰可見。</td>
-        </tr>
-    </table>
+
+    <!-- 加入 table-responsive 外層包裝 -->
+    <div class="table-responsive">
+        <table>
+            <thead>
+            <tr>
+                <th style="min-width: 120px;">分析維度</th>
+                <th style="min-width: 220px;">Perfect Piano 螢幕錄影</th>
+                <th style="min-width: 220px;">Marimba Real 螢幕錄影</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>視覺動態特徵</strong></td>
+                <td><strong>極低</strong>（僅琴鍵微幅變色，95% 畫面為靜態黑白琴體）</td>
+                <td><strong>極高</strong>（立體木槌大範圍揮動、共鳴板震動與陰影變化）</td>
+            </tr>
+            <tr>
+                <td><strong>畫格差異殘差</strong></td>
+                <td>前後影格差異極小，大量產生微小 P/B 影格，近乎直接複製上一幀。</td>
+                <td>木槌高速大面積移位，無法直接參照上一幀，被迫寫入大量運動補償。</td>
+            </tr>
+            <tr>
+                <td><strong>動態位元率</strong></td>
+                <td><strong>極低</strong>（約 500 ~ 1,500 kb/s 即可滿足）</td>
+                <td><strong>極高</strong>（需耗費 3,000 ~ 8,000+ kb/s 維持清晰）</td>
+            </tr>
+            <tr>
+                <td><strong>抗壓縮容忍度</strong></td>
+                <td>上傳社群後，微弱變色易被壓縮抹除，導致<strong>「聲音有、畫面沒動」</strong>。</td>
+                <td>運動輪廓大且明確，抗壓縮演算法能力強，打擊節奏清晰可辨。</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<!-- ==================== 6. 原生極速分析工作台（免外部 WASM，100% 穩定） ==================== -->
 <div id="sec-ffmpeg-wasm" class="supplementary-info" style="border-left: 5px solid #27ae60; background-color: #f6fcf8;">
     <h2 style="color: #1e8449;">🧪 6. 實機前端檢驗：原生 Web API 即時碼率與結構分析</h2>
     <p>
@@ -468,38 +504,45 @@
         <button id="runBtn" class="action-btn" onclick="startAnalysis()">🚀 開始執行對比分析</button>
     </div>
 
-    <table>
-        <tr>
-            <th>分析指標</th>
-            <th>Perfect Piano 影片</th>
-            <th>Marimba Real 影片</th>
-        </tr>
-        <tr>
-            <td>實際檔案大小 (File Size)</td>
-            <td id="sizeA">-</td>
-            <td id="sizeB">-</td>
-        </tr>
-        <tr>
-            <td>影片時長 (Duration)</td>
-            <td id="durationA">-</td>
-            <td id="durationB">-</td>
-        </tr>
-        <tr>
-            <td>視訊解析度 (Resolution)</td>
-            <td id="resA">-</td>
-            <td id="resB">-</td>
-        </tr>
-        <tr>
-            <td>實際平均碼率 (Average Bitrate)</td>
-            <td id="bitrateA">-</td>
-            <td id="bitrateB">-</td>
-        </tr>
-        <tr>
-            <td>動態複雜度評估</td>
-            <td id="dynamicA">-</td>
-            <td id="dynamicB">-</td>
-        </tr>
-    </table>
+    <!-- 加入 table-responsive 外層包裝 -->
+    <div class="table-responsive">
+        <table>
+            <thead>
+            <tr>
+                <th>分析指標</th>
+                <th>Perfect Piano 影片</th>
+                <th>Marimba Real 影片</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>實際檔案大小 (File Size)</td>
+                <td id="sizeA">-</td>
+                <td id="sizeB">-</td>
+            </tr>
+            <tr>
+                <td>影片時長 (Duration)</td>
+                <td id="durationA">-</td>
+                <td id="durationB">-</td>
+            </tr>
+            <tr>
+                <td>視訊解析度 (Resolution)</td>
+                <td id="resA">-</td>
+                <td id="resB">-</td>
+            </tr>
+            <tr>
+                <td>實際平均碼率 (Average Bitrate)</td>
+                <td id="bitrateA">-</td>
+                <td id="bitrateB">-</td>
+            </tr>
+            <tr>
+                <td>動態複雜度評估</td>
+                <td id="dynamicA">-</td>
+                <td id="dynamicB">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <h4>終端解析日誌 (Terminal Output)：</h4>
     <pre id="logOutput" style="max-height: 180px;">系統就緒，請選取兩部影片後點擊「開始執行對比分析」。</pre>
@@ -576,7 +619,7 @@
 </footer>
 
 <script>
-    // ----------------- 1. 互動容量計算機邏輯（已修正語法） -----------------
+    // ----------------- 1. 互動容量計算機邏輯（語法乾淨修正版） -----------------
     const slider = document.getElementById("recordMinutes");
     const minuteDisplay = document.getElementById("minuteDisplay");
     const qualitySelect = document.getElementById("qualitySelect");
@@ -624,7 +667,7 @@
     sceneTypeSelect.addEventListener("change", calculateSize);
     calculateSize();
 
-    // ----------------- 2. 原生極速視訊解析邏輯（零依賴、無 CORS 限制） -----------------
+    // ----------------- 2. 原生極速視訊解析邏輯（語法乾淨修正版） -----------------
     const logBox = document.getElementById("logOutput");
 
     function formatTime(seconds) {
@@ -654,7 +697,6 @@
                 const height = video.videoHeight;
                 const fileSize = file.size;
 
-                // 實際平均碼率公式：Bitrate (kb/s) = (檔案大小 in bits) / (時長 in seconds) / 1000
                 const bitrateKbps = duration > 0 ? Math.round((fileSize * 8) / duration / 1000) : 0;
 
                 resolve({
