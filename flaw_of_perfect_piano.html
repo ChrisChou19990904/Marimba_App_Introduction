@@ -276,7 +276,7 @@
     <ul>
         <li><a href="#sec-case-study">1. 案例觀察：數位樂器錄影之畫面與聲音脫節現象</a></li>
         <li><a href="#sec-space-system">2. 空間管理哲學：定期刪除檔案的重要性與 LINE 白畫面 I/O 原理</a></li>
-        <li><a href="#sec-media-comparison">3. 多媒體格式容量比較表（螢幕錄影、外部錄影、拍照、截圖、錄音）</a></li>
+        <li><a href="#sec-media-comparison">3. 多媒體格式容量比較表（螢幕錄影、相機錄影、短影音下載、拍照、截圖、錄音）</a></li>
         <li><a href="#sec-bitrate-calc">4. 互動實測：手機螢幕錄影容量即時預估計算機</a></li>
         <li><a href="#sec-video-encoding">5. 多媒體編碼原理：Perfect Piano vs. Marimba Real 體積懸殊的技術真相</a></li>
         <li><a href="#sec-ffmpeg-wasm">6. 實機前端檢驗：原生 Web API 任意雙影片碼率與結構比對工具</a></li>
@@ -333,7 +333,7 @@
 <div id="sec-media-comparison" class="supplementary-info" style="border-left: 5px solid #e67e22; background-color: #fffbf5;">
     <h2 style="color: #d35400;">📊 3. 常見多媒體紀錄型態之容量佔用與資料吞吐量對比</h2>
     <p>
-        為什麼手機空間常常在「不知不覺中被吃光」？下表清楚拆解了五種常見日常多媒體格式在檔案大小上的巨大級距差異及其背後的編碼原因：
+        為什麼手機空間常常在「不知不覺中被吃光」？下表依據<strong>「資料吞吐量與單位時間容量由大至小」</strong>清楚拆解了六種常見日常多媒體格式的階梯級距差異及其背後的編碼原因：
     </p>
 
     <!-- 加入 table-responsive 外層包裝 -->
@@ -341,47 +341,56 @@
         <table>
             <thead>
             <tr>
-                <th style="min-width: 110px;">多媒體型態</th>
+                <th style="min-width: 120px;">多媒體型態</th>
                 <th style="min-width: 140px;">常見檔案大小 (預估)</th>
                 <th style="min-width: 130px;">碼率 (Bitrate)</th>
                 <th style="min-width: 250px;">技術原理與佔用容量主因</th>
             </tr>
             </thead>
             <tbody>
+            <!-- 1. 空間殺手：螢幕錄影 -->
             <tr>
                 <td><strong>螢幕錄影<br>(Screen Recording)</strong></td>
                 <td><span style="color: #c0392b; font-weight: bold;">約 100 ~ 350 MB / 分</span></td>
                 <td><strong>極高</strong><br>15,000 ~ 45,000 kb/s<br>(60 FPS 逐格採集)</td>
                 <td>
                     <b>空間殺手第一名！</b><br>
-                    螢幕錄影記錄「像素級銳利」數位介面（文字、格線、高對比圖示），富含空間高頻資訊。編碼器無法透過自然景深偷懶，需龐大碼率避免破圖。
+                    螢幕錄影記錄「像素級銳利」數位介面（文字、格線、高對比圖示），富含空間高頻資訊。手機處理器為確保即時錄製不卡頓掉幀，硬體編碼器直接揮霍高碼率，導致檔案膨脹速度極快。
                 </td>
             </tr>
-            <tr>
-                <td><strong>短影音平台影片<br>(TikTok / 抖音下載)</strong></td>
-                <td><span style="color: #2980b9; font-weight: bold;">約 10 MB ~ 25 MB / 每分鐘</span><br>(3 分鐘影片僅約 40~70 MB)</td>
-                <td><strong>極致壓縮 (低)</strong><br>約 1,500 ~ 3,500 kb/s<br>(雲端 CRF 激進壓縮)</td>
-                <td>
-                    <b>頻寬優化極限！</b><br>
-                    平台為節省數億美元的 CDN 頻寬成本，在雲端採用多遍（Multi-pass）轉碼演算法（如 H.265/AV1）與心理視覺模型，將碼率壓制至人眼在手機小螢幕難以辨識瑕疵的臨界點。即使影片長達 3 分鐘，檔案體積往往仍遠小於僅錄製 1.5 分鐘的手機原生螢幕錄影！
-                </td>
-            </tr>
+
+            <!-- 2. 中高動態：外部相機錄影 -->
             <tr>
                 <td><strong>外部相機錄影<br>(Camera Video)</strong></td>
                 <td><strong>約 60 ~ 180 MB / 分</strong><br>(1080p 30/60 FPS)</td>
                 <td><strong>中高</strong><br>8,000 ~ 20,000 kb/s</td>
                 <td>
-                    真實世界光學拍攝自帶平滑漸層、背景散景與動態模糊。視訊編碼器極擅長壓縮平滑連續色塊，相同解析度下比螢幕錄影省空間。
+                    真實世界光學拍攝自帶平滑漸層、背景散景與動態模糊。視訊編碼器極擅長壓縮平滑連續色塊，相同解析度下比純數位螢幕錄影省空間。
                 </td>
             </tr>
+
+            <!-- 3. 雲端極限轉碼：短影音平台影片（依大小排在外部錄影之後） -->
+            <tr>
+                <td><strong>短影音平台影片<br>(TikTok / 抖音下載)</strong></td>
+                <td><span style="color: #2980b9; font-weight: bold;">約 10 ~ 25 MB / 分</span></td>
+                <td><strong>極致壓縮 (低)</strong><br>1,500 ~ 3,500 kb/s<br>(雲端 CRF 激進壓縮)</td>
+                <td>
+                    <b>頻寬優化極限！</b><br>
+                    平台為節省天文數字級的 CDN 伺服器頻寬，在雲端採用多遍（Multi-pass）轉碼演算法（如 H.265/AV1）與心理視覺模型，將碼率壓制至人眼難辨瑕疵的臨界點。即使長達 3 分鐘，體積往往仍遠小於 1.5 分鐘的手機原生螢幕錄影！
+                </td>
+            </tr>
+
+            <!-- 4. 靜態實景：拍照相片 -->
             <tr>
                 <td><strong>拍照相片<br>(Camera Photo)</strong></td>
                 <td><strong>約 2 ~ 8 MB / 張</strong><br>(高畫素達 15~25 MB)</td>
                 <td>單次寫入<br>(以靜態影格為單位)</td>
                 <td>
-                    僅包含單一時間點的二維影像陣列，經感光元件 ISP 降噪與壓縮（JPEG/HEIF），容量遠小於連續視訊。
+                    僅包含單一時間點的二維影像陣列，經感光元件 ISP 降噪與壓縮（JPEG/HEIF），容量遠小於連續動態視訊。
                 </td>
             </tr>
+
+            <!-- 5. 靜態介面：螢幕截圖 -->
             <tr>
                 <td><strong>螢幕截圖<br>(Screenshot)</strong></td>
                 <td><strong>約 300 KB ~ 3 MB / 張</strong></td>
@@ -390,13 +399,15 @@
                     捕捉單一畫格。若大面積為純色背景（如聊天記錄白底），字典壓縮率極高，容量僅為錄影一秒鐘的數十分之一。
                 </td>
             </tr>
+
+            <!-- 6. 一維訊號：外部錄音 -->
             <tr>
                 <td><strong>外部錄音<br>(Audio Recording)</strong></td>
                 <td><span style="color: #27ae60; font-weight: bold;">約 0.5 ~ 2 MB / 分</span></td>
                 <td><strong>極低</strong><br>64 ~ 256 kb/s</td>
                 <td>
                     <b>空間佔用最小！</b><br>
-                    僅記錄空氣壓力的「一維時間序列波形」，不含任何像素資訊。連續錄音一小時往往僅約 60 MB。
+                    僅記錄空氣壓力的「一維時間序列波形」，不含任何像素資訊。連續錄音一小時往往僅約 60 MB 上下。
                 </td>
             </tr>
             </tbody>
