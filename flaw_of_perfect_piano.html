@@ -461,6 +461,16 @@
 <!-- ==================== 6. FFmpeg.wasm 實機前台檢驗工作台 ==================== -->
 <div id="sec-ffmpeg-wasm" class="supplementary-info" style="border-left: 5px solid #27ae60; background-color: #f6fcf8;">
     <h2 style="color: #1e8449;">🧪 6. 實機前端檢驗：透過 FFmpeg.wasm 分析兩者碼率與關鍵影格結構</h2>
+    <!-- 執行環境與安全性提示 -->
+    <div style="background-color: #fff8e1; border: 1px solid #ffe082; border-left: 4px solid #f39c12; padding: 12px 16px; border-radius: 4px; margin: 15px 0; font-size: 0.92em; line-height: 1.6; color: #795548;">
+        <strong>⚠️ 本地端執行環境重要提醒：</strong><br>
+        若你在本機電腦直接以滑鼠雙擊開啟 HTML（網址為 <code>file:///</code> 協議），由於 Chrome 等現代瀏覽器的同源安全政策（CORS）會嚴格阻擋跨來源 WebAssembly 模組與 Web Worker 載入，導致分析按鈕無法啟用。<br>
+        <strong>💡 正確開啟方式：</strong>
+        <ul style="margin: 5px 0 0 18px; padding: 0;">
+            <li>請透過本機 HTTP 伺服器開啟（例如使用 WebStorm 內建預覽、VS Code 的 <em>Live Server</em> 擴充套件，或以指令 <code>python -m http.server</code> 啟動）。</li>
+            <li>直接透過 GitHub Pages 線上網址（走標準 HTTPS 協議）瀏覽即可直接使用。</li>
+        </ul>
+    </div>
     <p>
         以下整合了 WebAssembly 版的 FFmpeg 核心引擎。你可以直接在瀏覽器端載入兩部影片檔案，直接提取底層位元率與關鍵影格（I-Frame）統計數據：
     </p>
@@ -639,7 +649,7 @@
 
     // ----------------- FFmpeg.wasm 分析邏輯 -----------------
     const { FFmpeg } = FFmpegWASM;
-    const { fetchFile } = FFmpegUtil;
+    const { fetchFile, toBlobURL } = FFmpegUtil;
     let ffmpeg = null;
 
     async function initFFmpeg() {
@@ -652,16 +662,27 @@
         });
 
         try {
-            await ffmpeg.load();
+            logBox.textContent = "⏳ 正在自 CDN 載入單執行緒 WASM 核心（相容 localhost 與純靜態環境）...\n";
+
+            // 核心關鍵：使用 0.12.6 單執行緒核心，完全不受 SharedArrayBuffer 與 COOP/COEP 限制！
+            const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+
+            await ffmpeg.load({
+                coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+                wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+            });
+
             const runBtn = document.getElementById("runBtn");
             runBtn.disabled = false;
             runBtn.innerText = "🚀 開始執行對比分析";
-            logBox.textContent = "FFmpeg WebAssembly 模組載入就緒。\n";
+            logBox.textContent += "✅ FFmpeg WebAssembly 模組載入就緒！請選擇檔案後點擊按鈕。\n";
         } catch (err) {
-            console.error("FFmpeg 載入失敗:", err);
-            logBox.textContent = "WebAssembly 核心加載失敗，請確認網路環境或瀏覽器是否支援 WebAssembly。\n";
+            console.error("FFmpeg 載入詳細錯誤:", err);
+            logBox.textContent = "❌ WebAssembly 核心加載失敗。\n錯誤詳情: " + err.message + "\n(請打開 F12 Console 查看完整堆疊訊息)";
         }
     }
+
+    // 頁面載入後自動執行初始化
     initFFmpeg();
 
     async function probeVideo(file, virtualName) {
