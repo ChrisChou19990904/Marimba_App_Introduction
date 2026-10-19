@@ -444,11 +444,21 @@
 <div id="sec-video-encoding" class="supplementary-info" style="border-left: 5px solid #8e44ad; background-color: #fbf9ff;">
     <h2 style="color: #6c3483;">🎥 5. 多媒體編碼原理：Perfect Piano vs. Marimba Real 體積懸殊的技術真相</h2>
     <p>
-        在相同錄製時長（例如各彈奏 2 分鐘）且設定相同畫質（1080p 60fps）的前提下，<strong>《Marimba Real》產生的影片檔案大小往往會是《Perfect Piano》的 3 到 5 倍以上</strong>（例如前者檔案高達 120 MB，後者可能僅需 25 MB 左右）。
+        在相同錄製時長（例如各彈奏 2 分鐘）且設定相同畫質（1080p 60fps）的前提下，<strong>《Marimba Real》產生的影片檔案大小往往會是《Perfect Piano》的 3 到 5 倍以上</strong>（例如前者檔案高達 120 MB，後者可能僅需 25 MB 左右）。現代視訊壓縮的核心仰賴<strong>畫格間預測編碼（Inter-frame Compression）</strong>，只記錄畫面隨時間變動的「像素差異殘差（Residual）與運動向量（Motion Vector）」。
     </p>
     <p>
-        現代視訊壓縮的核心仰賴<strong>畫格間預測編碼（Inter-frame Compression）</strong>，只記錄畫面隨時間變動的「像素差異殘差（Residual）與運動向量（Motion Vector）」：
+        <strong>決定兩者檔案體積差距的底層物理公式為：</strong><br>
+        <code>檔案大小 (Bytes) = [平均碼率 (Bitrate in bps) × 時長 (Seconds)] ÷ 8</code><br>
+        在時長相同的條件下，<strong>檔案體積完全由編碼器依據畫面複雜度所分配的「動態碼率（Bitrate）」唯一決定</strong>：
     </p>
+    <ul>
+        <li>
+            <strong>Perfect Piano（低資訊熵 / 極高時間冗餘）</strong>：90% 的琴身像素完全靜止，按鍵變色僅產生微弱的像素差異。編碼器產生 P/B 影格時幾乎只需下達「複製上一幀」的極簡指令，殘差數據量極低，碼率自動縮減至 500~1,500 kb/s，檔案因而極小。
+        </li>
+        <li>
+            <strong>Marimba Real（高資訊熵 / 運動殘差暴增）</strong>：琴槌在立體木紋上方高速揮動並伴隨光影變化，畫面存在大量無法被上一幀預測的動態邊緣。編碼器為了避免木槌周圍破圖，必須分配高達 4,000~8,000+ kb/s 的資料頻寬來寫入運動向量與殘差數值，導致最終檔案體積呈數倍暴增。
+        </li>
+    </ul>
 
     <!-- 加入 table-responsive 外層包裝 -->
     <div class="table-responsive">
