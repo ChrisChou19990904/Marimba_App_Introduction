@@ -2,28 +2,37 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>數位樂器出現畫面與聲音不連貫的原因探討</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 數位樂器影音連貫性探討：視訊編碼殘差、儲存空間管理與 FFmpeg.wasm 實機分析</title>
+    <!-- 引入 FFmpeg.wasm 相關 UMD 腳本 -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: "Noto Sans TC", "微軟正黑體", sans-serif;
             color: #333;
             line-height: 1.8;
-            max-width: 800px;
+            max-width: 850px;
             margin: 50px auto;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             background-color: #fff;
             text-align: center;
         }
-        #google-translate-box{
+        #google-translate-box {
             text-align: left;
             margin-bottom: 20px;
         }
-        #google_translate_element{
+        #google_translate_element {
             text-align: left;
         }
         header {
             background-color: pink;
+            padding: 10px 0;
+            border-radius: 6px;
         }
         nav {
             text-align: left;
@@ -31,38 +40,123 @@
         h1 {
             font-size: 1.8em;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             color: #2c3e50;
+            line-height: 1.4;
         }
-
         p {
             margin-bottom: 20px;
             text-indent: 2em;
+            text-align: justify;
         }
-
         strong {
             color: #d35400;
         }
-        .guide{
+        .guide {
             color: black;
         }
-
+        /* 目錄導航卡片樣式 */
+        .toc-box {
+            background-color: #edf7fa;
+            border: 1px solid #bce8f1;
+            border-left: 5px solid #2980b9;
+            padding: 18px 25px;
+            border-radius: 6px;
+            margin: 25px 0 35px 0;
+            text-align: left;
+        }
+        .toc-box h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+        .toc-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .toc-box li {
+            margin-bottom: 6px;
+        }
         .supplementary-info {
             background-color: #f0f0f0;
-            padding: 15px;
+            padding: 18px 20px;
             border-left: 5px solid #3498db;
-            margin-top: 40px;
+            margin-top: 35px;
+            text-align: left;
+            border-radius: 4px;
         }
-
-        .supplementary-info h2 {
+        .supplementary-info h2, .supplementary-info h3 {
             margin-top: 0;
-            font-size: 1.5em;
             color: #2980b9;
         }
-        video{
-            max-width: 80%;
+        .supplementary-info p {
+            text-indent: 0;
+        }
+        video {
+            max-width: 85%;
             height: auto;
-            border:solid 10px red;
+            border: solid 8px red;
+            border-radius: 6px;
+            margin: 10px auto 20px auto;
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+        th {
+            background-color: #f7f9fa;
+            color: #2c3e50;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 5px;
+            overflow-x: auto;
+            text-align: left;
+            font-size: 13px;
+        }
+        .upload-section {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .upload-box {
+            flex: 1;
+            border: 2px dashed #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            background: #fdfefe;
+        }
+        button.action-btn {
+            background: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: opacity 0.2s;
+        }
+        button.action-btn:hover {
+            opacity: 0.9;
+        }
+        button.action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
         #social-share a {
             text-decoration: none;
@@ -83,28 +177,7 @@
         #social-share a#twitter-share {
             color: #1DA1F2;
         }
-        @media (max-width: 767px) {
-            body {
-                margin: 20px;
-                padding: 15px;
-            }
-            video{
-                max-width: 80%;
-                height: auto;
-                border:solid 10px red;
-            }
-            a{
-                color: #2980b9;
-                text-decoration: none;
-            }
-            a:hover {
-                text-decoration: underline;
-            }
-            a:visited {
-                color: #2980b9;
-            }
-        }
-        a{
+        a {
             color: #2980b9;
             text-decoration: none;
         }
@@ -113,6 +186,19 @@
         }
         a:visited {
             color: #2980b9;
+        }
+        @media (max-width: 767px) {
+            body {
+                margin: 20px;
+                padding: 15px;
+            }
+            .upload-section {
+                flex-direction: column;
+            }
+            video {
+                max-width: 100%;
+                border-width: 5px;
+            }
         }
     </style>
 </head>
@@ -131,95 +217,326 @@
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <p>點選上方語言選單切換頁面語言。</p>
 </div>
+
 <header>
     <nav>
         <ul>
-        <li><strong style="color:black">本頁內容：<br></strong>
-            <a>數位樂器出現畫面與聲音不連貫的原因探討</a></li>
+            <li><strong style="color:black">本頁內容：<br></strong>
+                <a>🎬 數位樂器影音連貫性探討：視訊編碼殘差、儲存空間管理與 FFmpeg.wasm 實機分析</a></li>
             <li><strong class="guide">其他文章連結：</strong>
-        <ol>
-            <li><a href="index.html" target="_blank">首頁</a></li>
-            <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
-            <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
-            <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
-            <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
-            <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（64 首）</a></li>
-            <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
-            <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
-            <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
-            <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
-            <li><a href="vue_vs_multiple_html.html" target="_blank">Vue 與多頁 HTML 架構的差異與對應</a></li>
-            <li><a href="being_honest_does_not_conflict_with_being_vain.html" target="_blank">關於真實、自我呈現與數位樂器演奏的說明</a></li>
-            <li><a href="InShot.html" target="_blank">InShot 使用心得與技術推測分析</a></li>
-            <li><a href="About_MIDI.html" target="_blank">🎹 MIDI 數據結構與跨平台應用：從樂譜轉譯、彈珠物理動畫到聲光瀑布流實踐</a></li>
-            <li><a href="video_situation_in_html_and_vue.html" target="_blank">為什麼原生 HTML + JavaScript 影片會繼續播放，但 Vue 3 不會？</a></li>
-            <li><a href="Modulation.html" target="_blank">🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與可視化實證</a></li>
-        </ol>
+                <ol>
+                    <li><a href="index.html" target="_blank">首頁</a></li>
+                    <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
+                    <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
+                    <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
+                    <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
+                    <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（64 首）</a></li>
+                    <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
+                    <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
+                    <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
+                    <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
+                    <li><a href="vue_vs_multiple_html.html" target="_blank">Vue 與多頁 HTML 架構的差異與對應</a></li>
+                    <li><a href="being_honest_does_not_conflict_with_being_vain.html" target="_blank">關於真實、自我呈現與數位樂器演奏的說明</a></li>
+                    <li><a href="InShot.html" target="_blank">InShot 使用心得與技術推測分析</a></li>
+                    <li><a href="About_MIDI.html" target="_blank">🎹 MIDI 數據結構與跨平台應用：從樂譜轉譯、彈珠物理動畫到聲光瀑布流實踐</a></li>
+                    <li><a href="video_situation_in_html_and_vue.html" target="_blank">為什麼原生 HTML + JavaScript 影片會繼續播放，但 Vue 3 不會？</a></li>
+                    <li><a href="Modulation.html" target="_blank">🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與可視化實證</a></li>
+                </ol>
             </li>
         </ul>
     </nav>
 </header>
-<h1>數位樂器影片中畫面與聲音不連貫的原因探討</h1>
 
-<p>
-    在進行數位樂器互動介面的研究與示範時，我錄製了《Perfect Piano》的操作影片作為範例。最初使用的影片並非原始錄製，而是從我的小紅書帳號下載後再上傳至 WebStorm 專案中，透過 HTML 的 <code>&lt;video&gt;</code> 元素進行播放。播放結果顯示：<strong>聲音可以正常輸出，但琴鍵被按下的動畫並未正確顯示</strong>（如下影片所示）。
-</p>
+<h1>🎬 數位樂器影音連貫性探討：視訊編碼殘差、儲存空間管理與 FFmpeg.wasm 實機分析</h1>
 
-<video controls><source src="something_you_can_do_piano_tutorial.mp4" type="video/mp4"></video>
+<!-- 目錄與錨點導航 -->
+<div class="toc-box">
+    <h3>📑 本文目錄與快速導航</h3>
+    <ul>
+        <li><a href="#sec-case-study">1. 案例觀察：數位樂器錄影之畫面與聲音脫節現象</a></li>
+        <li><a href="#sec-space-system">2. 空間管理哲學：定期刪除檔案的重要性與 LINE 白畫面 I/O 原理</a></li>
+        <li><a href="#sec-media-comparison">3. 多媒體格式容量比較表（螢幕錄影、外部錄影、拍照、截圖、錄音）</a></li>
+        <li><a href="#sec-bitrate-calc">4. 互動實測：手機螢幕錄影容量即時預估計算機</a></li>
+        <li><a href="#sec-video-encoding">5. 多媒體編碼原理：Perfect Piano vs. Marimba Real 體積懸殊的技術真相</a></li>
+        <li><a href="#sec-ffmpeg-wasm">6. 實機前端檢驗：透過 FFmpeg.wasm 分析兩者碼率與關鍵影格結構</a></li>
+        <li><a href="#sec-video-tag-guide">7. 補充說明：如何使用 HTML 的 &lt;video&gt; 元素</a></li>
+    </ul>
+</div>
 
-<p>
-    進一步分析發現，此問題並非僅僅來自影片壓縮或編碼錯誤，更是與應用程式本身的視覺回饋設計有關。《Perfect Piano》在互動設計上僅呈現「琴鍵被按下」的最終狀態，並未顯示手指觸控或按壓的過程。這樣的設計雖能減少視覺負擔，但在影片播放時會導致使用者難以直覺地對應觸發動作與聲音之間的關係。
-</p>
-
-<p>
-    相較之下，另一款應用程式《Marimba Real》在互動時會顯示琴槌敲擊琴鍵的完整動畫。這種視覺回饋的呈現方式不僅提高了使用者對聲音觸發過程的理解，也讓畫面與聲音之間的關聯更為明確。因此，視覺動態反饋的設計可視為數位樂器介面中一項重要的互動要素。所以同一首曲子在Marimba Real上演奏時，畫面與聲音能夠達到較高的一致性，如下影片所示。
-</p>
-<video controls><source src="Something_You_Can_Do_Marimba_Real.mp4"></video>
-<p>
-    為了提升影片示範的品質，我重新在Perfect Piano上錄製了這首曲子。此次錄製後，我將影片上傳至 TikTok 並進行後製處理（包含歌名、歌詞與中文翻譯等元素）。值得注意的是，TikTok 會在上傳成功後自動生成可下載的版本，該版本的畫質與原始錄製幾乎一致，顯示該平台在影片壓縮與轉碼上的優化技術相當成熟。
-</p>
-
-<video controls><source src="Something_You_Can_Do.mp4" type="video/mp4"></video>
-
-<p>
-    綜合上述觀察，可以發現數位樂器的使用體驗不僅取決於聲音輸出品質，更受到觸控回饋、畫面反應與多媒體資料處理技術的共同影響。這些因素彼此交織，形成了使用者與數位音樂互動時的整體感知體驗。
-</p>
-
-<p>
-    從計算機科學的角度來看，這樣的現象涉及多個層面：包含人機互動（Human–Computer Interaction, HCI）、多媒體資料壓縮與傳輸、以及使用者介面設計（User Interface Design）。因此，這次的案例不僅是影片播放的技術問題，更可作為探討數位音樂互動系統中技術與感知之間關係的具體例證。
-</p>
-<div class="supplementary-info" style="border-left: 5px solid #e67e22; background-color: #fffaf0;">
-    <h2 style="color: #d35400;">技術核心：空間壓力與影音品質的連鎖反應</h2>
+<!-- ==================== 1. 案例觀察 ==================== -->
+<div id="sec-case-study">
     <p>
-        從全端開發與多媒體處理的角度來看，影片品質與裝置的<strong>儲存空間（Disk Space）</strong>息息相關。當手機剩餘空間不足（例如低於 10%）時，作業系統為了維持運作，會強行降低螢幕錄影的<strong>位元率 (Bitrate)</strong> 以減輕寫入壓力。
+        在進行數位樂器互動介面的研究與示範時，我錄製了《Perfect Piano》的操作影片作為範例。最初使用的影片並非原始錄製，而是從我的小紅書帳號下載後再上傳至 WebStorm 專案中，透過 HTML 的 <code>&lt;video&gt;</code> 元素進行播放。播放結果顯示：<strong>聲音可以正常輸出，但琴鍵被按下的動畫並未正確顯示</strong>（如下影片所示）。
     </p>
+
+    <video controls><source src="something_you_can_do_piano_tutorial.mp4" type="video/mp4"></video>
+
     <p>
-        這種「初級母帶」在經過小紅書等社群平台的<strong>暴力壓縮（Aggressive Compression）</strong>後，演算法會優先捨棄變動細節較小的像素。在《Perfect Piano》中，琴鍵變色屬於極微小的像素變動，常被演算法誤認為「數位雜訊」而遭到抹除，這正是造成<strong>「聲音在跑、畫面沒動」</strong>的技術主因。
+        進一步分析發現，此問題並非僅僅來自影片壓縮或編碼錯誤，更是與應用程式本身的視覺回饋設計有關。《Perfect Piano》在互動設計上僅呈現「琴鍵被按下」的最終狀態，並未顯示手指觸控或按壓的過程。這樣的設計雖能減少視覺負擔，但在影片播放時會導致使用者難以直覺地對應觸發動作與聲音之間的關係。
     </p>
+
     <p>
-        <strong>實證建議：</strong>維持約 100 GB 的緩衝空間，能確保系統以最高位元率錄製原始訊號，保留更多視覺細節與真實音質，從根本上提升作品的「說服力」。
+        相較之下，另一款應用程式《Marimba Real》在互動時會顯示琴槌敲擊琴鍵的完整動畫。這種視覺回饋的呈現方式不僅提高了使用者對聲音觸發過程的理解，也讓畫面與聲音之間的關聯更為明確。因此，視覺動態反饋的設計可視為數位樂器介面中一項重要的互動要素。所以同一首曲子在 Marimba Real 上演奏時，畫面與聲音能夠達到較高的一致性，如下影片所示。
+    </p>
+
+    <video controls><source src="Something_You_Can_Do_Marimba_Real.mp4"></video>
+
+    <p>
+        為了提升影片示範的品質，我重新在 Perfect Piano 上錄製了這首曲子。此次錄製後，我將影片上傳至 TikTok 並進行後製處理（包含歌名、歌詞與中文翻譯等元素）。值得注意的是，TikTok 會在上傳成功後自動生成可下載的版本，該版本的畫質與原始錄製幾乎一致，顯示該平台在影片壓縮與轉碼上的優化技術相當成熟。
+    </p>
+
+    <video controls><source src="Something_You_Can_Do.mp4" type="video/mp4"></video>
+
+    <p>
+        綜合上述觀察，可以發現數位樂器的使用體驗不僅取決於聲音輸出品質，更受到觸控回饋、畫面反應與多媒體資料處理技術的共同影響。這些因素彼此交織，形成了使用者與數位音樂互動時的整體感知體驗。從計算機科學的角度來看，這樣的現象涉及多個層面：包含人機互動（HCI）、多媒體資料壓縮與傳輸、以及使用者介面設計（UI Design）。
     </p>
 </div>
-<!-- 補充說明區塊 -->
-<div class="supplementary-info">
-    <h2>補充說明：如何使用 HTML 的 <code>&lt;video&gt;</code> 元素</h2>
+
+<!-- ==================== 2. 空間管理哲學與 LINE 白畫面原理 ==================== -->
+<div id="sec-space-system" class="supplementary-info" style="border-left: 5px solid #e74c3c; background-color: #fff9f9;">
+    <h2 style="color: #c0392b;">💾 2. 空間管理哲學：定期刪除檔案的重要性與 LINE 白畫面 I/O 原理</h2>
     <p>
-        這裡的&lt;video&gt;元素是HTML中一個用來播放視頻的標籤，讓你可以在網頁上嵌入和播放各種視頻檔案。透過這個元素，我們可以像觀看YouTube影片那樣直接在網頁內播放視頻。不過，有時候，視頻格式或解析度等技術問題會影響其播放效果，就像這次《Perfect Piano》的問題一樣。
+        許多人在日常生活中常遇到一種窘況：<strong>「手機儲存空間幾乎被塞爆，LINE 明明跳出新訊息推播通知，但點進去卻只看到白畫面或完全看不到任何新內容」</strong>。這背後其實是作業系統底層的 I/O 寫入保護與推播架構設計使然：
+    </p>
+    <ul>
+        <li><strong>推播通知與 App 本體資料流完全分離</strong>：手機鎖屏畫面上彈出的文字橫幅，走的是 Apple (APNs) 或 Google (FCM) 的系統級輕量推播通道，封包僅有數百位元組（Bytes），即使手機空間剩 0 MB 也能成功接收並顯示。</li>
+        <li><strong>SQLite 本地資料庫寫入失敗</strong>：當使用者點擊通知開啟 LINE 時，LINE 必須向通訊伺服器拉取完整的聊天封包、貼圖及預覽圖，並將其寫入裝置內的本地資料庫（如 SQLite）與快取磁區。</li>
+        <li><strong>檔案系統唯讀鎖定（Read-Only Fallback）</strong>：當系統儲存空間極限逼近飽和時，作業系統核心為了避免毀損重要分區，會<strong>強制阻斷所有第三方 App 的磁碟寫入請求（拋出 Disk I/O Error / Out of Space 異常）</strong>。LINE 因無法將新訊息寫入本地快取，前端 UI 便無法渲染對話泡泡，導致介面陷入空白卡死。</li>
+        <li><strong>快閃記憶體壽命與寫入放大（Write Amplification）</strong>：快閃記憶體以區塊為抹除單位、以頁面為寫入單位。當磁區空間極度擁擠時，系統寫入新資料必須頻繁在碎裂區塊間「讀取、搬移、抹除、再重寫」，造成手機 I/O 嚴重卡頓，並加速消耗晶片寫入壽命。</li>
+    </ul>
+    <p>
+        <strong>實證結論：</strong>智慧型手機必須定期清理快取、卸載多餘大檔，將剩餘容量維持在安全比例以上（建議保留 10%~20% 緩衝區）。這不僅攸關 App 能否正常載入內容，更是維護作業系統虛擬記憶體交換（Swap Space）與防範開機卡死的重要防線。
+    </p>
+</div>
+
+<!-- ==================== 3. 多媒體格式容量比較表 ==================== -->
+<div id="sec-media-comparison" class="supplementary-info" style="border-left: 5px solid #e67e22; background-color: #fffbf5;">
+    <h2 style="color: #d35400;">📊 3. 常見多媒體紀錄型態之容量佔用與資料吞吐量對比</h2>
+    <p>
+        為什麼手機空間常常在「不知不覺中被吃光」？下表清楚拆解了五種常見日常多媒體格式在檔案大小上的巨大級距差異及其背後的編碼原因：
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 18%;">多媒體型態</th>
+            <th style="width: 22%;">常見檔案大小 (基準預估)</th>
+            <th style="width: 25%;">資料吞吐量 / 碼率 (Bitrate)</th>
+            <th style="width: 35%;">技術原理與佔用容量之主因</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><strong>螢幕錄影<br>(Screen Recording)</strong></td>
+            <td><span style="color: #c0392b; font-weight: bold;">約 100 MB ~ 350 MB / 每分鐘</span><br>(視 UI 變動劇烈度而定)</td>
+            <td><strong>極高</strong><br>約 15,000 ~ 45,000 kb/s<br>(60 FPS 逐格採集)</td>
+            <td>
+                <b>空間殺手第一名！</b><br>
+                螢幕錄影記錄的是「像素級銳利」的數位介面（文字、線條、高對比圖示），包含大量空間高頻資訊。編碼器無法透過自然景深或運動模糊來偷懶壓縮，必須分配龐大碼率避免破圖，因此檔案肥大速度極驚人。
+            </td>
+        </tr>
+        <tr>
+            <td><strong>外部相機錄影<br>(Camera Video)</strong></td>
+            <td><strong>約 60 MB ~ 180 MB / 每分鐘</strong><br>(1080p 30/60 FPS 標準模式)</td>
+            <td><strong>中高</strong><br>約 8,000 ~ 20,000 kb/s</td>
+            <td>
+                實體鏡頭拍攝真實世界時，光學折射會自然帶有平滑漸層、背景散景與動態模糊。視訊編碼器（H.264/HEVC）極擅長壓縮這種平滑連續色彩，因此相同解析度下，通常比銳利的純數位螢幕錄影更省空間。
+            </td>
+        </tr>
+        <tr>
+            <td><strong>拍照相片<br>(Camera Photo)</strong></td>
+            <td><strong>約 2 MB ~ 8 MB / 每張</strong><br>(4800萬高畫素可達 15~25 MB)</td>
+            <td>單次寫入<br>(以靜態畫面為單位)</td>
+            <td>
+                僅包含單一時間點的二維影像陣列，經過現代感光元件的 ISP 降噪與演算法（JPEG / HEIF）壓縮，即便解析度極高，佔用容量仍遠小於連續視訊。
+            </td>
+        </tr>
+        <tr>
+            <td><strong>螢幕截圖<br>(Screenshot)</strong></td>
+            <td><strong>約 300 KB ~ 3 MB / 每張</strong><br>(視畫面純色區比例而定)</td>
+            <td>單次寫入<br>(通常存為 PNG / JPEG)</td>
+            <td>
+                僅捕捉單一畫格（Single Frame）。若畫面上大面積為純色背景（如聊天記錄白底），PNG 的字典演算法壓縮率極高；即使是全螢幕複雜畫面，容量也僅是螢幕錄影一秒鐘的數十分之一。
+            </td>
+        </tr>
+        <tr>
+            <td><strong>外部錄音<br>(Audio Recording)</strong></td>
+            <td><span style="color: #27ae60; font-weight: bold;">約 0.5 MB ~ 2 MB / 每分鐘</span><br>(AAC / M4A 壓縮格式)</td>
+            <td><strong>極低</strong><br>約 64 ~ 256 kb/s<br>(單純一維聲波訊號)</td>
+            <td>
+                <b>空間佔用最小！</b><br>
+                錄音僅記錄空氣壓力的「一維時間序列波形」，不包含任何二維像素點與色彩資訊。即便錄製一整小時的演講或彈奏，檔案往往也僅有 60 MB 上下，容量僅相當於數十秒的螢幕錄影。
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p style="background: #fff; padding: 10px 15px; border-radius: 5px; border: 1px solid #ebd0b5; font-size: 0.95em; margin-top: 15px;">
+        💡 <strong>實務建議：</strong> 在錄製樂器操作教學或示範時，若非必要展示全動態操作，<strong>優先使用截圖＋音訊輔助</strong>；若必須使用螢幕錄影，錄製完畢後應及時匯出至電腦或外接硬碟備份，並從手機相簿「最近刪除」中徹底清除，方能讓裝置常保最佳運作效能！
+    </p>
+</div>
+
+<!-- ==================== 4. 螢幕錄影容量計算機 ==================== -->
+<div id="sec-bitrate-calc" class="supplementary-info" style="border-left: 5px solid #16a085; background-color: #f2fcf9;">
+    <h2 style="color: #117a65;">🧮 4. 互動實測：手機螢幕錄影容量即時預估計算機</h2>
+    <p style="font-size: 0.95em; color: #555;">
+        想知道錄製一段教學或實況會吃掉手機多少空間？選擇預計錄製的解析度與場景動態，即可即時試算總檔案大小：
+    </p>
+
+    <!-- 控制表單區域 -->
+    <div style="display: flex; flex-wrap: wrap; gap: 15px; margin: 15px 0; align-items: center; justify-content: space-between;">
+        <div style="flex: 1; min-width: 220px;">
+            <label for="recordMinutes" style="font-weight: bold; color: #2c3e50;">錄製時長 (分鐘)：<span id="minuteDisplay" style="color: #e67e22;">10</span> 分鐘</label>
+            <input type="range" id="recordMinutes" min="1" max="120" value="10" step="1" style="width: 100%; margin-top: 5px; accent-color: #16a085;">
+        </div>
+
+        <div style="flex: 1; min-width: 180px;">
+            <label for="qualitySelect" style="font-weight: bold; color: #2c3e50;">錄製品質 / 畫格率：</label>
+            <select id="qualitySelect" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px; font-size: 14px;">
+                <option value="6000">720p 30fps (低碼率 / 約 6 Mbps)</option>
+                <option value="12000">720p 60fps (流暢 / 約 12 Mbps)</option>
+                <option value="15000">1080p 30fps (標準 / 約 15 Mbps)</option>
+                <option value="28000" selected>1080p 60fps (高畫質螢幕錄影 / 約 28 Mbps)</option>
+                <option value="45000">2K / 高動態遊戲錄影 (極高 / 約 45 Mbps)</option>
+            </select>
+        </div>
+
+        <div style="flex: 1; min-width: 180px;">
+            <label for="sceneType" style="font-weight: bold; color: #2c3e50;">畫面動態類型：</label>
+            <select id="sceneType" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px; font-size: 14px;">
+                <option value="0.6">靜態介面 / Perfect Piano (殘差極小 ×0.6)</option>
+                <option value="1.0" selected>一般操作 / 綜合教學 (標準 ×1.0)</option>
+                <option value="1.35">高速敲擊 / Marimba Real / 動作遊戲 (高殘差 ×1.35)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 即時計算結果顯示卡片 -->
+    <div style="background: #ffffff; border: 2px solid #a3e4d7; border-radius: 8px; padding: 18px; text-align: center; margin-top: 15px;">
+        <div style="font-size: 0.9em; color: #7f8c8d; margin-bottom: 5px;">預估產生之視訊檔案大小</div>
+        <div id="resultText" style="font-size: 2em; font-weight: bold; color: #c0392b; font-family: monospace;">2.10 GB</div>
+        <div id="detailFormula" style="font-size: 0.85em; color: #7f8c8d; margin-top: 4px;">(約等同於 2150.4 MB)</div>
+        <div id="storageAdvice" style="margin-top: 10px; font-size: 0.9em; font-weight: bold; color: #27ae60;">
+            ✅ 佔用空間適中，但若空間低於 15% 仍建議錄完即時匯出備份！
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 5. 視訊編碼原理：體積懸殊的技術真相 ==================== -->
+<div id="sec-video-encoding" class="supplementary-info" style="border-left: 5px solid #8e44ad; background-color: #fbf9ff;">
+    <h2 style="color: #6c3483;">🎥 5. 多媒體編碼原理：Perfect Piano vs. Marimba Real 體積懸殊的技術真相</h2>
+    <p>
+        現代視訊壓縮的核心仰賴<strong>畫格間預測編碼（Inter-frame Compression）</strong>，只記錄畫面隨時間變動的「像素差異殘差（Residual）與運動向量（Motion Vector）」：
+    </p>
+    <table>
+        <tr>
+            <th>分析維度</th>
+            <th>Perfect Piano 螢幕錄影</th>
+            <th>Marimba Real 螢幕錄影</th>
+        </tr>
+        <tr>
+            <td><strong>視覺回饋動態特徵</strong></td>
+            <td><strong>極低</strong>（僅琴鍵表面微幅變色，95% 畫面為靜態黑白琴體）</td>
+            <td><strong>極高</strong>（立體木槌大範圍揮動、木質共鳴板物理震動與陰影變化）</td>
+        </tr>
+        <tr>
+            <td><strong>畫格差異殘差 (Residual)</strong></td>
+            <td>編碼器判定前後影格差異極小，大量產生微小容量的 P 影格與 B 影格，近乎直接複製上一幀。</td>
+            <td>木槌高速大面積移位，無法直接參照上一幀，編碼器被迫寫入大量運動補償與高殘差數據。</td>
+        </tr>
+        <tr>
+            <td><strong>動態位元率 (Bitrate)</strong></td>
+            <td><strong>極低</strong>（約 500 ~ 1,500 kb/s 即可滿足）</td>
+            <td><strong>極高</strong>（需耗費 3,000 ~ 8,000+ kb/s 才能維持動態不模糊）</td>
+        </tr>
+        <tr>
+            <td><strong>平台壓縮容忍度</strong></td>
+            <td>上傳小紅書等平台後，琴鍵微弱變色極易被暴力壓縮視為「雜訊抹除」，導致<strong>「聲音有、畫面沒動」</strong>。</td>
+            <td>運動輪廓大且明確，抗壓縮演算法能力強，即使檔案肥大，但打擊節奏視覺連貫度清晰可見。</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ==================== 6. FFmpeg.wasm 實機前台檢驗工作台 ==================== -->
+<div id="sec-ffmpeg-wasm" class="supplementary-info" style="border-left: 5px solid #27ae60; background-color: #f6fcf8;">
+    <h2 style="color: #1e8449;">🧪 6. 實機前端檢驗：透過 FFmpeg.wasm 分析兩者碼率與關鍵影格結構</h2>
+    <p>
+        以下整合了 WebAssembly 版的 FFmpeg 核心引擎。你可以直接在瀏覽器端載入兩部影片檔案，直接提取底層位元率與關鍵影格（I-Frame）統計數據：
+    </p>
+
+    <div class="upload-section">
+        <div class="upload-box">
+            <h4>選擇 Perfect Piano 影片</h4>
+            <input type="file" id="fileA" accept="video/mp4">
+        </div>
+        <div class="upload-box">
+            <h4>選擇 Marimba Real 影片</h4>
+            <input type="file" id="fileB" accept="video/mp4">
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 15px 0;">
+        <button id="runBtn" class="action-btn" onclick="startAnalysis()" disabled>⏳ 正在載入 WebAssembly 核心...</button>
+    </div>
+
+    <table>
+        <tr>
+            <th>分析指標</th>
+            <th>Perfect Piano 影片</th>
+            <th>Marimba Real 影片</th>
+        </tr>
+        <tr>
+            <td>影片時長 (Duration)</td>
+            <td id="durationA">-</td>
+            <td id="durationB">-</td>
+        </tr>
+        <tr>
+            <td>平均碼率 (Average Bitrate)</td>
+            <td id="bitrateA">-</td>
+            <td id="bitrateB">-</td>
+        </tr>
+        <tr>
+            <td>視訊編碼格式 (Video Codec)</td>
+            <td id="codecA">-</td>
+            <td id="codecB">-</td>
+        </tr>
+        <tr>
+            <td>關鍵影格數 (I-Frame Count)</td>
+            <td id="iframesA">-</td>
+            <td id="iframesB">-</td>
+        </tr>
+        <tr>
+            <td>平均 GOP 間距估算</td>
+            <td id="gopA">-</td>
+            <td id="gopB">-</td>
+        </tr>
+    </table>
+
+    <h4>終端解析日誌 (Terminal Output)：</h4>
+    <pre id="logOutput" style="max-height: 180px;">等待載入中...</pre>
+</div>
+
+<!-- ==================== 7. video 標籤教學 ==================== -->
+<div id="sec-video-tag-guide" class="supplementary-info">
+    <h2>7. 補充說明：如何使用 HTML 的 <code>&lt;video&gt;</code> 元素</h2>
+    <p>
+        這裡的 &lt;video&gt; 元素是 HTML 中一個用來播放影片的標籤，讓你可以在網頁上嵌入和播放各種視訊檔案。透過這個元素，我們可以像觀看 YouTube 影片那樣直接在網頁內播放視訊。不過，有時候，視訊格式或解析度等技術問題會影響其播放效果，就像這次《Perfect Piano》的問題一樣。
     </p>
     <p>
-        如果你將影片文件上傳到專案中，必須在&lt;video&gt;元素裡使用&lt;source&gt;來指定影片的路徑。比如，假設你的影片檔案叫做`example.mp4`並放在專案的`videos`資料夾中，代碼會是：
+        如果你將影片檔案上傳到專案中，必須在 &lt;video&gt; 元素裡使用 &lt;source&gt; 來指定影片的路徑。比如，假設你的影片檔案叫做 <code>example.mp4</code> 並放在專案的 <code>videos</code> 資料夾中，代碼會是：
     </p>
     <pre>
-    &lt;video controls&gt;
-        &lt;source src="videos/example.mp4" type="video/mp4"&gt;
-        &lt;source src="videos/example.ogv" type="video/ogg"&gt;
-        您的瀏覽器不支援影片播放。
-    &lt;/video&gt;
+&lt;video controls&gt;
+    &lt;source src="videos/example.mp4" type="video/mp4"&gt;
+    &lt;source src="videos/example.ogv" type="video/ogg"&gt;
+    您的瀏覽器不支援影片播放。
+&lt;/video&gt;
     </pre>
     <p>
-        如果影片存放在外部伺服器上，也可以提供完整的URL來引入影片。這樣，瀏覽器就會根據指定的路徑來尋找並播放影片。
+        如果影片存放在外部伺服器上，也可以提供完整的 URL 來引入影片。這樣，瀏覽器就會根據指定的路徑來尋找並播放影片。
     </p>
 </div>
+
 <div id="social-share" style="margin-top: 20px;">
     <a id="fb-share" href="#" target="_blank" style="color: #4267B2; font-weight: bold;">分享到 Facebook</a>
     <span> | </span>
@@ -228,22 +545,14 @@
     <a id="twitter-share" href="#" target="_blank" style="color: #1DA1F2; font-weight: bold;">分享到 X</a>
 </div>
 <script>
-    // 自動抓取當前頁面的 URL
     var currentUrl = window.location.href;
-    // Facebook 分享
-    document.getElementById("fb-share").href =
-        "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
-    // Line 分享
-    document.getElementById("line-share").href =
-        "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
-    // X (Twitter) 分享
-    document.getElementById("twitter-share").href =
-        "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=你的文章標題";
+    document.getElementById("fb-share").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
+    document.getElementById("line-share").href = "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
+    document.getElementById("twitter-share").href = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=數位樂器影音連貫性探討";
 </script>
+
 <div id="fb-root"></div>
-<script async defer crossorigin="anonymous"
-        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
-</script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce"></script>
 
 <div class="fb-comments"
      data-href="https://chrischou19990904.github.io/harp_app_introduction"
@@ -251,51 +560,6 @@
      data-numposts="5">
 </div>
 
-
-<script>
-    document.getElementById('comment-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const name = document.getElementById('name').value.trim();
-        const message = document.getElementById('message').value.trim();
-        const imageFile = document.getElementById('image').files[0];
-        const videoFile = document.getElementById('video').files[0];
-
-        if (!name || !message) {
-            alert('請填寫名字和留言內容');
-            return;
-        }
-
-        const commentDiv = document.createElement('div');
-        commentDiv.innerHTML = `<p><strong>${name}</strong>: ${message}</p>`;
-
-        const mediaWrapper = document.createElement('div');
-        mediaWrapper.classList.add('media-wrapper');
-
-        if (imageFile) {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(imageFile);
-            img.alt = '上傳的圖片';
-            mediaWrapper.appendChild(img);
-        }
-
-        if (videoFile) {
-            const video = document.createElement('video');
-            video.src = URL.createObjectURL(videoFile);
-            video.controls = true;
-            mediaWrapper.appendChild(video);
-        }
-
-        // 只有當有圖片或影片時才加 mediaWrapper
-        if (mediaWrapper.children.length > 0) {
-            commentDiv.appendChild(mediaWrapper);
-        }
-
-        document.getElementById('comments').appendChild(commentDiv);
-
-        this.reset();
-    });
-</script>
 <ul id="messages"></ul>
 <hr>
 <footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
@@ -304,10 +568,160 @@
     <img width="540" height="720" src="my_appearance2.jpg" alt="自拍">
     <br>
 </footer>
+
+<!-- ==================== 8. 腳本區：容量計算機與 FFmpeg.wasm ==================== -->
+<script>
+    // ----------------- 計算機邏輯 -----------------
+    const slider = document.getElementById("recordMinutes");
+    const minuteDisplay = document.getElementById("minuteDisplay");
+    const qualitySelect = document.getElementById("qualitySelect");
+    const sceneTypeSelect = document.getElementById("sceneType");
+    const resultText = document.getElementById("resultText");
+    const detailFormula = document.getElementById("detailFormula");
+    const storageAdvice = document.getElementById("storageAdvice");
+
+    function calculateSize() {
+        const minutes = parseFloat(slider.value);
+        minuteDisplay.innerText = minutes;
+
+        const baseVideoBitrate = parseFloat(qualitySelect.value) * 1000;
+        const motionFactor = parseFloat(sceneTypeSelect.value);
+        const audioBitrate = 192 * 1000;
+
+        const effectiveTotalBitrate = (baseVideoBitrate * motionFactor) + audioBitrate;
+        const totalSeconds = minutes * 60;
+
+        const totalMB = (effectiveTotalBitrate * totalSeconds) / (8 * 1024 * 1024);
+        const totalGB = totalMB / 1024;
+
+        if (totalGB >= 1) {
+            resultText.innerText = totalGB.toFixed(2) + " GB";
+            detailFormula.innerText = `(約等同於 ${totalMB.toFixed(1)} MB)`;
+        } else {
+            resultText.innerText = totalMB.toFixed(1) + " MB";
+            detailFormula.innerText = `(約等同於 ${totalGB.toFixed(3)} GB)`;
+        }
+
+        if (totalGB >= 10) {
+            storageAdvice.style.color = "#c0392b";
+            storageAdvice.innerText = "🚨 檔案極為巨大！手機若未預留至少 30GB 緩衝空間，錄製過程極易引發系統卡死或閃退！";
+        } else if (totalGB >= 3) {
+            storageAdvice.style.color = "#d35400";
+            storageAdvice.innerText = "⚠️ 檔案偏大，錄製時請確保手機有足夠暫存空間，避免 LINE 等通訊軟體讀取失敗。";
+        } else {
+            storageAdvice.style.color = "#27ae60";
+            storageAdvice.innerText = "✅ 佔用空間在正常範圍，但錄完後仍建議儘速備份至電腦並清除「最近刪除」。";
+        }
+    }
+
+    slider.addEventListener("input", calculateSize);
+    qualitySelect.addEventListener("change", calculateSize);
+    sceneTypeSelect.addEventListener("change", calculateSize);
+    calculateSize();
+
+    // ----------------- FFmpeg.wasm 分析邏輯 -----------------
+    const { FFmpeg } = FFmpegWASM;
+    const { fetchFile } = FFmpegUtil;
+    let ffmpeg = null;
+
+    async function initFFmpeg() {
+        const logBox = document.getElementById("logOutput");
+        ffmpeg = new FFmpeg();
+
+        ffmpeg.on("log", ({ message }) => {
+            logBox.textContent += message + "\n";
+            logBox.scrollTop = logBox.scrollHeight;
+        });
+
+        try {
+            await ffmpeg.load();
+            const runBtn = document.getElementById("runBtn");
+            runBtn.disabled = false;
+            runBtn.innerText = "🚀 開始執行對比分析";
+            logBox.textContent = "FFmpeg WebAssembly 模組載入就緒。\n";
+        } catch (err) {
+            console.error("FFmpeg 載入失敗:", err);
+            logBox.textContent = "WebAssembly 核心加載失敗，請確認網路環境或瀏覽器是否支援 WebAssembly。\n";
+        }
+    }
+    initFFmpeg();
+
+    async function probeVideo(file, virtualName) {
+        let logs = [];
+        const captureLog = ({ message }) => logs.push(message);
+        ffmpeg.on("log", captureLog);
+
+        await ffmpeg.writeFile(virtualName, await fetchFile(file));
+
+        await ffmpeg.exec([
+            "-i", virtualName,
+            "-vf", "select='eq(pict_type,PICT_TYPE_I)',showinfo",
+            "-f", "null",
+            "-"
+        ]);
+
+        ffmpeg.off("log", captureLog);
+        await ffmpeg.deleteFile(virtualName);
+
+        const fullLog = logs.join("\n");
+
+        const durationMatch = fullLog.match(/Duration:\s*(\d+:\d+:\d+\.\d+)/);
+        const bitrateMatch = fullLog.match(/bitrate:\s*(\d+\s*kb\/s)/);
+        const codecMatch = fullLog.match(/Video:\s*([^\s,]+)/);
+
+        const iframeMatches = fullLog.match(/iskey:1/g) || [];
+        const iframeCount = iframeMatches.length;
+
+        let durationSeconds = 0;
+        if (durationMatch) {
+            const parts = durationMatch[1].split(":");
+            durationSeconds = parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2]);
+        }
+
+        const avgGop = (durationSeconds > 0 && iframeCount > 0)
+            ? (durationSeconds / iframeCount).toFixed(2) + " 秒"
+            : "N/A";
+
+        return {
+            duration: durationMatch ? durationMatch[1] : "未知",
+            bitrate: bitrateMatch ? bitrateMatch[1] : "未知",
+            codec: codecMatch ? codecMatch[1] : "未知",
+            iframes: iframeCount,
+            gop: avgGop
+        };
+    }
+
+    async function startAnalysis() {
+        const fileA = document.getElementById("fileA").files[0];
+        const fileB = document.getElementById("fileB").files[0];
+
+        if (!fileA || !fileB) {
+            alert("請先選擇兩部要比對的影片檔案！");
+            return;
+        }
+
+        const runBtn = document.getElementById("runBtn");
+        runBtn.disabled = true;
+        runBtn.innerText = "⏳ 正在分析影片 A (Perfect Piano)...";
+
+        const statsA = await probeVideo(fileA, "videoA.mp4");
+        document.getElementById("durationA").innerText = statsA.duration;
+        document.getElementById("bitrateA").innerText = statsA.bitrate;
+        document.getElementById("codecA").innerText = statsA.codec;
+        document.getElementById("iframesA").innerText = statsA.iframes + " 個";
+        document.getElementById("gopA").innerText = statsA.gop;
+
+        runBtn.innerText = "⏳ 正在分析影片 B (Marimba Real)...";
+        const statsB = await probeVideo(fileB, "videoB.mp4");
+        document.getElementById("durationB").innerText = statsB.duration;
+        document.getElementById("bitrateB").innerText = statsB.bitrate;
+        document.getElementById("codecB").innerText = statsB.codec;
+        document.getElementById("iframesB").innerText = statsB.iframes + " 個";
+        document.getElementById("gopB").innerText = statsB.gop;
+
+        runBtn.disabled = false;
+        runBtn.innerText = "✅ 分析完成，可再次比對";
+    }
+</script>
 </body>
 </html>
-
-
-
-
-
