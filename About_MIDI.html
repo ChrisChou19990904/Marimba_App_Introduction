@@ -2,7 +2,8 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>MIDI原理與應用說明</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎹 MIDI 數據結構與跨平台應用：從樂譜轉譯、彈珠物理動畫到聲光瀑布流實踐</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", sans-serif;
@@ -46,9 +47,10 @@
         }
         .note {
             background-color: #fff3cd;
-            padding: 10px;
+            padding: 12px;
             border-left: 5px solid #ffeeba;
             margin-bottom: 20px;
+            border-radius: 4px;
         }
         #social-share a {
             text-decoration: none;
@@ -73,8 +75,9 @@
             text-align: left;
             background-color: pink;
             padding: 10px 0;
+            border-radius: 6px;
         }
-        a{
+        a {
             color: #2980b9;
             text-decoration: none;
         }
@@ -83,6 +86,10 @@
         }
         a:visited {
             color: #2980b9;
+        }
+        iframe, video {
+            max-width: 100%;
+            border-radius: 6px;
         }
     </style>
 </head>
@@ -93,8 +100,8 @@
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
-                pageLanguage: 'zh-TW',  // 頁面原語言
-                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',  // 支援的翻譯語言（可擴展）
+                pageLanguage: 'zh-TW',
+                includedLanguages: 'en,es,fr,de,it,zh-CN,ja,ko,th,vi,my,id,ms,ar,he,ru,tg,uk,hi,tr,pt,nl,is,fi,sv,no,ro,kk,bo,mn,la,fil,tl,el',
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
         }
@@ -102,10 +109,11 @@
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <p>點擊上方的語言選單以切換語言</p>
 </div>
+
 <nav>
     <ul>
         <li><strong class="guide">本頁內容：</strong><br>
-            <a>MIDI原理與應用說明</a></li>
+            <a>🎹 MIDI 數據結構與跨平台應用：從樂譜轉譯、彈珠物理動畫到聲光瀑布流實踐</a></li>
         <li><strong class="guide">其他文章連結：</strong>
             <ol>
                 <li><a href="index.html" target="_blank">首頁</a></li>
@@ -113,8 +121,8 @@
                 <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
                 <li><a href="flaw_of_perfect_piano.html" target="_blank">數位樂器出現畫面與聲音不連貫的原因探討</a></li>
                 <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
-                <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴<br>彈奏的曲目）</a></li>
-                <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（63 首）</a></li>
+                <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
+                <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（64 首）</a></li>
                 <li><a href="process_of_developing_the_app.html" target="_blank">Marimba Real開發技術介紹</a></li>
                 <li><a href="process_of_developing_perfect_piano.html" target="_blank">Perfect Piano開發技術介紹</a></li>
                 <li><a href="why_some_apps_are_not_influenced_by_silent_mode.html" target="_blank">為何有些應用程式的聲音會受靜音影響？</a></li>
@@ -125,138 +133,144 @@
                 <li><a href="video_situation_in_html_and_vue.html" target="_blank">為什麼原生 HTML + JavaScript 影片會繼續播放，但 Vue 3 不會？</a></li>
                 <li><a href="Modulation.html" target="_blank">🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與可視化實證</a></li>
             </ol>
+        </li>
     </ul>
 </nav>
-<h1>MIDI原理與應用說明</h1>
 
-    <h2>目錄</h2>
-<p>隨便點選下方其中一個主題便能快速跳到該主題的說明區</p>
-    <ul>
-        <li><a href="#section1">1. MIDI是什麼？</a></li>
-        <li><a href="#section2">2. MIDI的原理</a></li>
-        <li><a href="#section3">3. MIDI vs 音頻 (WAV/MP3)</a></li>
-        <li><a href="#section4">4. 對資工系和音樂系的重要性</a></li>
-        <li><a href="#section5">5. MIDI與應用程式的互動</a></li>
-        <li><a href="#section6">6. MuseScore vs Marble Music 優缺點比較</a></li>
-        <li><a href="#section7">7. MIDI與程式語言的關係</a></li>
-        <li><a href="#section8">8. 實體電子琴與手機應用的差異</a></li>
-        <li><a href="#section9">9. Marble Music自創作品上傳的條件</a></li>
-        <li><a href="#section10">10. MIDI創作流程圖</a></li>
-        <li><a href="#section11">11. Marble Music的使用說明</a></li>
-        <li><a href="#section12">12. 我透過MIDI創作的作品</a></li>
-    </ul>
-<h2 id="section1">1. MIDI是什麼？</h2>
+<h1>🎹 MIDI 數據結構與跨平台應用：從樂譜轉譯、彈珠物理動畫到聲光瀑布流實踐</h1>
+
+<h2>目錄</h2>
+<p>點選下方其中一個主題便能快速跳到該主題的說明區：</p>
+<ul>
+    <li><a href="#section1">1. MIDI 是什麼？</a></li>
+    <li><a href="#section2">2. MIDI 的原理與底層二進制數據</a></li>
+    <li><a href="#section3">3. MIDI vs 音頻 (WAV/MP3)</a></li>
+    <li><a href="#section4">4. 對資工系和音樂系的重要性</a></li>
+    <li><a href="#section5">5. MIDI 與應用程式的互動</a></li>
+    <li><a href="#section6">6. MuseScore vs Marble Music 優缺點比較</a></li>
+    <li><a href="#section6_2">6-2. 瀑布流視覺化原理：Synthesia vs SeeMusic</a></li>
+    <li><a href="#section7">7. MIDI 與程式語言的關係</a></li>
+    <li><a href="#section8">8. 實體電子琴與手機應用的差異</a></li>
+    <li><a href="#section9">9. Marble Music 自創作品上傳的條件</a></li>
+    <li><a href="#section10">10. MIDI 創作流程圖（多端派生輸出架構）</a></li>
+    <li><a href="#section11">11. Marble Music 的使用說明</a></li>
+    <li><a href="#section12">12. 我透過 MIDI 創作的作品實證清單</a></li>
+</ul>
+
+<h2 id="section1">1. MIDI 是什麼？</h2>
 <p>
     MIDI（<strong>Musical Instrument Digital Interface</strong>）是一種數位音樂通訊協議，用來讓電子樂器、電腦、控制器之間互相「說話」。
     它不直接產生聲音，而是告訴音源：
 </p>
 <ul>
-    <li>哪個音符要彈</li>
-    <li>音符的強弱（力度）</li>
-    <li>持續時間</li>
-    <li>音色、音量、表情控制</li>
+    <li>哪個音符要彈（Note Number）</li>
+    <li>音符的強弱與敲擊深度（Velocity 力度）</li>
+    <li>持續時間（Duration）</li>
+    <li>音色、音量、表情控制（Control Change）</li>
 </ul>
-<p>可以把MIDI想像成「數位樂譜」，而音源才是演奏出聲音的工具。</p>
+<p>可以把 MIDI 想像成「數位樂譜」，而音源（硬體合成器或虛擬軟體插件）才是真正把聲音震動發射出來的工具。</p>
 
-<h2 id="section2">2. MIDI的原理</h2>
+<h2 id="section2">2. MIDI 的原理與底層二進制數據</h2>
 <ul>
-    <li><strong>事件(Event)</strong>：例如按下 C4 音符、力度 100 或放開 C4 音符。</li>
-    <li><strong>通訊方式</strong>：傳統MIDI使用5針DIN接口，每秒傳送31,250位元；現代則多用USB或藍牙。</li>
-    <li><strong>數據結構</strong>：MIDI訊息通常只需幾個bytes，例如：
-        <pre>0x90 0x3C 0x64  （Note On, C4, Velocity 100）</pre>
+    <li><strong>事件 (Event)</strong>：例如按下 C4 音符、力度 100 或放開 C4 音符。</li>
+    <li><strong>通訊方式</strong>：傳統 MIDI 使用 5 針 DIN 接口，傳輸速率為 31,250 bps；現代則廣泛採用 USB MIDI 或低延遲藍牙 (BLE MIDI)。</li>
+    <li><strong>數據結構</strong>：MIDI 訊息通常只需 3 個 bytes（十六進制），例如：
+        <pre>0x90 0x3C 0x64  （Note On on Channel 1, C4, Velocity 100）</pre>
     </li>
-    <li><strong>解釋與播放</strong>：接收端（合成器或軟體音源）讀取MIDI指令 → 產生聲音。</li>
+    <li><strong>解釋與播放</strong>：接收端（合成器或軟體音源）讀取 MIDI 指令 → 觸發振盪器振幅與包絡線 → 產生聲音。</li>
 </ul>
 
 <h2 id="section3">3. MIDI vs 音頻 (WAV/MP3)</h2>
 <table>
     <tr>
-        <th></th>
+        <th>比較項目</th>
         <th>MIDI</th>
-        <th>音頻</th>
+        <th>音頻 (WAV / MP3)</th>
     </tr>
     <tr>
-        <td>內容</td>
-        <td>樂譜指令、控制訊息</td>
-        <td>聲音波形</td>
+        <td>本質內容</td>
+        <td>演奏行為指令、控制訊號</td>
+        <td>實際空氣壓力震動的採樣波形</td>
     </tr>
     <tr>
         <td>檔案大小</td>
-        <td>非常小</td>
-        <td>通常很大</td>
+        <td>極小（通常數十 KB）</td>
+        <td>龐大（數十 MB 乃至更巨）</td>
     </tr>
     <tr>
-        <td>可調性</td>
-        <td>音色、速度、力度可自由修改</td>
-        <td>改動困難，需要再編輯音軌</td>
+        <td>後期可調性</td>
+        <td>音色、速度、調性、力度皆可無失真即時微調</td>
+        <td>波形已固定，變速變調容易產生相位失真</td>
     </tr>
     <tr>
-        <td>依賴</td>
-        <td>需要音源（合成器或軟體）</td>
-        <td>自帶聲音</td>
+        <td>運作依賴</td>
+        <td>必須仰賴音源合成器進行解算</td>
+        <td>自帶波形數據，直接驅動解碼器即可出聲</td>
     </tr>
 </table>
 
 <h2 id="section4">4. 對資工系和音樂系的重要性</h2>
 <h3>資工系</h3>
 <ul>
-    <li>音樂軟體開發（DAW、合成器模擬器）</li>
-    <li>演算法與資料結構（MIDI訊息序列、事件排序、同步）</li>
-    <li>硬體通訊（USB、藍牙MIDI）</li>
+    <li>音樂軟體開發（DAW、網頁端 Web Audio 合成器）</li>
+    <li>演算法與資料結構（MIDI 訊息時間佇列、優先級事件排程、時鐘同步機制）</li>
+    <li>底層硬體通訊（USB、藍牙 HID 通訊與驅動介接）</li>
 </ul>
 <h3>音樂系</h3>
 <ul>
-    <li>編曲與演奏：快速修改音符、力度、音色</li>
-    <li>跨樂器協作：鋼琴鍵盤、鼓組、合成器同步演奏</li>
-    <li>混音與製作：調整速度、音高、延音</li>
+    <li>編曲與演奏：無損調整指法、音符音高、擊鍵力度與演奏音色</li>
+    <li>跨樂器協作：鍵盤、鼓機、類比合成器藉由主控時鐘實現同步對齊</li>
+    <li>混音與製作：自動化軌道參數（Automation）、延音踏板曲線控制</li>
 </ul>
 
 <div class="note">
-    核心公式：<br>
-    <strong>MIDI ≈ 數位樂譜 + 控制訊號 → 音源合成 → 聲音</strong>
+    <strong>核心公式：</strong><br>
+    <strong>MIDI ≈ 數位樂譜 + 控制訊號 → 音源合成器 → 物理震動聲波</strong>
 </div>
 
-<h2 id="section5">5. MIDI與應用程式的互動</h2>
-<p>以 <strong>Perfect Piano</strong> 為例：</p>
+<h2 id="section5">5. MIDI 與應用程式的互動</h2>
+<p>以 <strong>Perfect Piano</strong> 與各類音樂引擎為例：</p>
 <ul>
-    <li>彈奏鍵盤 → 錄製MIDI事件（Note On/Off, 力度）</li>
-    <li>儲存MIDI檔案 → 可命名管理</li>
-    <li>上傳至 MuseScore → 自動生成樂譜（可能誤判拍子）</li>
-    <li>上傳至 Marble Music → 生成動畫彈珠音效（動畫長度有限制）</li>
+    <li>螢幕鍵盤彈奏 → 採集 MIDI 事件（Note On/Off、Velocity 力度數值）</li>
+    <li>儲存為 <code>.mid</code> 檔案 → 獲得純粹的演奏數據結構</li>
+    <li>上傳至 MuseScore → 自動排版產生印刷級五線譜</li>
+    <li>上傳至 Marble Music → 生成重力加速度滾動的彈珠音效動畫</li>
+    <li>載入至 Web Audio（如 Tone.js）→ 透過程式演算法即時移調、波形切換與聲學頻譜繪製</li>
 </ul>
 
 <pre>
-鍵盤彈奏 → Perfect Piano錄製MIDI → 儲存檔案
-        ├─> MuseScore: 轉成樂譜
-        └─> Marble Music: 轉成彈珠動畫音效
-  </pre>
+鍵盤彈奏 → Perfect Piano 錄製 MIDI → 儲存 .mid 檔案
+        ├─> MuseScore: 符號解析與自動排版為樂譜
+        ├─> Marble Music: 轉為物理重力彈珠音效動畫
+        └─> Web Audio / Tone.js: 網頁端即時合成、移調與 FFT 可視化
+</pre>
 
 <h2 id="section6">6. MuseScore vs Marble Music 優缺點比較</h2>
 <table>
     <tr>
-        <th>功能/平台</th>
+        <th>功能 / 平台</th>
         <th>MuseScore</th>
         <th>Marble Music</th>
     </tr>
     <tr>
-        <td>用途</td>
-        <td>樂譜製作、編輯、正式呈現</td>
-        <td>動畫視覺化、彈珠音效展示</td>
+        <td>核心定位</td>
+        <td>專業樂譜製作、排版編輯、正式出版呈現</td>
+        <td>物理動畫視覺化、彈珠節奏展示</td>
     </tr>
     <tr>
         <td>優點</td>
         <td>
             <ul>
-                <li>自動把 MIDI 轉成樂譜</li>
-                <li>可修改音符、節奏、速度、音色</li>
-                <li>適合學術或正式樂譜呈現</li>
+                <li>自動將 MIDI 二進制指令轉為可讀五線譜</li>
+                <li>可手動細調音符拍號、調性與記譜符號</li>
+                <li>具備完整聲部劃分，適合學術與演奏教學</li>
             </ul>
         </td>
         <td>
             <ul>
-                <li>動畫直觀，視覺效果好</li>
-                <li>原始 MIDI 速度保留，無拍子誤判</li>
-                <li>操作簡單，上傳即生成動畫</li>
+                <li>小球墜落碰撞動畫直觀，極具趣味性與觀賞度</li>
+                <li>完全保留原始 MIDI 演奏時長與節奏微動態</li>
+                <li>操作流程極簡，上傳即可自動生成動畫</li>
             </ul>
         </td>
     </tr>
@@ -264,135 +278,220 @@
         <td>缺點</td>
         <td>
             <ul>
-                <li>有時誤判拍子速度</li>
-                <li>初學者需要手動調整量化與速度線</li>
-                <li>MIDI演奏速度不穩，樂譜可能不忠實</li>
+                <li>真人演奏的速度微動態容易導致拍號誤判</li>
+                <li>若未經嚴格量化（Quantize），樂譜記號會顯得破碎雜亂</li>
+                <li>需具備基本樂理知識才能進行後續校正</li>
             </ul>
         </td>
         <td>
             <ul>
-                <li>動畫長度有限（約1分鐘）</li>
-                <li>創作自由度受限，僅短片展示</li>
-                <li>不適合正式樂譜編輯</li>
+                <li>動畫展示長度受限（約 1 分鐘上下）</li>
+                <li>視覺表現形式固定，僅限於短片觀賞</li>
+                <li>無法導出印刷級五線譜或進行多軌混音</li>
             </ul>
         </td>
     </tr>
 </table>
 
-<h2 id="section7">7. MIDI與程式語言的關係</h2>
+<h2 id="section6_2">6-2. 瀑布流視覺化原理：Synthesia vs SeeMusic</h2>
+<p>
+    除了轉換成五線譜（MuseScore）與物理彈珠（Marble Music）之外，現代網路音樂創作最常見的呈現方式為<strong>垂直瀑布流視覺化（Piano Roll Waterfall Visualization）</strong>。
+    這種模式將時間軸設為垂直方向，音符以色塊長條形式由上往下墜落，在觸碰到虛擬琴鍵的瞬間發聲並發光。
+</p>
+
+<h3>1. 瀑布流的底層數學映射原理</h3>
+<p>
+    瀑布流的生成依賴於解析 MIDI 檔案中的音符事件（Note Events），並將物理時間映射至螢幕座標系（X, Y）：
+</p>
 <ul>
-    <li>MIDI本身不是程式語言，而是一種協議。</li>
-    <li>程式語言用於處理、解析、生成或控制MIDI檔案。</li>
+    <li><strong>X 軸（橫向位置）</strong>：由音符的音高數值 <code>note.midi</code> 決定。標準 88 鍵鋼琴的編號為 21 (A0) 到 108 (C8)，每個音符對應到畫布橫向特定的琴鍵中心座標。</li>
+    <li><strong>長條高度（Height）</strong>：取決於音符持續時間（Duration）。公式為：<code>高度 = note.duration × 下落速度常數 (px/sec)</code>。</li>
+    <li><strong>Y 軸（縱向動態位置）</strong>：取決於「音符預計發聲時間（note.time）」與「當前播放指針時間（currentTime）」的差值。公式為：<code>Y = 琴鍵接觸線Y座標 - (note.time - currentTime) × 下落速度</code>。</li>
+    <li><strong>觸發碰撞與粒子特效</strong>：當 <code>note.time ≈ currentTime</code> 時，長條底緣接觸琴鍵判定線，系統觸發琴鍵高亮（Key Glow）、發光軍刀光束（Saber）或發射粒子（Particles）。</li>
+</ul>
+
+<h3>2. 兩大主流軟體對比：Synthesia vs SeeMusic</h3>
+<table>
+    <tr>
+        <th>比較維度</th>
+        <th>Synthesia</th>
+        <th>SeeMusic</th>
+    </tr>
+    <tr>
+        <td>核心定位</td>
+        <td>鍵盤教學、互動練習與遊戲化打分</td>
+        <td>高質感影片離線渲染、粒子視覺特效合成</td>
+    </tr>
+    <tr>
+        <td>運作模式</td>
+        <td><strong>即時執行引擎</strong>：需透過螢幕錄影軟體（如 OBS）擷取畫面與音訊。</td>
+        <td><strong>非即時離線渲染（Render）</strong>：逐幀（Frame-by-Frame）無損導出 4K MP4 影片，不掉幀、不卡頓。</td>
+    </tr>
+    <tr>
+        <td>視覺特效</td>
+        <td>色彩簡潔、幾何方塊分明，支援指法標記與左右手分色。</td>
+        <td>專業級渲染：支援光暈殘影、發光粒子（Particles）、鍵盤按壓波紋與實體琴鍵反光效果。</td>
+    </tr>
+    <tr>
+        <td>外接音源 (VST)</td>
+        <td>內建簡易 Soundfont 音源，外接高階音源需依賴虛擬 MIDI 端口（LoopMIDI）。</td>
+        <td>可直接加載高階無損 WAV 音軌，或在專案內直接掛載專業音源庫進行同步導出。</td>
+    </tr>
+    <tr>
+        <td>在個人工作流中的價值</td>
+        <td>適合快速檢視手動彈奏的音符指法、節奏對齊度與練習驗證。</td>
+        <td>適合將手機錄製之 MIDI 與高品質音源結合，直接輸出為可發布至社群與 YouTube 的成品影片。</td>
+    </tr>
+</table>
+
+<div class="note">
+    <strong>💡 創作結論：</strong><br>
+    由手機雙拇指在 Perfect Piano 錄製之 <code>.mid</code> 檔案，具備高精度的時間差（Time Offset）與鍵位數據。透過 SeeMusic 或 Synthesia 的瀑布流映射，能將無形的二進制訊號轉換為具備強烈視覺張力的下落動畫，是「個人演奏數據化」最直觀的視覺驗證手段。
+</div>
+
+<h2 id="section7">7. MIDI 與程式語言的關係</h2>
+<ul>
+    <li>MIDI 本身不是程式語言，而是一種軟硬體通訊協議。</li>
+    <li>工程師使用程式語言來解析二進制資料流、排程發聲、合成波形或實現聲學可視化。</li>
 </ul>
 <table>
     <tr>
         <th>程式語言</th>
-        <th>用途</th>
-        <th>常用庫 / API</th>
+        <th>核心用途</th>
+        <th>常用函式庫 / API</th>
+    </tr>
+    <tr>
+        <td>JavaScript</td>
+        <td>網頁端音訊合成、即時移調、頻譜與示波器可視化</td>
+        <td>Web Audio API, Tone.js, @tonejs/midi</td>
     </tr>
     <tr>
         <td>Python</td>
-        <td>生成、解析、分析MIDI檔案</td>
+        <td>數據科學分析、MIDI 樂譜自動轉譯、AI 音樂生成</td>
         <td>mido, pretty_midi, music21</td>
     </tr>
     <tr>
         <td>C / C++</td>
-        <td>低延遲MIDI處理、硬體控制</td>
-        <td>RtMidi, JUCE</td>
+        <td>極低延遲專業音源開發、DSP 數位訊號處理、硬體控制器</td>
+        <td>RtMidi, JUCE 框架</td>
     </tr>
     <tr>
         <td>Java</td>
-        <td>跨平台音樂程式、樂譜軟體</td>
+        <td>跨平台樂理軟體開發、桌上型應用</td>
         <td>javax.sound.midi</td>
     </tr>
     <tr>
-        <td>JavaScript</td>
-        <td>網頁MIDI應用、音樂可視化</td>
-        <td>Web MIDI API, Tone.js</td>
-    </tr>
-    <tr>
-        <td>Swift / Objective-C</td>
-        <td>iOS / macOS 音樂App</td>
+        <td>Swift / Obj-C</td>
+        <td>Apple 平台原生專業音訊與音樂 App 開發</td>
         <td>CoreMIDI, AudioKit</td>
     </tr>
     <tr>
         <td>C# / .NET</td>
-        <td>Windows 音樂App、遊戲</td>
+        <td>Windows 桌面端音樂工具、Unity 遊戲音訊驅動</td>
         <td>NAudio, Midi.Net</td>
     </tr>
 </table>
 
 <h2 id="section8">8. 實體電子琴與手機應用的差異</h2>
 <ul>
-    <li>實體電子琴可同時按下多個鍵 → MIDI能完整記錄和弦、主旋律+伴奏</li>
-    <li>手機應用如 Perfect Piano 螢幕小 → 難以同時按下多個鍵，多音演奏受限</li>
-    <li>網路上的多軌樂譜影片多來源於實體鍵盤錄製的MIDI檔</li>
+    <li><strong>實體電子琴</strong>：鍵盤尺寸符合人體工學，十指皆能靈活鋪展，可同時記錄低音八度伴奏、中音副旋律與高音主旋律，MIDI 檔案具備高密度的多聲部和弦數據。</li>
+    <li><strong>手機應用 (Perfect Piano)</strong>：限於觸控螢幕尺寸，通常僅能依靠左右大拇指敲擊。配樂不得不以主旋律為核心，但在高 BPM 節奏下需要極高的鍵位掌控力。</li>
+    <li><strong>數據等價性</strong>：雖然演奏輸入方式不同，但產生的 <code>.mid</code> 檔案在數據結構層級是完全標準且等價的，皆能無縫丟入專業 DAW 或視覺化引擎中播放。</li>
 </ul>
 
-<h2 id="section9">9. Marble Music自創作品上傳的條件</h2>
+<h2 id="section9">9. Marble Music 自創作品上傳的條件</h2>
 <ul>
-    <li>必須有 MIDI 檔案</li>
-    <li>創作者可以自己演奏錄製 MIDI（實體電子琴或數位鍵盤）</li>
-    <li>或者使用別人提供的 MIDI 檔案</li>
+    <li>必須具備標準的 <code>.mid</code> 檔案作為音符時間事件來源。</li>
+    <li>創作者可親手彈奏錄製（實體電子琴或手機應用），保留原始人性化微動態。</li>
+    <li>亦可使用現成或後製軟體編排之 MIDI 檔案。</li>
 </ul>
 <pre>
-1️⃣ 自己演奏 → 錄製MIDI → 上傳Marble Music → 生成動畫
-2️⃣ 使用別人MIDI檔 → 上傳Marble Music → 生成動畫
-  </pre>
+1️⃣ 自己演奏 → 錄製 MIDI → 上傳 Marble Music → 自動計算碰撞判定點並生成彈珠動畫
+2️⃣ 使用現成 MIDI 檔 → 上傳 Marble Music → 生成動畫
+</pre>
 
-<!-- 在 <body> 適當位置加入流程圖，建議放在 8. 實體電子琴與手機應用的差異 後面 -->
-
-<h2 id="section10">10. MIDI創作流程圖</h2>
-<svg width="100%" height="400" xmlns="http://www.w3.org/2000/svg">
+<h2 id="section10">10. MIDI 創作流程圖（多端派生輸出架構）</h2>
+<svg width="100%" height="440" viewBox="0 0 780 440" xmlns="http://www.w3.org/2000/svg" style="background: #ffffff; border-radius: 8px; border: 1px solid #e0e0e0;">
     <!-- 箭頭定義 -->
     <defs>
         <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
             <path d="M0,0 L10,5 L0,10 z" fill="#2c3e50"/>
         </marker>
+        <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/>
+        </marker>
     </defs>
 
-    <!-- 實體鍵盤節點 -->
-    <rect x="50" y="50" width="150" height="50" fill="#d1ecf1" stroke="#0c5460" stroke-width="2" rx="5" ry="5"/>
-    <text x="125" y="80" font-size="14" text-anchor="middle" fill="#0c5460">實體電子琴</text>
+    <!-- ==================== 1. 輸入端 (左側) ==================== -->
+    <rect x="40" y="80" width="160" height="55" fill="#d1ecf1" stroke="#0c5460" stroke-width="2" rx="6" ry="6"/>
+    <text x="120" y="105" font-size="15" font-weight="bold" text-anchor="middle" fill="#0c5460">實體電子琴</text>
+    <text x="120" y="123" font-size="11" text-anchor="middle" fill="#0c5460">多指和弦 / 飽滿伴奏</text>
 
-    <!-- 手機應用節點 -->
-    <rect x="50" y="150" width="150" height="50" fill="#f8d7da" stroke="#721c24" stroke-width="2" rx="5" ry="5"/>
-    <text x="125" y="180" font-size="14" text-anchor="middle" fill="#721c24">手機應用鍵盤</text>
+    <rect x="40" y="220" width="160" height="55" fill="#f8d7da" stroke="#721c24" stroke-width="2" rx="6" ry="6"/>
+    <text x="120" y="245" font-size="15" font-weight="bold" text-anchor="middle" fill="#721c24">手機應用 (Perfect Piano)</text>
+    <text x="120" y="263" font-size="11" text-anchor="middle" fill="#721c24">雙拇指極限彈奏 / 單音限制</text>
 
-    <!-- MIDI檔案節點 -->
-    <rect x="300" y="100" width="150" height="50" fill="#fff3cd" stroke="#856404" stroke-width="2" rx="5" ry="5"/>
-    <text x="375" y="130" font-size="14" text-anchor="middle" fill="#856404">錄製 MIDI 檔</text>
+    <!-- ==================== 2. 中間核心數據 ==================== -->
+    <rect x="290" y="150" width="160" height="60" fill="#fff3cd" stroke="#856404" stroke-width="2.5" rx="8" ry="8"/>
+    <text x="370" y="177" font-size="16" font-weight="bold" text-anchor="middle" fill="#856404">錄製 MIDI 檔案</text>
+    <text x="370" y="197" font-size="12" text-anchor="middle" fill="#856404">保留音高/力度/Time Offset</text>
 
-    <!-- MuseScore節點 -->
-    <rect x="550" y="50" width="150" height="50" fill="#d4edda" stroke="#155724" stroke-width="2" rx="5" ry="5"/>
-    <text x="625" y="80" font-size="14" text-anchor="middle" fill="#155724">MuseScore (樂譜)</text>
+    <!-- ==================== 3. 輸出端 (右側三路) ==================== -->
+    <!-- 分支 1: MuseScore -->
+    <rect x="550" y="40" width="190" height="55" fill="#d4edda" stroke="#155724" stroke-width="2" rx="6" ry="6"/>
+    <text x="645" y="65" font-size="14" font-weight="bold" text-anchor="middle" fill="#155724">MuseScore (樂譜轉譯)</text>
+    <text x="645" y="83" font-size="11" text-anchor="middle" fill="#155724">五線譜輸出 / 符號化編排</text>
 
-    <!-- Marble Music節點 -->
-    <rect x="550" y="150" width="150" height="50" fill="#cce5ff" stroke="#004085" stroke-width="2" rx="5" ry="5"/>
-    <text x="625" y="180" font-size="14" text-anchor="middle" fill="#004085">Marble Music (動畫)</text>
+    <!-- 分支 2: Marble Music -->
+    <rect x="550" y="150" width="190" height="55" fill="#cce5ff" stroke="#004085" stroke-width="2" rx="6" ry="6"/>
+    <text x="645" y="175" font-size="14" font-weight="bold" text-anchor="middle" fill="#004085">Marble Music (彈珠動畫)</text>
+    <text x="645" y="193" font-size="11" text-anchor="middle" fill="#004085">物理重力碰撞 / 節奏小球</text>
 
-    <!-- 箭頭連線 -->
-    <line x1="200" y1="75" x2="300" y2="125" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
-    <line x1="200" y1="175" x2="300" y2="125" stroke="#721c24" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrow)"/>
+    <!-- 分支 3: SeeMusic / Synthesia -->
+    <rect x="550" y="260" width="190" height="55" fill="#e8daef" stroke="#6c3483" stroke-width="2" rx="6" ry="6"/>
+    <text x="645" y="285" font-size="14" font-weight="bold" text-anchor="middle" fill="#6c3483">SeeMusic / Synthesia</text>
+    <text x="645" y="303" font-size="11" text-anchor="middle" fill="#6c3483">垂直瀑布流 / 發光粒子特效</text>
 
-    <line x1="450" y1="125" x2="550" y2="75" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
-    <line x1="450" y1="125" x2="550" y2="175" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+    <!-- ==================== 連線與箭頭 ==================== -->
+    <!-- 實體琴 -> MIDI -->
+    <line x1="200" y1="107" x2="290" y2="165" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="215" y="125" font-size="11" fill="#2c3e50">完整 MIDI 軌道</text>
 
-    <!-- 標註說明 -->
-    <text x="230" y="90" font-size="12" fill="#2c3e50">完整和弦/多音</text>
-    <text x="230" y="150" font-size="12" fill="#721c24">單指受限</text>
+    <!-- 手機琴 -> MIDI (紅色虛線) -->
+    <line x1="200" y1="247" x2="290" y2="195" stroke="#c0392b" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrow-red)"/>
+    <text x="205" y="235" font-size="11" fill="#c0392b">手動採譜採集</text>
+
+    <!-- MIDI -> MuseScore -->
+    <line x1="450" y1="165" x2="550" y2="78" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="470" y="110" font-size="11" fill="#155724">符號音符解析</text>
+
+    <!-- MIDI -> Marble Music -->
+    <line x1="450" y1="180" x2="550" y2="180" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="475" y="173" font-size="11" fill="#004085">音符事件觸發</text>
+
+    <!-- MIDI -> SeeMusic / Synthesia -->
+    <line x1="450" y1="195" x2="550" y2="282" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="465" y="255" font-size="11" fill="#6c3483">Y軸時序降落映射</text>
+
+    <!-- ==================== 底部總結註記 ==================== -->
+    <rect x="40" y="360" width="700" height="48" fill="#fdfefe" stroke="#bdc3c7" stroke-width="1" rx="4" ry="4"/>
+    <text x="390" y="388" font-size="13" font-weight="bold" text-anchor="middle" fill="#34495e">
+        核心概念：原始 MIDI 數據作為單一真實數據來源（Single Source of Truth），可平行派生出樂譜、物理動畫與視覺瀑布流
+    </text>
 </svg>
-<h2 id="section11">11. Marble Music的使用說明</h2>
+
+<h2 id="section11">11. Marble Music 的使用說明</h2>
 <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/eXURkYGNgco?si=TsKMiPQvF2hWdo9F" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<h2 id="section12">12. 我透過MIDI創作的作品</h2>
+
+<h2 id="section12">12. 我透過 MIDI 創作的作品實證清單</h2>
 <ol>
     <li>
-        帝皇再臨A大調樂譜
+        帝皇再臨 A 大調樂譜
         <br>
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/cydqv1t0Ljc?si=8PaMFmJw07DMvplY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
     <li>
-        帝皇再臨C大調樂譜
+        帝皇再臨 C 大調樂譜
         <br>
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/omgZstaqcQk?si=1DiwkM1qUvS-e4IY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
@@ -442,12 +541,12 @@
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/4PC3Czgm_Cw?si=I030GZWbnJ-OARc6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
     <li>
-        帝皇再臨A大調 音樂小球
+        帝皇再臨 A 大調 音樂小球
         <br>
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/hv3jLuliFB8?si=VYszEtog4EVWhkRq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
     <li>
-        帝皇再臨C大調 音樂小球
+        帝皇再臨 C 大調 音樂小球
         <br>
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/iWQSHJhJ_PE?si=Xv1FDVrlGxCgSh5l" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
@@ -607,7 +706,7 @@
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/tkXC4yRplK0?si=a17Rv0SBiPb_y1V4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
     <li>
-        Samsung Galaxy Ringtone-Homecoming C大調 vs D大調 音樂小球
+        Samsung Galaxy Ringtone-Homecoming C 大調 vs D 大調 音樂小球
         <br>
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/9rGMItSkZTM?si=dL9Fh_mA-unHFLJQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
@@ -642,9 +741,12 @@
         <iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/zC_VAaejSSM?si=mZ9PhDEbXFMT17Xe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </li>
 </ol>
+
 <div class="note">
-    核心結論：MIDI是靈魂，演奏能力是創作的橋梁；沒有演奏能力就只能靠現成MIDI。
+    <strong>核心結論：</strong><br>
+    MIDI 是數據與結構的靈魂，演奏能力是創作的橋梁。唯有透過扎實的手動演奏採集，才能賦予 MIDI 檔案細膩的人性微動態；再透過工程演算法與視覺引擎派生多樣化呈現，達成技術與音樂藝術的完全融合。
 </div>
+
 <div id="social-share" style="margin-top: 20px;">
     <a id="fb-share" href="#" target="_blank" style="color: #4267B2; font-weight: bold;">分享到 Facebook</a>
     <span> | </span>
@@ -653,28 +755,21 @@
     <a id="twitter-share" href="#" target="_blank" style="color: #1DA1F2; font-weight: bold;">分享到 X</a>
 </div>
 <script>
-    // 自動抓取當前頁面的 URL
     var currentUrl = window.location.href;
-    // Facebook 分享
-    document.getElementById("fb-share").href =
-        "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
-    // Line 分享
-    document.getElementById("line-share").href =
-        "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
-    // X (Twitter) 分享
-    document.getElementById("twitter-share").href =
-        "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=你的文章標題";
+    document.getElementById("fb-share").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
+    document.getElementById("line-share").href = "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
+    document.getElementById("twitter-share").href = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=MIDI數據結構與跨平台應用說明";
 </script>
+
 <div id="fb-root"></div>
-<script async defer crossorigin="anonymous"
-        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce">
-</script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v17.0" nonce="yourNonce"></script>
 
 <div class="fb-comments"
      data-href="https://chrischou19990904.github.io/harp_app_introduction"
      data-width="100%"
      data-numposts="5">
 </div>
+
 <ul id="messages"></ul>
 <hr>
 <footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
