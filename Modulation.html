@@ -31,7 +31,41 @@
         .player-bar { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 550px; margin: 15px auto 5px auto; }
         .time-display { font-family: monospace; font-size: 14px; color: #444; width: 45px; }
         input[type="range"] { flex: 1; cursor: pointer; accent-color: #2980b9; }
-        @media (max-width: 767px) { img { width: 100%; } }
+
+        /* 頁尾樣式優化：適當字體大小與響應式排版 */
+        footer.author-card {
+            text-align: center;
+            background-color: purple;
+            color: yellow;
+            padding: 30px 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        footer.author-card .author-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        footer.author-card .author-meta {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #ffeaa7;
+            margin-bottom: 15px;
+        }
+        footer.author-card img {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 767px) {
+            body { margin: 15px auto; padding: 12px; }
+            footer.author-card .author-title { font-size: 20px; }
+            footer.author-card .author-meta { font-size: 14px; }
+            img { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -95,6 +129,7 @@
         <li><a href="#sec-key-tuning">5. 演奏調性特調與音域物理探討（-1 vs +11）</a></li>
         <li><a href="#sec-player-workstation">🛠️ 前往：音訊可視化工作站與播放控制台</a></li>
         <li><a href="#sec-playlist">🎵 前往：精選 43 首手動演奏曲目播放清單</a></li>
+        <li><a href="#sec-conclusion">💡 8. 結語：從「數據結構」到「聲學靈魂」的工程實踐</a></li>
     </ul>
 </div>
 
@@ -267,7 +302,7 @@
         <li><button onclick="fetchAndPlayMidi('一笑江湖.mid')">▶ 播放：一笑江湖（原調降D，採集調C）</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('homecoming.mid')">▶ 播放：homecoming（Samsung手機鈴聲；我連續用C大調與D大調彈奏）</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Way Back Home B Flat Major.mid')">▶ 播放：Way Back Home</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('君が好きだと叫びたい.mid')">▶ 播放：好想大聲說喜歡你 (灌籃高手主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('君が好きだと叫びたい.mid')">▶ 播放：好想大聲說喜歡你 (灌籃高手主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('時代を越える想い.mid')">▶ 播放：穿越時空的思念 (犬夜叉插曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('哀歌.mid')">▶ 播放：哀歌 (犬夜叉插曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('戰鬥通往勝利.mid')">▶ 播放：戰鬥–通往勝利 (鎧甲勇士光影傳奇插曲)</button><br><br></li>
@@ -277,7 +312,7 @@
         <li><button onclick="fetchAndPlayMidi('不敗的英雄.mid')">▶ 播放：不敗的英雄 (鎧甲勇士刑天主題曲，原調B，採集調C)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Just K.O.mid')">▶ 播放：Just K.O (鎧甲勇士拿瓦主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('ウルトラマンの歌.mid')">▶ 播放：ウルトラマンの歌 (初代超人力霸王主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ウルトラセブンの歌.mid')">▶ 播放：ウルトラセブンの歌 (超人七號主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('ウルトラセブンの歌.mid')">▶ 播放：ウルトラセブンの歌 (超人七號主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('帰ってきたウルトラマンの歌.mid')">▶ 播放：帰ってきたウルトラマンの歌 (歸來的超人力霸王主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('ウルトラマンエース.mid')">▶ 播放：ウルトラマンエースの歌 (超人力霸王衛司主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Ultraman Taro OP.mid')">▶ 播放：ウルトラマンタロウの歌 (超人力霸王太郎主題曲)</button><br><br></li>
@@ -286,22 +321,66 @@
         <li><button onclick="fetchAndPlayMidi('只想守护你.mid')">▶ 播放：君だけを守りたい (超人力霸王帝納片尾曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('悲しみの沼.mid')">▶ 播放：悲しみの沼 (超人力霸王蓋亞插曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Spirit .mid')">▶ 播放：Spirit (超人力霸王高斯主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('君にできる何か.mid')">▶ 播放：君にできるなにか (超人力霸王高斯片尾曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('君にできる何か.mid')">▶ 播放：君にできるなにか (超人力霸王高斯片尾曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Eiyuu .mid')">▶ 播放：英雄 (超人力霸王納克斯主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Ultraman Mebius OP.mid')">▶ 播放：ウルトラマンメビウスの歌 (超人力霸王梅比斯主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('ウルトラの奇跡.mid')">▶ 播放：ウルトラの奇跡 (超人力霸王梅比斯插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('進めウルトラマンゼロ.mid')">▶ 播放：進め！ウルトラマンゼロ！ (超人力霸王傑洛主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('オーブの祈り.mid')">▶ 播放：オーブの祈り (超人力霸王歐布主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ジードの証.mid')">▶ 播放：ジードの証 (超人力霸王捷德主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('進めウルトラマンゼロ.mid')">▶ 播放：進め！ウルトラマンゼロ！ (超人力霸王傑洛主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('オーブの祈り.mid')">▶ 播放：オーブの祈り (超人力霸王歐布主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('ジードの証.mid')">▶ 播放：ジードの証 (超人力霸王捷德主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('影となりて悪を討つ.mid')">▶ 播放：影となりて悪を討つ (忍風戰隊破裏劍者主插曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Shiawase Shaking Hands.mid')">▶ 播放：幸せShaking Hands (忍風戰隊破裏劍者插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('仮面ライダークウガ.mid')">▶ 播放：仮面ライダークウが (假面騎士空我主題曲)</button><br><br></li>
+        <li><button onclick="fetchAndPlayMidi('仮面ライダークウガ.mid')">▶ 播放：仮面ライダークウが (假面騎士空我主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Be the one.mid')">▶ 播放：Be the one (假面騎士Build主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('Life Goes On.mid')">▶ 播放：Life Goes On (超星神格蘭賽沙主題曲)</button><br><br></li>
         <li><button onclick="fetchAndPlayMidi('竜剣道.mid')">▶ 播放：龍劍道 (魔彈戰記龍劍道主題曲)</button></li>
     </ol>
 </div>
+
+<!-- ==================== 新增章節：深度技術結語 ==================== -->
+<div id="sec-conclusion" class="section" style="border-left: 5px solid #2c3e50; background-color: #f8f9fa;">
+    <h2 style="color: #2c3e50;">💡 8. 結語：從「數據結構」到「聲學靈魂」的工程實踐</h2>
+    <p>
+        數位音樂工程的迷人之處，在於它既是精密的純粹數學，也是充滿情感的聽覺藝術。回顧整套系統的架構設計，本專案將抽象的樂理與感性的演奏，逐層沉澱為扎實的前端工程實作：
+    </p>
+    <ul>
+        <li><strong>在底層協議層</strong>：透過將二進位 MIDI 訊息解構為 <code>(Pitch, Velocity, Time Offset)</code> 陣列，確立了音訊驅動的單一真實數據源（Single Source of Truth），為後續的轉調、時鐘映射與視覺化提供堅實依據。</li>
+        <li><strong>在訊號合成與排程層</strong>：摒棄單純調用靜態音訊檔案（如 MP3/WAV）的常規做法，全面採用 Web Audio API 的 <code>OscillatorNode</code> 物理訊號產生器與 ADSR 包絡線動態運算；更透過 <code>Tone.Transport</code> 抽象主控時鐘，徹底解決非阻塞式排程、精準暫停與任意時間軸跳轉（Seek）的難題。</li>
+        <li><strong>在可視化與聲學層</strong>：將時域（Time Domain）的連續波形振幅映射為動態示波器，並利用快速傅立葉變換（FFT）即時拆解各諧波分貝能量，讓聲音的「物理實體」與「諧波色彩」在畫布上具象化呈現。</li>
+        <li><strong>在演奏數據層</strong>：演算法可以輕易完成即時轉調與音色變換，但真正賦予這些數位波形生命力的，始終是<strong>雙拇指在狹小螢幕上克服高密度節奏時所刻印下的細微時序動態與力度起伏</strong>。這是冷硬的程式碼所無法憑空生成的真實靈魂。</li>
+    </ul>
+    <p>
+        當我們能以計算機科學的視角剖析音訊、用嚴謹的前端架構實現聲學互動，並以多年淬鍊的演奏手感作為數據基石時，技術與音樂便不再是彼此平行的領域，而是交融為兼具工程深度與藝術溫度的完整作品。
+    </p>
+</div>
+
+<div id="social-share" style="margin-top: 20px;">
+    <a id="fb-share" href="#" target="_blank">分享到 Facebook</a>
+    <span> | </span>
+    <a id="line-share" href="#" target="_blank">分享到 Line</a>
+    <span> | </span>
+    <a id="twitter-share" href="#" target="_blank">分享到 X</a>
+</div>
+<script>
+    var currentUrl = window.location.href;
+    document.getElementById("fb-share").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
+    document.getElementById("line-share").href = "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
+    document.getElementById("twitter-share").href = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=數位音訊與MIDI數據處理";
+</script>
+<hr>
+
+<!-- 優化後的作者個人資料卡片（字體階梯分明，不再生硬巨大） -->
+<footer class="author-card">
+    <div class="author-title">
+        作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color: #ffffff; text-decoration: underline;">周彥廷</a>
+    </div>
+    <div class="author-meta">
+        創作日期：西元二零二六年二月二十四日<br>
+        更新日期：西元二零二六年十月二十二日
+    </div>
+    <img width="260" height="346" src="my_appearance2.jpg" alt="周彥廷自拍照片">
+</footer>
 
 <script>
     // ==================== 1. 全域變數與分析節點 ====================
@@ -616,27 +695,5 @@
         }
     });
 </script>
-
-<div id="social-share" style="margin-top: 20px;">
-    <a id="fb-share" href="#" target="_blank">分享到 Facebook</a>
-    <span> | </span>
-    <a id="line-share" href="#" target="_blank">分享到 Line</a>
-    <span> | </span>
-    <a id="twitter-share" href="#" target="_blank">分享到 X</a>
-</div>
-<script>
-    var currentUrl = window.location.href;
-    document.getElementById("fb-share").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl);
-    document.getElementById("line-share").href = "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(currentUrl);
-    document.getElementById("twitter-share").href = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(currentUrl) + "&text=數位音訊與MIDI數據處理";
-</script>
-<hr>
-<footer style="text-align: center; background-color: purple; color:yellow; font-size: 50px">
-    作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color:white;">周彥廷</a>
-    <br>創作日期：西元二零二六年二月二十四日<br>
-    <br>更新日期：西元二零二六年十月二十二日<br>
-    <img width="300" height="400" src="my_appearance2.jpg" alt="自拍">
-    <br>
-</footer>
 </body>
 </html>
