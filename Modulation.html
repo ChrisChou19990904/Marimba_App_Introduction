@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
     <style>
         html { scroll-behavior: smooth; }
-        body { font-family: "Microsoft JhengHei", sans-serif; line-height: 1.7; max-width: 850px; margin: 40px auto; padding: 20px; color: #333; }
+        body { font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif; line-height: 1.7; max-width: 850px; margin: 40px auto; padding: 20px; color: #333; }
         .section { background: #f4f7f6; padding: 25px; border-radius: 10px; margin-bottom: 30px; border-left: 5px solid #2980b9; }
         .highlight { color: #b22222; font-weight: bold; }
         .toc-box { background: #eaf2f8; padding: 20px 25px; border-radius: 8px; border: 1px solid #bce8f1; margin-bottom: 30px; }
@@ -32,7 +32,41 @@
         .time-display { font-family: monospace; font-size: 14px; color: #444; width: 45px; }
         input[type="range"] { flex: 1; cursor: pointer; accent-color: #2980b9; }
 
-        /* 頁尾樣式優化：適當字體大小與響應式排版 */
+        /* 分類過濾按鈕樣式 */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0 20px 0;
+            justify-content: flex-start;
+        }
+        .filter-btn {
+            background: #eaf2f8;
+            color: #2980b9;
+            border: 1px solid #bce8f1;
+            padding: 7px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13.5px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .filter-btn:hover {
+            background: #d4e6f1;
+        }
+        .filter-btn.active {
+            background: #2980b9;
+            color: #ffffff;
+            border-color: #2980b9;
+            box-shadow: 0 2px 6px rgba(41, 128, 185, 0.3);
+        }
+        .filter-count {
+            font-size: 0.85em;
+            opacity: 0.85;
+            margin-left: 2px;
+        }
+
+        /* 頁尾作者卡片樣式優化 */
         footer.author-card {
             text-align: center;
             background-color: purple;
@@ -94,7 +128,7 @@
                     <li><a href="index.html" target="_blank">首頁</a></li>
                     <li><a href="essence_of_recordings.html" target="_blank">Marimba Real演奏精華</a></li>
                     <li><a href="essence_of_songs_played_on_perfect_piano.html" target="_blank">Perfect Piano演奏精華</a></li>
-                    <li><a href="flaw_of_perfect_piano.html" target="_blank">🎬 數位樂器影音連貫性探討：視訊編碼殘差、儲存空間管理與 FFmpeg.wasm 實機分析</a></li>
+                    <li><a href="flaw_of_perfect_piano.html" target="_blank">🎬 數位樂器影音連貫性探討：視訊編碼殘差、儲存空間管理與實機分析</a></li>
                     <li><a href="songs_played_on_the_piano.html" target="_blank">實體鋼琴演奏精華</a></li>
                     <li><a href="music_category.html" target="_blank"> 🎶 演奏曲目分類（融合Marimba Real、Perfect Piano，以及實體鋼琴彈奏的曲目）</a></li>
                     <li><a href="quantity_of_my_songs.html" target="_blank">我的曲目記憶表（64 首）</a></li>
@@ -104,7 +138,7 @@
                     <li><a href="html_vs_vue.html" target="_blank">HTML 與 Vue 的結構差異說明（含三種架構示意圖）</a></li>
                     <li><a href="vue_vs_multiple_html.html" target="_blank">Vue 與多頁 HTML 架構的差異與對應</a></li>
                     <li><a href="being_honest_does_not_conflict_with_being_vain.html" target="_blank">關於真實、自我呈現與數位樂器演奏的說明</a></li>
-                    <li><a href="InShot.html" target="_blank">移動端影音編輯架構解析：以 InShot 變速變調演算法（Time-Stretching / WSOLA）與 19 組演奏實證為例</a></li>
+                    <li><a href="InShot.html" target="_blank">🎬 移動端影音編輯架構解析：以 InShot 變速變調演算法（Time-Stretching / WSOLA）與 18 組演奏實證為例</a></li>
                     <li><a href="About_MIDI.html" target="_blank">🎹 MIDI 數據結構與跨平台應用：從樂譜轉譯、彈珠物理動畫到聲光瀑布流實踐</a></li>
                     <li><a href="video_situation_in_html_and_vue.html" target="_blank">為什麼原生 HTML + JavaScript 影片會繼續播放，但 Vue 3 不會？</a></li>
                 </ol>
@@ -129,7 +163,7 @@
         <li><a href="#sec-key-tuning">5. 演奏調性特調與音域物理探討（-1 vs +11）</a></li>
         <li><a href="#sec-player-workstation">🛠️ 前往：音訊可視化工作站與播放控制台</a></li>
         <li><a href="#sec-playlist">🎵 前往：精選 48 首手動演奏曲目播放清單</a></li>
-        <li><a href="#sec-conclusion">💡 結語：從「數據結構」到「聲學靈魂」的工程實踐</a></li>
+        <li><a href="#sec-conclusion">💡 8. 結語：從「數據結構」到「聲學靈魂」的工程實踐</a></li>
     </ul>
 </div>
 
@@ -291,61 +325,80 @@
     <p>
         以下旋律皆為我使用 Perfect Piano 錄製，點擊後會載入至播放器時間軸，並依據上方設定動態合成發聲。
     </p>
-    <ol>
-        <li><button onclick="fetchAndPlayMidi('鬼新娘.mid')">▶ 播放：鬼新娘（此為林正英系列最經典的旋律，就不用我介紹了）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('殭屍先生精簡版.mid')">▶ 播放：殭屍先生（此為《殭屍先生》中的同名旋律，出現在九叔與四目道長合力制伏殭屍的片段）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('殭屍復活II.mid')">▶ 播放：殭屍復活II（《殭屍家族》溫馨配樂）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('一眉道人.mid')">▶ 播放：一眉道人（原調C，採集調B）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('百鬼霧林.mid')">▶ 播放：百鬼霧林（《新殭屍先生》恐怖配樂）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('全家便利商店新鈴聲.mid')">▶ 播放：全家便利商店新鈴聲</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('資源回收車.mid')">▶ 播放：資源回收車配樂（其實是台語歌《收酒矸》的一小部分，我用C大調演奏）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('夜幕下的旅途.mid')">▶ 播放：夜幕下的旅途（《神魔之塔》配樂）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('一笑江湖.mid')">▶ 播放：一笑江湖（原調降D，採集調C）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('homecoming.mid')">▶ 播放：homecoming（Samsung手機鈴聲；我連續用C大調與D大調彈奏）</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Way Back Home.mid')">▶ 播放：Way Back Home</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('君が好きだと叫びたい.mid')">▶ 播放：好想大聲說喜歡你 (灌籃高手主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('時代を越える想い.mid')">▶ 播放：穿越時空的思念 (犬夜叉插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('哀歌.mid')">▶ 播放：哀歌 (犬夜叉插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('戰鬥-通往勝利.mid')">▶ 播放：戰鬥–通往勝利 (鎧甲勇士光影傳奇插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('淡淡的愛意C大調.mid')">▶ 播放：淡淡的愛意 (鎧甲勇士光影傳奇插曲，原調降D，採集調C)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('光的戰役.mid')">▶ 播放：光的戰役 (鎧甲勇士光影傳奇片尾曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('帝皇再臨A大調.mid')">▶ 播放：帝皇再臨 (鎧甲勇士之帝皇俠插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('不敗的英雄.mid')">▶ 播放：不敗的英雄 (鎧甲勇士刑天主題曲，原調B，採集調C)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Just K.O.mid')">▶ 播放：Just K.O (鎧甲勇士拿瓦主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ウルトラマンの歌.mid')">▶ 播放：ウルトラマンの歌 (初代超人力霸王主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ウルトラセブンの歌.mid')">▶ 播放：ウルトラセブンの歌 (超人七號主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('帰ってきたウルトラマンの歌.mid')">▶ 播放：帰ってきたウルトラマンの歌 (歸來的超人力霸王主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ウルトラマンエース.mid')">▶ 播放：ウルトラマンエースの歌 (超人力霸王衛司主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Ultraman Taro OP.mid')">▶ 播放：ウルトラマンタロウの歌 (超人力霸王太郎主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Ultraman Leo OP.mid')">▶ 播放：ウルトラマンレオの歌 (超人力霸王雷歐主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Take_Me_Higher.mid')">▶ 播放：Take Me Higher (超人力霸王迪卡主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('奇蹟再現.mid')">▶ 播放：奇蹟再現 (超人力霸王迪卡中文版主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('君だけを守りたい.mid')">▶ 播放：君だけを守りたい (超人力霸王帝納片尾曲；此為降D大調轉E大調的正版)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('只想守护你.mid')">▶ 播放：君だけを守りたい (超人力霸王帝納片尾曲；此為F大調轉降A大調的抒情版)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Lovin\'You Lovin\'Me.mid')">▶ 播放：Lovin'You Lovin'Me (超人力霸王蓋亞片尾曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('悲しみの沼.mid')">▶ 播放：悲しみの沼 (超人力霸王蓋亞插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Spirit .mid')">▶ 播放：Spirit (超人力霸王高斯主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('君にできる何か.mid')">▶ 播放：君にできるなにか (超人力霸王高斯片尾曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Eiyuu .mid')">▶ 播放：英雄 (超人力霸王納克斯主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Ultraman Mebius OP.mid')">▶ 播放：ウルトラマンメビウスの歌 (超人力霸王梅比斯主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ウルトラの奇跡.mid')">▶ 播放：ウルトラの奇跡 (超人力霸王梅比斯插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('進めウルトラマンゼロ.mid')">▶ 播放：進め！ウルトラマンゼロ！ (超人力霸王傑洛主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('オーブの祈り.mid')">▶ 播放：オーブの祈り (超人力霸王歐布主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ジードの証.mid')">▶ 播放：ジードの証 (超人力霸王捷德主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('影となりて悪を討つ.mid')">▶ 播放：影となりて悪を討つ (忍風戰隊破裏劍者主插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Shiawase Shaking Hands.mid')">▶ 播放：幸せShaking Hands (忍風戰隊破裏劍者插曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('仮面ライダークウガ.mid')">▶ 播放：仮面ライダークウが (假面騎士空我主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Justifaiz.mid')">▶ 播放：Justifaiz (假面騎士555主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Be the one.mid')">▶ 播放：Be the one (假面騎士Build主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('Life Goes On.mid')">▶ 播放：Life Goes On (超星神格蘭賽沙主題曲)</button><br><br></li>
-        <li><button onclick="fetchAndPlayMidi('竜剣道.mid')">▶ 播放：龍劍道 (魔彈戰記龍劍道主題曲)</button></li>
+
+    <!-- 分類篩選按鈕列 -->
+    <!-- 分類篩選按鈕列 -->
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterCategory('all', this)">全部曲目 <span class="filter-count">(48)</span></button>
+        <button class="filter-btn" onclick="filterCategory('movie', this)">林正英靈幻經典 <span class="filter-count">(5)</span></button>
+        <button class="filter-btn" onclick="filterCategory('life', this)">生活日常與流行鈴聲 <span class="filter-count">(5)</span></button>
+        <button class="filter-btn" onclick="filterCategory('anime', this)">動漫與遊戲配樂 <span class="filter-count">(4)</span></button>
+        <button class="filter-btn" onclick="filterCategory('tokusatsu', this)">特攝英雄宇宙（奧特曼 / 假面騎士 / 超級戰隊 / 鎧甲勇士 / 龍劍道 / 超星神） <span class="filter-count">(34)</span></button>
+        </div>
+
+    <!-- 標記 data-category 的 48 首演奏曲目清單 -->
+    <ol id="midiSongList">
+        <!-- 1. 林正英靈幻經典 (movie: 5首) -->
+        <li data-category="movie"><button onclick="fetchAndPlayMidi('鬼新娘.mid')">▶ 播放：鬼新娘（林正英系列最經典的旋律）</button><br><br></li>
+        <li data-category="movie"><button onclick="fetchAndPlayMidi('殭屍先生精簡版.mid')">▶ 播放：殭屍先生（《殭屍先生》同名旋律，九叔與四目道長合力制伏殭屍片段）</button><br><br></li>
+        <li data-category="movie"><button onclick="fetchAndPlayMidi('殭屍復活II.mid')">▶ 播放：殭屍復活II（《殭屍家族》溫馨配樂）</button><br><br></li>
+        <li data-category="movie"><button onclick="fetchAndPlayMidi('一眉道人.mid')">▶ 播放：一眉道人（原調C，採集調B）</button><br><br></li>
+        <li data-category="movie"><button onclick="fetchAndPlayMidi('百鬼霧林.mid')">▶ 播放：百鬼霧林（《新殭屍先生》恐怖配樂）</button><br><br></li>
+
+        <!-- 2. 生活日常與流行鈴聲 (life: 5首) -->
+        <li data-category="life"><button onclick="fetchAndPlayMidi('全家便利商店新鈴聲.mid')">▶ 播放：全家便利商店新鈴聲</button><br><br></li>
+        <li data-category="life"><button onclick="fetchAndPlayMidi('資源回收車.mid')">▶ 播放：資源回收車配樂（台語歌《收酒矸》片段，以C大調演奏）</button><br><br></li>
+        <li data-category="life"><button onclick="fetchAndPlayMidi('homecoming.mid')">▶ 播放：homecoming（Samsung手機鈴聲；連續用C大調與D大調彈奏）</button><br><br></li>
+        <li data-category="life"><button onclick="fetchAndPlayMidi('Way Back Home.mid')">▶ 播放：Way Back Home</button><br><br></li>
+        <li data-category="life"><button onclick="fetchAndPlayMidi('一笑江湖.mid')">▶ 播放：一笑江湖（原調降D，採集調C）</button><br><br></li>
+
+        <!-- 3. 動漫與遊戲配樂 (anime: 4首) -->
+        <li data-category="anime"><button onclick="fetchAndPlayMidi('夜幕下的旅途.mid')">▶ 播放：夜幕下的旅途（《神魔之塔》配樂）</button><br><br></li>
+        <li data-category="anime"><button onclick="fetchAndPlayMidi('君が好きだと叫びたい.mid')">▶ 播放：好想大聲說喜歡你 (灌籃高手主題曲)</button><br><br></li>
+        <li data-category="anime"><button onclick="fetchAndPlayMidi('時代を越える想い.mid')">▶ 播放：穿越時空的思念 (犬夜叉插曲)</button><br><br></li>
+        <li data-category="anime"><button onclick="fetchAndPlayMidi('哀歌.mid')">▶ 播放：哀歌 (犬夜叉插曲)</button><br><br></li>
+
+        <!-- 4. 特攝英雄宇宙 (tokusatsu: 34首，含國產特攝鎧甲勇士、東寶超星神、松竹龍劍道) -->
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('戰鬥-通往勝利.mid')">▶ 播放：戰鬥–通往勝利 (鎧甲勇士光影傳奇插曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('淡淡的愛意C大調.mid')">▶ 播放：淡淡的愛意 (鎧甲勇士光影傳奇插曲，原調降D，採集調C)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('光的戰役.mid')">▶ 播放：光的戰役 (鎧甲勇士光影傳奇片尾曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('帝皇再臨A大調.mid')">▶ 播放：帝皇再臨 (鎧甲勇士之帝皇俠插曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('不敗的英雄.mid')">▶ 播放：不敗的英雄 (鎧甲勇士刑天主題曲，原調B，採集調C)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Just K.O.mid')">▶ 播放：Just K.O (鎧甲勇士拿瓦主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('ウルトラマンの歌.mid')">▶ 播放：ウルトラマンの歌 (初代超人力霸王主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('ウルトラセブンの歌.mid')">▶ 播放：ウルトラセブンの歌 (超人七號主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('帰ってきたウルトラマンの歌.mid')">▶ 播放：帰ってきたウルトラマンの歌 (歸來的超人力霸王主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('ウルトラマンエース.mid')">▶ 播放：ウルトラマンエースの歌 (超人力霸王衛司主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Ultraman Taro OP.mid')">▶ 播放：ウルトラマンタロウの歌 (超人力霸王太郎主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Ultraman Leo OP.mid')">▶ 播放：ウルトラマンレオの歌 (超人力霸王雷歐主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Take_Me_Higher.mid')">▶ 播放：Take Me Higher (超人力霸王迪卡主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('奇蹟再現.mid')">▶ 播放：奇蹟再現 (超人力霸王迪卡中文版主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('君だけを守りたい.mid')">▶ 播放：君だけを守りたい (超人力霸王帝納片尾曲；降D轉E正版)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('只想守护你.mid')">▶ 播放：君だけを守りたい (超人力霸王帝納片尾曲；F轉降A抒情版)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Lovin\'You Lovin\'Me.mid')">▶ 播放：Lovin'You Lovin'Me (超人力霸王蓋亞片尾曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('悲しみの沼.mid')">▶ 播放：悲しみの沼 (超人力霸王蓋亞插曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Spirit .mid')">▶ 播放：Spirit (超人力霸王高斯主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('君にできる何か.mid')">▶ 播放：君にできるなにか (超人力霸王高斯片尾曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Eiyuu .mid')">▶ 播放：英雄 (超人力霸王納克斯主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Ultraman Mebius OP.mid')">▶ 播放：ウルトラマンメビウスの歌 (超人力霸王梅比斯主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('ウルトラの奇跡.mid')">▶ 播放：ウルトラの奇跡 (超人力霸王梅比斯插曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('進めウルトラマンゼロ.mid')">▶ 播放：進め！ウルトラマンゼロ！ (超人力霸王傑洛主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('オーブの祈り.mid')">▶ 播放：オーブの祈り (超人力霸王歐布主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('ジードの証.mid')">▶ 播放：ジードの証 (超人力霸王捷德主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('ハリケンジャー参上.mid')">▶ 播放：ハリケンジャー参上 (忍風戰隊破裏劍者主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('影となりて悪を討つ.mid')">▶ 播放：影となりて悪を討つ (忍風戰隊破裏劍者主插曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Shiawase Shaking Hands.mid')">▶ 播放：幸せShaking Hands (忍風戰隊破裏劍者插曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('仮面ライダークウガ.mid')">▶ 播放：仮面ライダークウが (假面騎士空我主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Justifaiz.mid')">▶ 播放：Justifaiz (假面騎士555主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Be the one.mid')">▶ 播放：Be the one (假面騎士Build主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('Life Goes On.mid')">▶ 播放：Life Goes On (超星神格蘭賽沙主題曲)</button><br><br></li>
+        <li data-category="tokusatsu"><button onclick="fetchAndPlayMidi('竜剣道.mid')">▶ 播放：龍劍道 (魔彈戰記龍劍道主題曲)</button></li>
     </ol>
 </div>
 
 <!-- ==================== 新增章節：深度技術結語 ==================== -->
 <div id="sec-conclusion" class="section" style="border-left: 5px solid #2c3e50; background-color: #f8f9fa;">
-    <h2 style="color: #2c3e50;">💡 結語：從「數據結構」到「聲學靈魂」的工程實踐</h2>
+    <h2 style="color: #2c3e50;">💡 8. 結語：從「數據結構」到「聲學靈魂」的工程實踐</h2>
     <p>
         數位音樂工程的迷人之處，在於它既是精密的純粹數學，也是充滿情感的聽覺藝術。回顧整套系統的架構設計，本專案將抽象的樂理與感性的演奏，逐層沉澱為扎實的前端工程實作：
     </p>
@@ -699,6 +752,25 @@
             alert("檔案解析失敗。");
         }
     });
+
+    // ==================== 8. 曲目清單分類篩選邏輯 ====================
+    function filterCategory(category, clickedBtn) {
+        // 1. 切換按鈕 active 樣式
+        const allButtons = document.querySelectorAll(".filter-btn");
+        allButtons.forEach(btn => btn.classList.remove("active"));
+        clickedBtn.classList.add("active");
+
+        // 2. 顯示/隱藏對應分類的清單項目
+        const songItems = document.querySelectorAll("#midiSongList li");
+        songItems.forEach(item => {
+            const itemCategory = item.getAttribute("data-category");
+            if (category === "all" || itemCategory === category) {
+                item.style.display = "list-item";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
 </script>
 </body>
 </html>
