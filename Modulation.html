@@ -382,7 +382,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 FILE_A = "Geed No Akashi.mid"
 FILE_B = "Geed_part2.mid"
 OUTPUT_FILE = "Geed_No_Akashi_Full.mid"
-GAP_SECONDS = 0.05
+GAP_SECONDS = 0.5
 
 files = [unicodedata.normalize('NFC', FILE_A), unicodedata.normalize('NFC', FILE_B)]
 merged_mid = mido.MidiFile(type=0, ticks_per_beat=480)
