@@ -160,10 +160,11 @@
         <li><a href="#sec-visual-control">2. 聲學可視化與時間軸排程控制原理</a></li>
         <li><a href="#sec-mobile-audio">3. 行動裝置瀏覽發聲重要提示與 Web Audio 底層原理</a></li>
         <li><a href="#sec-performance-core">⚠️ 4. 核心觀點：技術無法取代演奏能力與「分治工程實踐」</a>
-        <ol>
+        <ul style="color:white">
             <li><a href="#sec-ergonomics-merge">長曲目演奏的人體工學瓶頸與 Python 分治實踐</a></li>
             <li><a href="#sec-unicode-pitfall">日文 Unicode 編碼地雷與檔案系統避坑實務</a></li>
-        </ol>
+            <li><a href="#sec-battle-of-light-merge">🎼 極致複雜樂句拆解與交響呼吸感調校（以《光的戰役》8 段 Take 為例）</a></li>
+        </ul>
         </li>
         <li><a href="#sec-key-tuning">5. 演奏調性特調與音域物理探討（-1 vs +11）</a></li>
         <li><a href="#sec-player-workstation">🛠️ 前往：音訊可視化工作站與播放控制台</a></li>
@@ -249,15 +250,15 @@
         在小螢幕上以雙拇指精準駕馭如《魔彈戰記龍劍道》或《假面騎士 Build》等每分鐘超過 130 拍（BPM）、音符密度極高的快節奏特攝曲目，要求創作者具備極高的節奏感、動態掌控力與鍵位空間感。這些親自演奏錄製的 MIDI 數據，完整保留了人類演奏特有的細微情感，是純程式動態生成或死板的 Q 點量化所無法比擬的。
     </p>
 
-    <!-- 子區塊 1：人體工學瓶頸與 Python 分治無縫合併 -->
+    <!-- 子區塊 1：長曲目人體工學瓶頸與三段合併實踐（七龍珠 GT） -->
     <div id="sec-ergonomics-merge" style="background: #eef7fb; padding: 22px; border-radius: 8px; border-left: 4px solid #2980b9; margin-top: 25px; line-height: 1.85;">
-        <h3 style="color: #2980b9; margin-top: 0; font-size: 1.25em;">🛠️ 長曲目演奏的人體工學瓶頸與 Python 分治實踐</h3>
+        <h3 style="color: #2980b9; margin-top: 0; font-size: 1.25em;">🛠️ 長曲目演奏的人體工學瓶頸與 Python 分治實踐（三段式 Take）</h3>
         <p>
             在手機觸控螢幕上彈奏長篇曲目時，面臨的並非技術問題，而是<strong>人體工學極限與容錯率的嚴苛考驗</strong>：
         </p>
         <ul>
             <li><strong>生理疲勞與單點故障</strong>：觸控螢幕缺乏物理琴鍵的觸覺回饋，像《七龍珠 GT》神曲《漸漸被你吸引》時長數分鐘、伴奏聲部繁複，長時間高速敲擊極易導致拇指僵硬；只要在最後數秒按偏一個音，整條錄音就直接作廢。</li>
-            <li><strong>分治策略（Divide and Conquer）</strong>：為確保每一段落的力度與時序皆處於最佳狀態，我將長曲目依結構拆解為數個 Take 分段錄音（如《漸漸被你吸引》三段 Take、以及《超人力霸王捷德》主題曲二段 Take）。</li>
+            <li><strong>分治策略（Divide and Conquer）</strong>：為確保每一段落的力度與時序皆處於最佳狀態，我將長曲目依結構拆解為數個 Take 分段錄音（如《漸漸被你吸引》三段 Take）。</li>
             <li><strong>剪除停頓與時間軸緊密重構</strong>：分段錄音常伴隨「按下錄音至敲鍵」以及「彈奏結束至按停」的發呆空白。透過 Python 腳本動態計算每個片段的第一個與最後一個音符事件，自動剔除多餘空檔，並跨軌道提取 Note On/Off 訊息重算 Delta Time，重構出無縫緊湊的完整音軌。</li>
         </ul>
 
@@ -339,9 +340,9 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
 🎉 無縫拼接完成！最終緊湊時長: 91.09 秒，間隔已消除！</pre>
     </div>
 
-    <!-- 子區塊 2：日文 Unicode 編碼地雷與雙檔避坑指南 -->
+    <!-- 子區塊 2：日文 Unicode 編碼地雷與雙檔避坑指南（超人力霸王捷德） -->
     <div id="sec-unicode-pitfall" style="background: #fdfaf6; padding: 22px; border-radius: 8px; border-left: 4px solid #e67e22; margin-top: 25px; line-height: 1.85;">
-        <h3 style="color: #d35400; margin-top: 0; font-size: 1.25em;">🔍 日文 Unicode 編碼地雷與檔案系統避坑實務</h3>
+        <h3 style="color: #d35400; margin-top: 0; font-size: 1.25em;">🔍 日文 Unicode 編碼地雷與檔案系統避坑實務（二段式 Take）</h3>
         <p>
             在處理特攝曲（如《ジードの証》）、動漫日文歌名時，許多創作者在寫 Python 批次處理或網頁加載時，常會撞見這個令人抓狂的靈異現象：<br>
             <em>「程式明明照著檔案名稱寫，控制台卻一直噴 <code>FileNotFoundError: [Errno 2] No such file or directory: 'ジードの証.mid'</code>，甚至複製貼上到編輯器後，字元之間莫名其妙跑出宛如按了空白鍵的空檔？」</em>
@@ -382,7 +383,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 FILE_A = "Geed No Akashi.mid"
 FILE_B = "Geed_part2.mid"
 OUTPUT_FILE = "Geed_No_Akashi_Full.mid"
-GAP_SECONDS = 0.5
+GAP_SECONDS = 0.1
 
 files = [unicodedata.normalize('NFC', FILE_A), unicodedata.normalize('NFC', FILE_B)]
 merged_mid = mido.MidiFile(type=0, ticks_per_beat=480)
@@ -419,9 +420,84 @@ for note_time, msg in all_notes:
 merged_track.append(mido.MetaMessage('end_of_track', time=0))
 merged_mid.save(OUTPUT_FILE)
 print(f"🎉 捷德雙檔無縫合併完成：{OUTPUT_FILE}，總長度：{merged_mid.length:.2f} 秒")</pre>
+    </div>
+
+    <!-- 子區塊 3：極致複雜樂句拆解與交響呼吸感調校（光的戰役 8 段 Take） -->
+    <div id="sec-battle-of-light-merge" style="background: #fbfcfc; padding: 22px; border-radius: 8px; border-left: 4px solid #16a085; margin-top: 25px; line-height: 1.85;">
+        <h3 style="color: #16a085; margin-top: 0; font-size: 1.25em;">🎼 極致複雜樂句拆解與交響呼吸感調校（以《光的戰役》8 段 Take 為例）</h3>
+        <p>
+            如果說《七龍珠 GT》是長曲目的耐力考驗，那麼國產特攝經典《鎧甲勇士》片尾曲《光的戰役》則是<strong>指法複雜度與聲部密度的極限挑戰</strong>：
+        </p>
+        <ul>
+            <li><strong>多層次樂句拆解（8 個 Take）</strong>：全曲長達兩分鐘，前奏的交響動態變化極多，尾奏收尾切分音繁複，極度考驗手指靈活度。為了確保每個變奏與和弦的精準度，我採取更細緻的分治架構，將全曲拆解為 <strong>8 個錄音片段</strong>（前奏 5 段、正式演奏 2 段、結尾 1 段）[cite: 1]。</li>
+            <li><strong>交響呼吸感與段落留白（Gap Padding）</strong>：樂章之間並非零間隔貼合，為了保留原曲交響推進的蓄力感與休止符，我在腳本中刻意設定了 <code>GAP_SECONDS = 0.5</code> 秒的銜接空檔。</li>
+            <li><strong>累積時長物理分析</strong>：8 個片段共產生 7 個銜接點（累積貢獻 $7 \times 0.5 = 3.5$ 秒的人工留白），加上各段演奏末尾自然的釋音延音（Release），最終合併長度約 2 分 10 秒（剛好比原版多出約 10 秒），完美還原了交響戰歌該有的呼吸感與磅礴張力。</li>
+        </ul>
+
+        <strong>💻 《光的戰役》8 段專用合併腳本（<code>merge_battle_of_light.py</code>）：</strong>
+        <pre style="background: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 13.5px; line-height: 1.5; font-family: Consolas, monospace;">import sys
+import unicodedata
+import mido
+
+sys.stdout.reconfigure(encoding='utf-8')
+
+# 依序填入 8 個分段錄音檔名
+files = [
+    "光的戰役前奏.mid",
+    "光的戰役前奏2.mid",
+    "光的戰役前奏3.mid",
+    "光的戰役前奏4.mid",
+    "光的戰役前奏5.mid",
+    "光的戰役正式片段.mid",
+    "光的戰役正式片段2.mid",
+    "光的戰役結尾.mid"
+]
+OUTPUT_FILE = "Battle_of_Light_Full.mid"
+GAP_SECONDS = 0.5  # 刻意保留 0.5 秒交響蓄力呼吸感
+
+merged_mid = mido.MidiFile(type=0, ticks_per_beat=480)
+merged_track = mido.MidiTrack()
+merged_mid.tracks.append(merged_track)
+merged_track.append(mido.MetaMessage('set_tempo', tempo=500000, time=0))
+
+all_notes, current_timeline = [], 0.0
+
+for idx, filename in enumerate(files):
+    normalized_name = unicodedata.normalize('NFC', filename)
+    try:
+        mid = mido.MidiFile(normalized_name)
+    except FileNotFoundError:
+        print(f"❌ 找不到檔案：[{normalized_name}]")
+        continue
+
+    segment_events, abs_time = [], 0.0
+    for msg in mid:
+        abs_time += msg.time
+        if msg.type in ['note_on', 'note_off']:
+            segment_events.append((abs_time, msg.copy()))
+
+    if not segment_events: continue
+    first_time, last_time = segment_events[0][0], segment_events[-1][0]
+    for note_time, msg in segment_events:
+        all_notes.append((current_timeline + (note_time - first_time), msg))
+
+    actual_duration = last_time - first_time
+    current_timeline += actual_duration + GAP_SECONDS
+
+all_notes.sort(key=lambda x: x[0])
+last_time = 0.0
+for note_time, msg in all_notes:
+    delta_ticks = int(mido.second2tick(max(0.0, note_time - last_time), ticks_per_beat=480, tempo=500000))
+    msg.time = delta_ticks
+    merged_track.append(msg)
+    last_time = note_time
+
+merged_track.append(mido.MetaMessage('end_of_track', time=0))
+merged_mid.save(OUTPUT_FILE)
+print(f"🎉 《光的戰役》8 段全數無縫拼接完成：{OUTPUT_FILE}，總時長：{merged_mid.length:.2f} 秒")</pre>
 
         <p style="margin-top: 10px; font-size: 0.9em; color: #555;">
-            💡 <strong>工程價值</strong>：當實體交互遭遇物理人體工學瓶頸、或是檔案系統面臨 Unicode 多語系編碼壁壘時，工程師懂得善用代碼建立自動化工作流，在二進制與事件層面精準拼裝出無瑕疵的作品。
+            💡 <strong>工程價值</strong>：當實體交互遭遇物理人體工學瓶頸、檔案系統面臨 Unicode 多語系編碼壁壘、或需要精準調配樂句呼吸感時，工程師懂得善用代碼建立自動化工作流，在二進制與事件層面精準拼裝出無瑕疵的作品。
         </p>
     </div>
 </div>
