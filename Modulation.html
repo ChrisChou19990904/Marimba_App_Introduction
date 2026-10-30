@@ -159,7 +159,12 @@
         <li><a href="#sec-theory">1. 數位音訊合成與轉調原理</a></li>
         <li><a href="#sec-visual-control">2. 聲學可視化與時間軸排程控制原理</a></li>
         <li><a href="#sec-mobile-audio">3. 行動裝置瀏覽發聲重要提示與 Web Audio 底層原理</a></li>
-        <li><a href="#sec-performance-core">⚠️ 4. 核心觀點：技術無法取代演奏能力與「分治工程實踐」</a></li>
+        <li><a href="#sec-performance-core">⚠️ 4. 核心觀點：技術無法取代演奏能力與「分治工程實踐」</a>
+        <ol>
+            <li><a href="#sec-ergonomics-merge">長曲目演奏的人體工學瓶頸與 Python 分治實踐</a></li>
+            <li><a href="#sec-unicode-pitfall">日文 Unicode 編碼地雷與檔案系統避坑實務</a></li>
+        </ol>
+        </li>
         <li><a href="#sec-key-tuning">5. 演奏調性特調與音域物理探討（-1 vs +11）</a></li>
         <li><a href="#sec-player-workstation">🛠️ 前往：音訊可視化工作站與播放控制台</a></li>
         <li><a href="#sec-playlist">🎵 前往：精選 52 首手動演奏曲目播放清單</a></li>
@@ -244,45 +249,19 @@
         在小螢幕上以雙拇指精準駕馭如《魔彈戰記龍劍道》或《假面騎士 Build》等每分鐘超過 130 拍（BPM）、音符密度極高的快節奏特攝曲目，要求創作者具備極高的節奏感、動態掌控力與鍵位空間感。這些親自演奏錄製的 MIDI 數據，完整保留了人類演奏特有的細微情感，是純程式動態生成或死板的 Q 點量化所無法比擬的。
     </p>
 
-    <!-- 人體工學瓶頸、Unicode 編碼深度解析與 Python MIDI 實作教學 -->
-    <div style="background: #eef7fb; padding: 22px; border-radius: 8px; border-left: 4px solid #2980b9; margin-top: 20px; line-height: 1.85;">
-        <strong style="color: #2980b9; font-size: 1.15em;">🛠️ 長曲目演奏的人體工學瓶頸、日文 Unicode 編碼地雷與 Python 分治實踐：</strong><br>
-        在手機觸控螢幕上彈奏長篇曲目時，面臨的並非技術問題，而是<strong>人體工學極限與容錯率的嚴苛考驗</strong>：
+    <!-- 子區塊 1：人體工學瓶頸與 Python 分治無縫合併 -->
+    <div id="sec-ergonomics-merge" style="background: #eef7fb; padding: 22px; border-radius: 8px; border-left: 4px solid #2980b9; margin-top: 25px; line-height: 1.85;">
+        <h3 style="color: #2980b9; margin-top: 0; font-size: 1.25em;">🛠️ 長曲目演奏的人體工學瓶頸與 Python 分治實踐</h3>
+        <p>
+            在手機觸控螢幕上彈奏長篇曲目時，面臨的並非技術問題，而是<strong>人體工學極限與容錯率的嚴苛考驗</strong>：
+        </p>
         <ul>
             <li><strong>生理疲勞與單點故障</strong>：觸控螢幕缺乏物理琴鍵的觸覺回饋，像《七龍珠 GT》神曲《漸漸被你吸引》時長數分鐘、伴奏聲部繁複，長時間高速敲擊極易導致拇指僵硬；只要在最後數秒按偏一個音，整條錄音就直接作廢。</li>
             <li><strong>分治策略（Divide and Conquer）</strong>：為確保每一段落的力度與時序皆處於最佳狀態，我將長曲目依結構拆解為數個 Take 分段錄音（如《漸漸被你吸引》三段 Take、以及《超人力霸王捷德》主題曲二段 Take）。</li>
             <li><strong>剪除停頓與時間軸緊密重構</strong>：分段錄音常伴隨「按下錄音至敲鍵」以及「彈奏結束至按停」的發呆空白。透過 Python 腳本動態計算每個片段的第一個與最後一個音符事件，自動剔除多餘空檔，並跨軌道提取 Note On/Off 訊息重算 Delta Time，重構出無縫緊湊的完整音軌。</li>
         </ul>
 
-        <!-- 特別新增：獻給懂日文與音樂創作者的避坑指南 -->
-        <div style="background: #ffffff; padding: 18px 20px; border-radius: 6px; border: 1.5px solid #bce8f1; margin: 15px 0;">
-            <strong style="color: #c0392b; font-size: 1.05em;">🔍 深度技術排坑：獻給喜愛動漫音樂採集者的「日文濁音/半濁音與 Unicode 幽靈空格」避坑指南</strong><br>
-            在處理特攝曲（如《ジードの証》）、動漫日文歌名時，許多創作者在寫 Python 批次處理或網頁加載時，常會撞見這個令人抓狂的靈異現象：<br>
-            <em>「程式明明照著檔案名稱寫，控制台卻一直噴 <code>FileNotFoundError: [Errno 2] No such file or directory: 'ジードの証.mid'</code>，甚至複製貼上到編輯器後，字元之間莫名其妙跑出宛如按了空白鍵的空檔？」</em>
-            <br><br>
-            <strong>📌 為什麼會有這層幽靈空格與找不到檔案？（底層原理拆解）：</strong>
-            <ol style="margin-left: -15px; margin-top: 5px;">
-                <li><strong>Unicode NFC（合成形式）vs NFD（分解形式）標準衝突</strong>：
-                    在國際編碼規範中，日文的濁音（如 <code>ジ</code>、<code>ガ</code>）與半濁音（如 <code>パ</code>）有兩種合法的表達方式：
-                    <ul>
-                        <li><strong>NFC（Canonical Composition）</strong>：把「基本字元」與「濁點 ゛」融合成<strong>單一 Unicode 碼位</strong>。例如 <code>ジ</code> 就是單一字元 <code>\u30b8</code>（Windows 系統預設、網頁 URL 常見格式）。</li>
-                        <li><strong>NFD（Canonical Decomposition）</strong>：把字元拆成<strong>「基底文字 + 獨立結合濁音符號（Combining Character）」</strong>。例如 <code>ジ</code> 被拆成了「シ (<code>\u30b7</code>)」加上獨立的濁音符號「゛(<code>\u3099</code>)」兩個字節（macOS 檔案系統或特定通訊軟體剪貼簿常見格式）。</li>
-                    </ul>
-                </li>
-                <li><strong>字型引擎的「幽靈空格」假象</strong>：
-                    當帶有 NFD 格式的檔名字串被複製到某些終端機（如 PowerShell）或不完全支援結合字元對齊的文字框時，渲染引擎無法精確把濁點疊加在假名右上角，而是把它<strong>獨立當作一個全形或半形字元渲染出來</strong>，外觀上就像多了一個「删不掉的空白鍵」！</li>
-                <li><strong>作業系統的「二進位逐字節比對」失敗</strong>：
-                    在人類肉眼看來，NFC 的 <code>ジ</code> 與 NFD 的 <code>シ + ゛</code> 完全一模一樣；但對 Windows 檔案系統（特別是繁體中文預設為 CP950/Big5 語系）或 Python 核心來說，二進位 byte 根本不同。Python 拿著 NFD 去硬碟找 NFC 檔案，自然無情報錯 <code>FileNotFoundError</code>。</li>
-            </ol>
-            <br>
-            <strong>💡 工程解決方案（雙管齊下）：</strong>
-            <ul>
-                <li><strong>架構解法（最佳實踐）</strong>：<strong>「後台管線 ASCII-Safe，前台介面 Localized」</strong>。批次處理腳本與伺服器二進位儲存檔名一律命名為純英數（如 <code>Geed_part1.mid</code>、<code>Geed_part2.mid</code>、<code>Geed_No_Akashi_Full.mid</code>），避開所有 OS I/O 與瀏覽器 <code>fetch</code> URL 編碼雷區；而「ジードの証」則保留在前端畫面的按鈕標題純作視覺展示。</li>
-                <li><strong>程式碼解法（若非得讀取日文檔名）</strong>：使用 Python 內建的 <code>unicodedata.normalize('NFC', filename)</code> 將字串強制收斂為單一合成字元，即可正常讀取。</li>
-            </ul>
-        </div>
-
-        <strong>💻 實作一：三段式長曲目自動無縫合併腳本（剪除頭尾空白，以《漸漸被你吸引》為例）：</strong>
+        <strong>💻 三段式長曲目自動無縫合併實作（以《漸漸被你吸引》為例）：</strong>
         <p style="margin: 8px 0;">1. 安裝所需套件：</p>
         <pre style="background: #2d3436; color: #dfe6e9; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 13.5px; font-family: Consolas, monospace;">pip install mido</pre>
 
@@ -358,9 +337,39 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
 ✅ 第 3 段 [漸漸被你吸引3.mid] 有效演奏長度: 27.30 秒（已剪除開頭發呆時間）
 
 🎉 無縫拼接完成！最終緊湊時長: 91.09 秒，間隔已消除！</pre>
+    </div>
 
-        <br>
-        <strong>💻 實作二：專用雙檔合併工具與編碼安全管線（以《超人力霸王捷德》二合一為例）：</strong>
+    <!-- 子區塊 2：日文 Unicode 編碼地雷與雙檔避坑指南 -->
+    <div id="sec-unicode-pitfall" style="background: #fdfaf6; padding: 22px; border-radius: 8px; border-left: 4px solid #e67e22; margin-top: 25px; line-height: 1.85;">
+        <h3 style="color: #d35400; margin-top: 0; font-size: 1.25em;">🔍 日文 Unicode 編碼地雷與檔案系統避坑實務</h3>
+        <p>
+            在處理特攝曲（如《ジードの証》）、動漫日文歌名時，許多創作者在寫 Python 批次處理或網頁加載時，常會撞見這個令人抓狂的靈異現象：<br>
+            <em>「程式明明照著檔案名稱寫，控制台卻一直噴 <code>FileNotFoundError: [Errno 2] No such file or directory: 'ジードの証.mid'</code>，甚至複製貼上到編輯器後，字元之間莫名其妙跑出宛如按了空白鍵的空檔？」</em>
+        </p>
+
+        <strong style="color: #c0392b;">📌 為什麼會有這層幽靈空格與找不到檔案？（底層原理拆解）：</strong>
+        <ol style="margin-left: -15px; margin-top: 5px;">
+            <li><strong>Unicode NFC（合成形式）vs NFD（分解形式）標準衝突</strong>：
+                在國際編碼規範中，日文的濁音（如 <code>ジ</code>、<code>ガ</code>）與半濁音（如 <code>パ</code>）有兩種合法的表達方式：
+                <ul>
+                    <li><strong>NFC（Canonical Composition）</strong>：把「基本字元」與「濁點 ゛」融合成<strong>單一 Unicode 碼位</strong>。例如 <code>ジ</code> 就是單一字元 <code>\u30b8</code>（Windows 系統預設、網頁 URL 常見格式）。</li>
+                    <li><strong>NFD（Canonical Decomposition）</strong>：把字元拆成<strong>「基底文字 + 獨立結合濁音符號（Combining Character）」</strong>。例如 <code>ジ</code> 被拆成了「シ (<code>\u30b7</code>)」加上獨立濁音符號「゛(<code>\u3099</code>)」兩個字節（macOS 檔案系統或特定通訊軟體剪貼簿常見格式）。</li>
+                </ul>
+            </li>
+            <li><strong>字型引擎的「幽靈空格」假象</strong>：
+                當帶有 NFD 格式的檔名字串被複製到某些終端機（如 PowerShell）或不完全支援結合字元對齊的文字框時，渲染引擎無法精確把濁點疊加在假名右上角，而是把它<strong>獨立當作一個全形或半形字元渲染出來</strong>，外觀上就像多了一個「删不掉的空白鍵」！
+            </li>
+            <li><strong>作業系統的「二進位逐字節比對」失敗</strong>：
+                在人類肉眼看來，NFC 的 <code>ジ</code> 與 NFD 的 <code>シ + ゛</code> 完全一模一樣；但對 Windows 檔案系統（特別是繁體中文預設為 CP950/Big5 語系）或 Python 核心來說，二進位 byte 根本不同。Python 拿著 NFD 去硬碟找 NFC 檔案，自然無情報錯 <code>FileNotFoundError</code>。</li>
+        </ol>
+
+        <strong style="color: #27ae60;">💡 工程解決方案（雙管齊下）：</strong>
+        <ul>
+            <li><strong>架構解法（最佳實踐）</strong>：<strong>「後台管線 ASCII-Safe，前台介面 Localized」</strong>。批次處理腳本與伺服器二進位儲存檔名一律命名為純英數（如 <code>Geed_part1.mid</code>、<code>Geed_part2.mid</code>、<code>Geed_No_Akashi_Full.mid</code>），避開所有 OS I/O 與瀏覽器 <code>fetch</code> URL 編碼雷區；而「ジードの証」則保留在前端畫面的按鈕標題純作視覺展示。</li>
+            <li><strong>程式碼解法（若非得讀取日文檔名）</strong>：使用 Python 內建的 <code>unicodedata.normalize('NFC', filename)</code> 將字串強制收斂為單一合成字元，即可正常讀取。</li>
+        </ul>
+
+        <strong>💻 專用雙檔合併工具與編碼安全管線（以《超人力霸王捷德》二合一為例）：</strong>
         <p style="margin: 8px 0;">針對主副歌二段式 Take，且避開日文假名濁音/促音編碼衝突的獨立腳本（<code>merge_two.py</code>）：</p>
         <pre style="background: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 13.5px; line-height: 1.5; font-family: Consolas, monospace;">import sys
 import unicodedata
