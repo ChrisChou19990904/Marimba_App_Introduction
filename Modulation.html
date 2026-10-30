@@ -665,7 +665,7 @@ print(f"🎉 《光的戰役》8 段全數無縫拼接完成：{OUTPUT_FILE}，�
         數位音樂工程的迷人之處，在於它既是精密的純粹數學，也是充滿情感的聽覺藝術。回顧整套系統的架構設計，本專案將抽象的樂理與感性的演奏，逐層沉澱為扎實的前端工程實作：
     </p>
     <ul>
-        <li><strong>在底層協議與數據管線層</strong>：透過將二進位 MIDI 訊息解構為 <code>(Pitch, Velocity, Time Offset)</code> 陣列，確立了音訊驅動的單一真實數據源（Single Source of Truth）；在面對長曲目觸控疲勞的生理限制時，<strong>運用 Python（mido）實作分治重組工作流</strong>，在二進位層面無縫銜接時間軸；同時<strong>診斷並攻克多語系編碼壁壘</strong>，深入剖析 Unicode 規範化（NFC vs NFD）在 Windows 檔案系統下引發日文濁音/促音「幽靈空格」與 I/O 阻斷的成因，確立「後端管線 ASCII-Safe、前端 UI 在地化呈現」的跨平台架構規範，為後續的轉調、時鐘映射與視覺化提供堅實基石。</li>
+        <li><strong>在底層協議與數據管線層</strong>：透過將二進位 MIDI 訊息解構為 <code>(Pitch, Velocity, Time Offset)</code> 陣列，確立了音訊驅動的單一真實數據源（Single Source of Truth）；在面對長篇曲目與複雜交響樂句的生理限制時，<strong>運用 Python（mido）實作分治重組工作流並精確配置段落銜接緩衝（Gap Padding）</strong>，在消除冗餘發呆時間的同時保留樂曲的呼吸感；同時<strong>診斷並攻克多語系編碼壁壘</strong>，深入剖析 Unicode 規範化（NFC vs NFD）在 Windows 檔案系統下引發日文濁音/促音「幽靈空格」與 I/O 阻斷的成因，確立「後端管線 ASCII-Safe、前端 UI 在地化呈現」的跨平台架構規範，為後續的轉調、時鐘映射與視覺化提供堅實基石。</li>
         <li><strong>在訊號合成與排程層</strong>：摒棄單純調用靜態音訊檔案（如 MP3/WAV）的常規做法，全面採用 Web Audio API 的 <code>OscillatorNode</code> 物理訊號產生器與 ADSR 包絡線動態運算；更透過 <code>Tone.Transport</code> 抽象主控時鐘，徹底解決非阻塞式排程、精準暫停與任意時間軸跳轉（Seek）的難題。</li>
         <li><strong>在可視化與聲學層</strong>：將時域（Time Domain）的連續波形振幅映射為動態示波器，並利用快速傅立葉變換（FFT）即時拆解各諧波分貝能量，讓聲音的「物理實體」與「諧波色彩」在畫布上具象化呈現。</li>
         <li><strong>在演奏數據與工程哲學層</strong>：演算法可以輕易完成即時轉調與音色變換，但真正賦予這些數位波形生命力的，始終是<strong>雙拇指在狹小螢幕上克服高密度節奏時所刻印下的細微時序動態與力度起伏</strong>。當物理環境遭遇極限時，工程師懂得善用代碼搭建自動化工具，守護演奏數據中最真實的人性靈魂。</li>
