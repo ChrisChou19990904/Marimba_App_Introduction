@@ -432,6 +432,7 @@ print(f"🎉 捷德雙檔無縫合併完成：{OUTPUT_FILE}，總長度：{merge
             <li><strong>多層次樂句拆解（8 個 Take）</strong>：全曲長達兩分鐘，前奏的交響動態變化極多，尾奏收尾切分音繁複，極度考驗手指靈活度。為了確保每個變奏與和弦的精準度，我採取更細緻的分治架構，將全曲拆解為 <strong>8 個錄音片段</strong>（前奏 5 段、正式演奏 2 段、結尾 1 段）[cite: 1]。</li>
             <li><strong>交響呼吸感與段落留白（Gap Padding）</strong>：樂章之間並非零間隔貼合，為了保留原曲交響推進的蓄力感與休止符，我在腳本中刻意設定了 <code>GAP_SECONDS = 0.5</code> 秒的銜接空檔。</li>
             <li><strong>累積時長物理分析</strong>：8 個片段共產生 7 個銜接點（累積貢獻 $7 \times 0.5 = 3.5$ 秒的人工留白），加上各段演奏末尾自然的釋音延音（Release），最終合併長度約 2 分 10 秒（剛好比原版多出約 10 秒），完美還原了交響戰歌該有的呼吸感與磅礴張力。</li>
+            <li><strong>管線輸出與手動命名規範</strong>：為確保 Python 在處理大量檔案串接時不受編碼干擾，腳本初期先輸出為 ASCII-Safe 的過渡檔名 <code>Battle_of_Light_Full.mid</code>；生成確認無誤後，<strong>直接在檔案總管按滑鼠右鍵重新命名為「<code>光的戰役.mid</code>」</strong>，與下方播放清單的 <code>fetchAndPlayMidi('光的戰役.mid')</code> 調用路徑完美對齊。</li>
         </ul>
 
         <strong>💻 《光的戰役》8 段專用合併腳本（<code>merge_battle_of_light.py</code>）：</strong>
@@ -452,7 +453,8 @@ files = [
     "光的戰役正式片段2.mid",
     "光的戰役結尾.mid"
 ]
-OUTPUT_FILE = "光的戰役.mid"
+# 先行輸出為英文安全檔名，產出後再按右鍵重新命名為「光的戰役.mid」
+OUTPUT_FILE = "Battle_of_Light_Full.mid"
 GAP_SECONDS = 0.5  # 刻意保留 0.5 秒交響蓄力呼吸感
 
 merged_mid = mido.MidiFile(type=0, ticks_per_beat=480)
