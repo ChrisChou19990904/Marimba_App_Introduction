@@ -244,21 +244,22 @@
         在小螢幕上以雙拇指精準駕馭如《魔彈戰記龍劍道》或《假面騎士 Build》等每分鐘超過 130 拍（BPM）、音符密度極高的快節奏特攝曲目，要求創作者具備極高的節奏感、動態掌控力與鍵位空間感。這些親自演奏錄製的 MIDI 數據，完整保留了人類演奏特有的細微情感，是純程式動態生成或死板的 Q 點量化所無法比擬的。
     </p>
 
-    <!-- 新增：人體工學瓶頸與 Python MIDI 腳本教學 -->
+    <!-- 新增：人體工學瓶頸、Unicode 編碼陷阱與 Python MIDI 腳本教學 -->
     <div style="background: #eef7fb; padding: 20px; border-radius: 8px; border-left: 4px solid #2980b9; margin-top: 20px; line-height: 1.8;">
-        <strong style="color: #2980b9; font-size: 1.1em;">🛠️ 長曲目演奏的人體工學瓶頸與 Python 分治實踐（以《漸漸被你吸引》為例）：</strong><br>
+        <strong style="color: #2980b9; font-size: 1.1em;">🛠️ 長曲目演奏的人體工學瓶頸、檔案系統編碼陷阱與 Python 分治實踐：</strong><br>
         在手機觸控螢幕上彈奏長篇曲目時，面臨的並非技術問題，而是<strong>人體工學極限與容錯率的嚴苛考驗</strong>：
         <ul>
             <li><strong>生理疲勞與單點故障</strong>：觸控螢幕缺乏物理琴鍵的觸覺回饋，像《七龍珠 GT》神曲《漸漸被你吸引》時長數分鐘、伴奏聲部繁複，長時間高速敲擊極易導致拇指僵硬；只要在最後數秒按偏一個音，整條錄音就直接作廢。</li>
-            <li><strong>分治策略（Divide and Conquer）</strong>：為確保每一段落的力度與時序皆處於最佳狀態，我將曲目依結構拆解為三個 Take 分段錄音（<code>漸漸被你吸引.mid</code>、<code>漸漸被你吸引2.mid</code>、<code>漸漸被你吸引3.mid</code>）。</li>
-            <li><strong>剪除停頓與時間軸緊密重構</strong>：分段錄音常伴隨「按下錄音至敲鍵」以及「彈奏結束至按停」的發呆空白。透過 Python 腳本動態計算每個片段的第一個與最後一個音符事件，自動剔除多餘空檔，並跨軌道提取 Note On/Off 訊息重算 Delta Time，重構出無縫緊湊的 91 秒完整音軌。</li>
+            <li><strong>分治策略（Divide and Conquer）</strong>：為確保每一段落的力度與時序皆處於最佳狀態，我將長曲目依結構拆解為數個 Take 分段錄音（如《漸漸被你吸引》三段 Take、以及《超人力霸王捷德》主題曲二段 Take）。</li>
+            <li><strong>剪除停頓與時間軸緊密重構</strong>：分段錄音常伴隨「按下錄音至敲鍵」以及「彈奏結束至按停」的發呆空白。透過 Python 腳本動態計算每個片段的第一個與最後一個音符事件，自動剔除多餘空檔，並跨軌道提取 Note On/Off 訊息重算 Delta Time，重構出無縫緊湊的完整音軌。</li>
+            <li><strong>系統底層編碼地雷（Unicode NFC vs NFD 與日文濁音/促音陷阱）</strong>：在多媒體數據管線中，若直接以日文假名（如 <code>ジードの証.mid</code>）命名，常因 Unicode 規範化形式差異（NFC 單一碼位 vs NFD 濁點結合字元），在終端機字型渲染時被拆成外觀看似空格的佔位，並在 Windows CP950 / I/O 比對時引發無情的 <code>FileNotFoundError</code>。因此工程上的標準做法是：<strong>後台儲存與自動化管線一律強制使用純英數底線命名（ASCII-Safe），前台 UI 再渲染在地化文字與日文標籤</strong>。</li>
         </ul>
 
-        <strong>💻 Python MIDI 自動無縫合併腳本（剪除頭尾空白）：</strong>
+        <strong>💻 實作一：三段式長曲目自動無縫合併腳本（剪除頭尾空白，以《漸漸被你吸引》為例）：</strong>
         <p style="margin: 8px 0;">1. 安裝所需套件：</p>
         <pre style="background: #2d3436; color: #dfe6e9; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 13.5px; font-family: Consolas, monospace;">pip install mido</pre>
 
-        <p style="margin: 8px 0;">2. 執行合併腳本（<code>merge.py</code>）：</p>
+        <p style="margin: 8px 0;">2. 執行三段合併腳本（<code>merge.py</code>）：</p>
         <pre style="background: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 13.5px; line-height: 1.5; font-family: Consolas, monospace;">import mido
 
 # 依序填入需要串接的分段 MIDI 檔案名稱
@@ -331,8 +332,59 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
 
 🎉 無縫拼接完成！最終緊湊時長: 91.09 秒，間隔已消除！</pre>
 
+        <br>
+        <strong>💻 實作二：專門雙檔合併工具與編碼安全管線（以《超人力霸王捷德》二合一為例）：</strong>
+        <p style="margin: 8px 0;">針對二段式 Take（如主歌+副歌），且避開日文假名濁音/促音編碼衝突的獨立腳本（<code>merge_two.py</code>）：</p>
+        <pre style="background: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 13.5px; line-height: 1.5; font-family: Consolas, monospace;">import sys
+import mido
+
+# 強制輸出為 UTF-8，防止終端機編碼衝撞
+sys.stdout.reconfigure(encoding='utf-8')
+
+# 採用 ASCII-Safe 命名，徹底杜絕 Windows NFD 結合濁音假空格與 FileNotFoundError
+FILE_A = "Geed No Akashi.mid"
+FILE_B = "Geed_part2.mid"
+OUTPUT_FILE = "Geed_No_Akashi_Full.mid"
+GAP_SECONDS = 0.05
+
+files = [FILE_A, FILE_B]
+merged_mid = mido.MidiFile(type=0, ticks_per_beat=480)
+merged_track = mido.MidiTrack()
+merged_mid.tracks.append(merged_track)
+merged_track.append(mido.MetaMessage('set_tempo', tempo=500000, time=0))
+
+all_notes, current_timeline = [], 0.0
+
+for idx, f in enumerate(files):
+    mid = mido.MidiFile(f)
+    segment_events, abs_time = [], 0.0
+    for msg in mid:
+        abs_time += msg.time
+        if msg.type in ['note_on', 'note_off']:
+            segment_events.append((abs_time, msg.copy()))
+
+    if not segment_events: continue
+    first_time, last_time = segment_events[0][0], segment_events[-1][0]
+    for note_time, msg in segment_events:
+        all_notes.append((current_timeline + (note_time - first_time), msg))
+
+    actual_duration = last_time - first_time
+    current_timeline += actual_duration + GAP_SECONDS
+
+all_notes.sort(key=lambda x: x[0])
+last_time = 0.0
+for note_time, msg in all_notes:
+    delta_ticks = int(mido.second2tick(max(0.0, note_time - last_time), ticks_per_beat=480, tempo=500000))
+    msg.time = delta_ticks
+    merged_track.append(msg)
+    last_time = note_time
+
+merged_track.append(mido.MetaMessage('end_of_track', time=0))
+merged_mid.save(OUTPUT_FILE)
+print(f"🎉 捷德雙檔無縫合併完成：{OUTPUT_FILE}，總長度：{merged_mid.length:.2f} 秒")</pre>
+
         <p style="margin-top: 10px; font-size: 0.9em; color: #555;">
-            💡 <strong>工程價值</strong>：當實體交互遭遇物理瓶頸時，工程師懂得善用代碼建立自動化工作流，在二進制事件層面精準拼裝出無瑕疵的作品。
+            💡 <strong>工程價值</strong>：當實體交互遭遇物理人體工學瓶頸、或是檔案系統面臨 Unicode 多語系編碼壁壘時，工程師懂得善用代碼建立自動化工作流，在二進制與事件層面精準拼裝出無瑕疵的作品。
         </p>
     </div>
 </div>
@@ -419,16 +471,15 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
     </p>
 
     <!-- 分類篩選按鈕列 -->
-    <!-- 分類篩選按鈕列 -->
     <div class="filter-container">
         <button class="filter-btn active" onclick="filterCategory('all', this)">全部曲目 <span class="filter-count">(52)</span></button>
         <button class="filter-btn" onclick="filterCategory('movie', this)">林正英靈幻經典 <span class="filter-count">(5)</span></button>
         <button class="filter-btn" onclick="filterCategory('life', this)">生活日常與流行鈴聲 <span class="filter-count">(8)</span></button>
         <button class="filter-btn" onclick="filterCategory('anime', this)">動漫與遊戲配樂 <span class="filter-count">(5)</span></button>
-        <button class="filter-btn" onclick="filterCategory('tokusatsu', this)">特攝英雄宇宙（鎧甲勇士 / 超人力霸王 / 超級戰隊 /假面騎士 / 超星神 / 龍劍道 ） <span class="filter-count">(34)</span></button>
-        </div>
+        <button class="filter-btn" onclick="filterCategory('tokusatsu', this)">特攝英雄宇宙（鎧甲勇士 / 超人力霸王 / 超級戰隊 / 假面騎士 / 超星神 / 龍劍道） <span class="filter-count">(34)</span></button>
+    </div>
 
-    <!-- 標記 data-category 的 48 首演奏曲目清單 -->
+    <!-- 標記 data-category 的 52 首演奏曲目清單 -->
     <ol id="midiSongList">
         <!-- 1. 林正英靈幻經典 (movie: 5首) -->
         <li data-category="movie"><button onclick="fetchAndPlayMidi('鬼新娘.mid')">▶ 播放：鬼新娘（林正英系列最經典的旋律）</button><br><br></li>
@@ -499,7 +550,7 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
         數位音樂工程的迷人之處，在於它既是精密的純粹數學，也是充滿情感的聽覺藝術。回顧整套系統的架構設計，本專案將抽象的樂理與感性的演奏，逐層沉澱為扎實的前端工程實作：
     </p>
     <ul>
-        <li><strong>在底層協議與數據管線層</strong>：透過將二進位 MIDI 訊息解構為 <code>(Pitch, Velocity, Time Offset)</code> 陣列，確立了音訊驅動的單一真實數據源（Single Source of Truth）；並在面對長曲目觸控疲勞的生理限制時，<strong>運用 Python（mido）實作分治重組工作流</strong>，在二進位層面無縫銜接時間軸，為後續的轉調、時鐘映射與視覺化提供堅實基石。</li>
+        <li><strong>在底層協議與數據管線層</strong>：透過將二進位 MIDI 訊息解構為 <code>(Pitch, Velocity, Time Offset)</code> 陣列，確立了音訊驅動的單一真實數據源（Single Source of Truth）；在面對長曲目觸控疲勞的生理限制時，<strong>運用 Python（mido）實作分治重組工作流</strong>，在二進位層面無縫銜接時間軸；同時<strong>診斷並攻克多語系編碼壁壘</strong>，深入剖析 Unicode 規範化（NFC vs NFD）在 Windows 檔案系統下引發日文濁音/促音「幽靈空格」與 I/O 阻斷的成因，確立「後端管線 ASCII-Safe、前端 UI 在地化呈現」的跨平台架構規範，為後續的轉調、時鐘映射與視覺化提供堅實基石。</li>
         <li><strong>在訊號合成與排程層</strong>：摒棄單純調用靜態音訊檔案（如 MP3/WAV）的常規做法，全面採用 Web Audio API 的 <code>OscillatorNode</code> 物理訊號產生器與 ADSR 包絡線動態運算；更透過 <code>Tone.Transport</code> 抽象主控時鐘，徹底解決非阻塞式排程、精準暫停與任意時間軸跳轉（Seek）的難題。</li>
         <li><strong>在可視化與聲學層</strong>：將時域（Time Domain）的連續波形振幅映射為動態示波器，並利用快速傅立葉變換（FFT）即時拆解各諧波分貝能量，讓聲音的「物理實體」與「諧波色彩」在畫布上具象化呈現。</li>
         <li><strong>在演奏數據與工程哲學層</strong>：演算法可以輕易完成即時轉調與音色變換，但真正賦予這些數位波形生命力的，始終是<strong>雙拇指在狹小螢幕上克服高密度節奏時所刻印下的細微時序動態與力度起伏</strong>。當物理環境遭遇極限時，工程師懂得善用代碼搭建自動化工具，守護演奏數據中最真實的人性靈魂。</li>
@@ -524,14 +575,14 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
 </script>
 <hr>
 
-<!-- 優化後的作者個人資料卡片（字體階梯分明，不再生硬巨大） -->
+<!-- 優化後的作者個人資料卡片 -->
 <footer class="author-card">
     <div class="author-title">
         作者：<a href="https://www.facebook.com/profile.php?id=100056441813114&locale=zh_TW" target="_blank" style="color: #ffffff; text-decoration: underline;">周彥廷</a>
     </div>
     <div class="author-meta">
         創作日期：西元二零二六年二月二十四日<br>
-        更新日期：西元二零二六年十月二十九日
+        更新日期：西元二零二六年十月三十日
     </div>
     <img width="260" height="346" src="my_appearance2.jpg" alt="周彥廷自拍照片">
 </footer>
@@ -713,12 +764,10 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
         await Tone.start();
         getOrCreateSynth();
 
-        // 若 Part 被銷毀或處於結束狀態，重新構建
         if (!currentPart) {
             buildPartFromEvents();
         }
 
-        // 若指針已走到末尾，重頭歸零
         if (Tone.Transport.seconds >= currentTotalDuration - 0.1) {
             Tone.Transport.seconds = 0;
             document.getElementById("progressBar").value = 0;
@@ -759,7 +808,6 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
             document.getElementById("progressBar").value = currentSec;
             document.getElementById("currentTimeText").innerText = formatTime(currentSec);
 
-            // 當播放至曲目末端，重置時間指針與狀態，保留 Part 以支援直接重播
             if (currentSec >= currentTotalDuration) {
                 Tone.Transport.stop();
                 Tone.Transport.seconds = 0;
@@ -813,7 +861,6 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
             if (!response.ok) throw new Error("找不到檔案：" + url);
             const arrayBuffer = await response.arrayBuffer();
 
-            // 若未提供 customTitle，自動去除副檔名作為歌名
             let title = customTitle;
             if (!title) {
                 title = decodeURIComponent(url.replace(/\.[^/.]+$/, ""));
@@ -851,12 +898,10 @@ print(f"🎉 無縫拼接完成：{output_file}，最終時長：{merged_mid.len
 
     // ==================== 8. 曲目清單分類篩選邏輯 ====================
     function filterCategory(category, clickedBtn) {
-        // 1. 切換按鈕 active 樣式
         const allButtons = document.querySelectorAll(".filter-btn");
         allButtons.forEach(btn => btn.classList.remove("active"));
         clickedBtn.classList.add("active");
 
-        // 2. 顯示/隱藏對應分類的清單項目
         const songItems = document.querySelectorAll("#midiSongList li");
         songItems.forEach(item => {
             const itemCategory = item.getAttribute("data-category");
