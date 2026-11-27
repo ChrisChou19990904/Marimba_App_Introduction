@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與可視化實證</title>
+    <title>🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與聲光瀑布流實證</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
     <style>
@@ -122,7 +122,7 @@
     <nav>
         <ul>
             <li><strong class="guide">本頁內容：</strong><br>
-                <a>🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與可視化實證</a></li>
+                <a>🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與聲光瀑布流實證</a></li>
             <li><strong class="guide">其他文章連結：</strong>
                 <ol>
                     <li><a href="index.html" target="_blank">首頁</a></li>
@@ -147,7 +147,7 @@
     </nav>
 </header>
 
-<h1>🎹 數位音訊與 MIDI 數據處理：多波形合成器、動態轉調與可視化實證</h1>
+<h1>🎹 數位音訊與 MIDI 數據處理：多波形合成、即時轉調與聲光瀑布流實證</h1>
 <p style="font-size: 1.1em; color: #555; margin-top: -10px;">
     —— 基於 Web Audio API 架構與雙拇指極限演奏數據之互動實踐
 </p>
@@ -157,7 +157,7 @@
     <h3>📑 本文目錄與快速導航</h3>
     <ul>
         <li><a href="#sec-theory">1. 數位音訊合成與轉調原理</a></li>
-        <li><a href="#sec-visual-control">2. 聲學可視化與時間軸排程控制原理</a></li>
+        <li><a href="#sec-visual-control">2. 聲學可視化、88 鍵聲光瀑布流與時間軸排程原理</a></li>
         <li><a href="#sec-mobile-audio">3. 行動裝置瀏覽發聲重要提示與 Web Audio 底層原理</a></li>
         <li><a href="#sec-performance-core">⚠️ 4. 核心觀點：技術無法取代演奏能力與「分治工程實踐」：</a>
         <ul style="color:red">
@@ -201,22 +201,32 @@
 </div>
 
 <div id="sec-visual-control" class="section">
-    <h2>📊 2. 聲學可視化與時間軸排程控制原理</h2>
+    <h2>📊 2. 聲學可視化、88 鍵聲光瀑布流與時間軸排程原理</h2>
     <p>
-        為了克服純音訊播放時「看不見數據流動」與「無法自由掌控播放時間」的限制，本架構引入了 Web Audio API 的進階分析節點與排程引擎：
+        為了克服純音訊播放時「看不見數據流動」與「無法自由掌控播放時間」的限制，本架構引入了 HTML5 Canvas 2D 高幀率渲染引擎與 Web Audio API 的進階分析節點：
     </p>
 
-    <h3>(1) 示波器波形圖（Tone.Waveform）：時域分析</h3>
+    <h3>(1) SeeMusic 風格即時瀑布流與粒子特效（HTML5 Canvas 2D）</h3>
+    <p>
+        本系統不依賴任何第三方雲端渲染服務，直接在瀏覽器端透過 <code>requestAnimationFrame</code> 以 60 FPS 驅動 88 鍵（MIDI 21 至 108）鋼琴瀑布流畫布：
+    </p>
+    <ul>
+        <li><strong>時間－空間座標映射與視窗裁剪（Viewport Culling）</strong>：系統依據目前播放指針 <code>Tone.Transport.seconds</code>，動態篩選出未來 2.6 秒（<code>LOOKAHEAD_SECONDS</code>）內即將觸發的音符事件，將時間差換算為 Y 軸下落距離，並以音符持續時間（<code>duration</code>）決定方塊長度。畫面外的音符直接跳過運算，確保上千顆音符的長曲目依然維持流暢幀率。</li>
+        <li><strong>即時轉調視覺聯動（Transpose Sync）</strong>：渲染引擎直接讀取控制台的半音偏移變數（<code>ev.midi + transpose</code>）。當使用者在播放途中切換升降調時，下落中的音符方塊與底部 88 鍵盤的高亮位置會即時水平平移，讓移調邏輯在視覺上完全具象化。</li>
+        <li><strong>琴鍵光暈與粒子物理系統（Particle System）</strong>：利用 Canvas 的 <code>shadowBlur</code> 屬性模擬霓虹發光效果；當音符方塊底部撞擊琴鍵基準線的瞬間，系統會動態生成帶有隨機初速度向量 <code>(vx, vy)</code> 與透明度衰減（<code>alpha</code>）的光點粒子，還原華麗的敲擊火花回饋。</li>
+    </ul>
+
+    <h3>(2) 示波器波形圖（Tone.Waveform）：時域分析</h3>
     <p>
         <code>Tone.Waveform</code> 能夠以每秒數十次的頻率捕捉訊號的<strong>時間域振幅（Time-Domain Amplitude）</strong>。程式將採集到的 -1.0 至 1.0 浮點數陣列映射至 Canvas 畫布的 Y 軸座標，繪製出連續振動的聲波線條。讀者可以直觀看見三角波的平緩折角、方波的垂直陡升，以及正弦波的柔和圓弧。
     </p>
 
-    <h3>(2) 頻譜分析儀（Tone.FFT）：頻率域分析</h3>
+    <h3>(3) 頻譜分析儀（Tone.FFT）：頻率域分析</h3>
     <p>
         <code>Tone.FFT</code> 透過快速傅立葉變換，將複雜的音訊訊號拆解為各頻率成分的<strong>能量分貝值（dB）</strong>。畫面左側代表低音貝斯（Bass）能量，右側代表高音與泛音（Treble）。當播放明亮的鋸齒波時，右側高頻柱會活躍跳動；轉調時，整個能量群則會即時水平平移。
     </p>
 
-    <h3>(3) Tone.Transport 與 Tone.Part：非阻塞式時間軸主控</h3>
+    <h3>(4) Tone.Transport 與 Tone.Part：非阻塞式時間軸主控</h3>
     <p>
         傳統做法如果直接呼叫 <code>triggerAttackRelease</code>，會將所有音符一次性鎖死在硬體時鐘上，導致無法暫停與拖曳。本系統改寫為：
     </p>
@@ -526,6 +536,9 @@ print(f"🎉 《光的戰役》8 段全數無縫拼接完成：{OUTPUT_FILE}，�
 
 <div id="sec-player-workstation" class="section" style="text-align: center;">
     <h2>📊 即時音訊可視化工作站</h2>
+    <!-- 新增：SeeMusic 風格鋼琴瀑布流與動態琴鍵 -->
+    <h3>🎹 SeeMusic 風格即時瀑布流與琴鍵光暈 (Waterfall & Particles)</h3>
+    <canvas id="waterfallCanvas" width="700" height="340" style="background: #0d1117; border-radius: 8px; width: 100%; max-width: 700px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);"></canvas>
 
     <h3>即時聲波振動圖 (Oscilloscope)</h3>
     <canvas id="waveformCanvas" width="700" height="130" style="background: #111; border-radius: 8px; width: 100%; max-width: 700px; margin-bottom: 15px;"></canvas>
@@ -670,7 +683,7 @@ print(f"🎉 《光的戰役》8 段全數無縫拼接完成：{OUTPUT_FILE}，�
     <ul>
         <li><strong>在底層協議與數據管線層</strong>：透過將二進位 MIDI 訊息解構為 <code>(Pitch, Velocity, Time Offset)</code> 陣列，確立了音訊驅動的單一真實數據源（Single Source of Truth）；在面對長篇曲目與複雜交響樂句的生理限制時，<strong>運用 Python（mido）實作分治重組工作流並精確配置段落銜接緩衝（Gap Padding）</strong>，在消除冗餘發呆時間的同時保留樂曲的呼吸感；同時<strong>診斷並攻克多語系編碼壁壘</strong>，深入剖析 Unicode 規範化（NFC vs NFD）在 Windows 檔案系統下引發日文濁音/促音「幽靈空格」與 I/O 阻斷的成因，確立「後端管線 ASCII-Safe、前端 UI 在地化呈現」的跨平台架構規範，為後續的轉調、時鐘映射與視覺化提供堅實基石。</li>
         <li><strong>在訊號合成與排程層</strong>：摒棄單純調用靜態音訊檔案（如 MP3/WAV）的常規做法，全面採用 Web Audio API 的 <code>OscillatorNode</code> 物理訊號產生器與 ADSR 包絡線動態運算；更透過 <code>Tone.Transport</code> 抽象主控時鐘，徹底解決非阻塞式排程、精準暫停與任意時間軸跳轉（Seek）的難題。</li>
-        <li><strong>在可視化與聲學層</strong>：將時域（Time Domain）的連續波形振幅映射為動態示波器，並利用快速傅立葉變換（FFT）即時拆解各諧波分貝能量，讓聲音的「物理實體」與「諧波色彩」在畫布上具象化呈現。</li>
+        <li><strong>在可視化與聲學層</strong>：將時域（Time Domain）的連續波形振幅映射為動態示波器，並利用快速傅立葉變換（FFT）即時拆解各諧波分貝能量，讓聲音的「物理實體」與「諧波色彩」在畫布上具象化呈現。並結合 88 鍵琴鍵幾何映射與粒子物理系統，打造無需外部依賴的即時聲光瀑布流</li>
         <li><strong>在演奏數據與工程哲學層</strong>：演算法可以輕易完成即時轉調與音色變換，但真正賦予這些數位波形生命力的，始終是<strong>雙拇指在狹小螢幕上克服高密度節奏時所刻印下的細微時序動態與力度起伏</strong>。當物理環境遭遇極限時，工程師懂得善用代碼搭建自動化工具，守護演奏數據中最真實的人性靈魂。</li>
     </ul>
     <p>
@@ -700,7 +713,7 @@ print(f"🎉 《光的戰役》8 段全數無縫拼接完成：{OUTPUT_FILE}，�
     </div>
     <div class="author-meta">
         創作日期：西元二零二六年二月二十四日<br>
-        更新日期：西元二零二六年十一月十八日
+        更新日期：西元二零二六年十一月二十七日
     </div>
     <img width="260" height="346" src="my_appearance2.jpg" alt="周彥廷自拍照片">
 </footer>
@@ -1030,6 +1043,171 @@ print(f"🎉 《光的戰役》8 段全數無縫拼接完成：{OUTPUT_FILE}，�
             }
         });
     }
+    // ==================== 9. SeeMusic 風格鋼琴瀑布流與粒子特效 ====================
+    const wfCanvas = document.getElementById("waterfallCanvas");
+    const wfCtx = wfCanvas.getContext("2d");
+
+    const KEYBOARD_HEIGHT = 65; // 底部琴鍵高度
+    const FALL_AREA_HEIGHT = wfCanvas.height - KEYBOARD_HEIGHT;
+    const LOOKAHEAD_SECONDS = 2.6; // 畫面預視未來幾秒的音符（數值越小下落越快）
+    const MIN_MIDI = 21; // A0 (88鍵最低音)
+    const MAX_MIDI = 108; // C8 (88鍵最高音)
+
+    let particles = []; // 儲存音符撞擊琴鍵時噴發的光點粒子
+
+    function isBlackKey(midi) {
+        const note = midi % 12;
+        return [1, 3, 6, 8, 10].includes(note);
+    }
+
+    // 計算每顆 MIDI 音高在畫布上的 X 座標與寬度（標準 52 白鍵等分佈局）
+    function getKeyGeometry(midi) {
+        const whiteKeyWidth = wfCanvas.width / 52;
+        const blackKeyWidth = whiteKeyWidth * 0.62;
+        let whiteIndex = 0;
+
+        for (let m = MIN_MIDI; m < midi; m++) {
+            if (!isBlackKey(m)) whiteIndex++;
+        }
+
+        if (!isBlackKey(midi)) {
+            return { x: whiteIndex * whiteKeyWidth, w: whiteKeyWidth, isBlack: false };
+        } else {
+            return { x: (whiteIndex * whiteKeyWidth) - (blackKeyWidth / 2), w: blackKeyWidth, isBlack: true };
+        }
+    }
+
+    // 噴發霓虹粒子
+    function spawnParticles(x, y, color) {
+        for (let i = 0; i < 2; i++) {
+            particles.push({
+                x: x + (Math.random() - 0.5) * 10,
+                y: y,
+                vx: (Math.random() - 0.5) * 2.2,
+                vy: -Math.random() * 2.8 - 0.8,
+                alpha: 1.0,
+                size: Math.random() * 2.5 + 1.2,
+                color: color
+            });
+        }
+    }
+
+    function drawWaterfall() {
+        requestAnimationFrame(drawWaterfall);
+
+        // 1. 繪製深邃星空背景
+        wfCtx.fillStyle = "#0b0e14";
+        wfCtx.fillRect(0, 0, wfCanvas.width, wfCanvas.height);
+
+        // 繪製八度音區微弱分隔線
+        wfCtx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+        wfCtx.lineWidth = 1;
+        for (let m = MIN_MIDI; m <= MAX_MIDI; m++) {
+            if (m % 12 === 0) { // 每個 C 音畫一條基準線
+                const geo = getKeyGeometry(m);
+                wfCtx.beginPath();
+                wfCtx.moveTo(geo.x, 0);
+                wfCtx.lineTo(geo.x, FALL_AREA_HEIGHT);
+                wfCtx.stroke();
+            }
+        }
+
+        const currentTime = Tone.Transport.state === "started" ? Tone.Transport.seconds : 0;
+        const activeNotes = new Map(); // 記錄當下正在發聲的音符（用於點亮琴鍵）
+
+        // 2. 繪製下落中的音符方塊
+        if (currentMidiEvents && currentMidiEvents.length > 0) {
+            const pxPerSec = FALL_AREA_HEIGHT / LOOKAHEAD_SECONDS;
+
+            for (let i = 0; i < currentMidiEvents.length; i++) {
+                const ev = currentMidiEvents[i];
+                const noteStart = ev.time;
+                const noteEnd = ev.time + ev.duration;
+
+                // 效能優化：只處理在可視時間範圍內的音符
+                if (noteEnd < currentTime || noteStart > currentTime + LOOKAHEAD_SECONDS) continue;
+
+                // 套用你原本控制台的即時轉調數值！
+                const displayMidi = Math.max(MIN_MIDI, Math.min(MAX_MIDI, ev.midi + transpose));
+                const geo = getKeyGeometry(displayMidi);
+
+                const bottomY = FALL_AREA_HEIGHT - ((noteStart - currentTime) * pxPerSec);
+                const topY = FALL_AREA_HEIGHT - ((noteEnd - currentTime) * pxPerSec);
+                const rectHeight = Math.max(4, bottomY - topY);
+
+                const isPlayingNow = (currentTime >= noteStart && currentTime <= noteEnd);
+                const baseColor = geo.isBlack ? "#00a8ff" : "#00d2d3"; // 黑鍵深藍、白鍵青藍
+
+                if (isPlayingNow) {
+                    activeNotes.set(displayMidi, baseColor);
+                    if (Tone.Transport.state === "started" && Math.random() < 0.45) {
+                        spawnParticles(geo.x + geo.w / 2, FALL_AREA_HEIGHT - 2, "#7ed6df");
+                    }
+                }
+
+                // 繪製圓角發光音符條
+                wfCtx.save();
+                wfCtx.shadowBlur = isPlayingNow ? 14 : 6;
+                wfCtx.shadowColor = baseColor;
+                wfCtx.fillStyle = isPlayingNow ? "#ffffff" : baseColor;
+
+                wfCtx.beginPath();
+                if (wfCtx.roundRect) {
+                    wfCtx.roundRect(geo.x + 1, topY, geo.w - 2, rectHeight, 3);
+                } else {
+                    wfCtx.rect(geo.x + 1, topY, geo.w - 2, rectHeight);
+                }
+                wfCtx.fill();
+                wfCtx.restore();
+            }
+        }
+
+        // 3. 更新並繪製撞擊火花粒子
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= 0.03;
+
+            if (p.alpha <= 0) {
+                particles.splice(i, 1);
+                continue;
+            }
+
+            wfCtx.save();
+            wfCtx.globalAlpha = p.alpha;
+            wfCtx.fillStyle = p.color;
+            wfCtx.shadowBlur = 8;
+            wfCtx.shadowColor = p.color;
+            wfCtx.beginPath();
+            wfCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            wfCtx.fill();
+            wfCtx.restore();
+        }
+
+        // 4. 繪製底部 88 鍵鋼琴（先畫所有白鍵，再疊畫黑鍵）
+        for (let m = MIN_MIDI; m <= MAX_MIDI; m++) {
+            if (!isBlackKey(m)) {
+                const geo = getKeyGeometry(m);
+                const glowColor = activeNotes.get(m);
+                wfCtx.fillStyle = glowColor ? "#00d2d3" : "#f1f2f6";
+                wfCtx.fillRect(geo.x, FALL_AREA_HEIGHT, geo.w - 1, KEYBOARD_HEIGHT);
+            }
+        }
+        for (let m = MIN_MIDI; m <= MAX_MIDI; m++) {
+            if (isBlackKey(m)) {
+                const geo = getKeyGeometry(m);
+                const glowColor = activeNotes.get(m);
+                wfCtx.fillStyle = glowColor ? "#00a8ff" : "#1e272e";
+                wfCtx.fillRect(geo.x, FALL_AREA_HEIGHT, geo.w, KEYBOARD_HEIGHT * 0.62);
+            }
+        }
+
+        // 琴鍵頂部霓虹光條分隔線
+        wfCtx.fillStyle = "#00d2d3";
+        wfCtx.fillRect(0, FALL_AREA_HEIGHT - 2, wfCanvas.width, 2);
+    }
+    drawWaterfall();
 </script>
 </body>
 </html>
